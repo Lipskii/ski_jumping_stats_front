@@ -1,10 +1,30 @@
-import './App.css';
+import React, {Component} from "react";
+import Layout from "./hoc/Layout/Layout";
+import {withRouter, Switch, Route} from 'react-router-dom'
+import NotFound from "./containers/NotFound";
 
-function App() {
-  return (
-    <div>
-    </div>
-  );
+
+class App extends Component {
+
+
+  render() {
+
+      const routes = (
+          <Switch>
+                <Route path="/addSkiClub" exact />
+                <Route path="/" exact/>
+                <Route component={NotFound}/>
+          </Switch>
+      )
+
+    return (
+        <div>
+            <Layout>
+                {routes}
+            </Layout>
+        </div>
+    )
+  }
 }
 
-export default App;
+export default withRouter(App);
