@@ -3,7 +3,7 @@ import {Button, Form, FormControl, Nav, Navbar, NavDropdown} from "react-bootstr
 import { LinkContainer } from 'react-router-bootstrap'
 
 
-const toolbar = () => (
+const Toolbar = () => (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
         <Navbar.Brand href="/">Ski Jumping System</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
@@ -45,4 +45,4 @@ const toolbar = () => (
 )
 
 
-export default  toolbar
+export default Toolbar

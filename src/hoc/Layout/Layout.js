@@ -9,6 +9,9 @@ class Layout extends Component{
         return(
             <React.Fragment>
                 <Toolbar/>
+                <main>
+                    {this.props.children}
+                </main>
             </React.Fragment>
         )
     }
