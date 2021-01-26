@@ -1,6 +1,10 @@
 import React, {Component} from "react";
 import Toolbar from '../../components/Navigation/Toolbar'
+import styled from "styled-components";
 
+const StyledMain = styled.main`
+  padding-top: 80px;
+`
 
 class Layout extends Component{
 
@@ -9,9 +13,9 @@ class Layout extends Component{
         return(
             <React.Fragment>
                 <Toolbar/>
-                <main>
+                <StyledMain>
                     {this.props.children}
-                </main>
+                </StyledMain>
             </React.Fragment>
         )
     }

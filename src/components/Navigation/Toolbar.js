@@ -32,7 +32,9 @@ const Toolbar = () => (
                 <NavDropdown id="collasible-nav-dropdown_two" title="FIS Tools">
                     <NavDropdown.Item>Add Competition</NavDropdown.Item>
                     <NavDropdown.Item>Register an Athlete</NavDropdown.Item>
-                    <NavDropdown.Item>Register a Ski Club</NavDropdown.Item>
+                    <LinkContainer to='/addSkiClub'>
+                        <NavDropdown.Item>Register a Ski Club</NavDropdown.Item>
+                    </LinkContainer>
                     <NavDropdown.Item>Venues</NavDropdown.Item>
                 </NavDropdown>
                 <Nav.Link>Account</Nav.Link>
