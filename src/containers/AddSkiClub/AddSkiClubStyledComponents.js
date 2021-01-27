@@ -16,6 +16,13 @@ export const StyledDiv1 = styled.div`
   padding-bottom: 10px;
 `
 
+export const StyledDiv2 = styled.div`
+  margin: auto;
+  max-width: 700px;
+  text-align: right;
+  padding-bottom: 10px;
+`
+
 export const CheckButton = styled(Button)`
     margin:auto
 `
@@ -25,7 +32,6 @@ export const StyledFormSmall = styled(Form)`
   max-height: 150px;
   max-width: 250px;
 `
-
 export const StyledForm = styled(Form)`
   margin: auto;
   max-width: 700px;
