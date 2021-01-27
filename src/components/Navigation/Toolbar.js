@@ -5,7 +5,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 
 const Toolbar = () => (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
-        <Navbar.Brand href="/">Ski Jumping System</Navbar.Brand>
+        <Navbar.Brand href="/">Ski Jumping Stats</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
         <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto" >
