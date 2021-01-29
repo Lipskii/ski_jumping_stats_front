@@ -12,11 +12,11 @@ import {
     StyledFormSmall
 } from "./AddSkiClubStyledComponents";
 
-//TODO THURSDAY: finish posting clubs and add feedback
 //TODO add spinner during loading
+//TODO add toasts as feedback after adding something
 //TODO place countries in global state (redux)
 //TODO fetch from api only those countries that have ski clubs in db
-//TODO try different solutions with passing an object post (also look at api)
+//TODO try different solutions with passing an object post (also look at api), pass object instead of Map<String,String>
 //TODO split forms into different files
 
 class AddSkiClub extends Component {
@@ -35,10 +35,12 @@ class AddSkiClub extends Component {
         newCityName: "",
         newCityRegion: null,
         showNewCityForm: false,
-        newCityButtonText: "Do you want to add new city?"
+        newCityButtonText: "Do you want to add new city?",
+        showToast: false
     }
 
     componentDidMount() {
+        console.log("Component did mount")
         axios.get('/api/countries')
             .then(res => {
                 this.setState({
@@ -48,6 +50,7 @@ class AddSkiClub extends Component {
     }
 
     updateClubsList = (e) => {
+        console.log("updateClubsList")
         axios.get('/api/skiClubs/' + e.target.value)
             .then(res => {
                 this.setState({
@@ -58,10 +61,13 @@ class AddSkiClub extends Component {
     }
 
     updateCitiesAndRegionsList = () => {
+        console.log("updateCitiesAndRegionsList " + this.state.currentCountry)
+
         axios.get('/api/cities/' + this.state.currentCountry)
             .then(res => {
                 this.setState({
-                    cities: res.data
+                    cities: res.data,
+                    newClubCity: null
                 })
             }).catch(error => console.log(error))
 
@@ -84,23 +90,37 @@ class AddSkiClub extends Component {
     }
 
     addNewCity = () => {
-        window.alert(this.state.newCityName + " added!")
-        axios.post('/api/country', {name: this.state.newCityName, region: this.state.newCityRegion})
+        console.log("addNewCity")
+        let postSuccessful = true
+
+
+        axios.post('/api/city', {name: this.state.newCityName, region: this.state.newCityRegion})
             .then(function (response) {
                 console.log(response.data);
+
             })
             .catch(function (error) {
                 console.log(error);
+                postSuccessful = false
             });
+
+        if(postSuccessful){
+            window.alert(this.state.newCityName + " added!")
+        }else{
+            window.alert("Ups, something went wrong")
+        }
+
         this.updateCitiesAndRegionsList()
+
     }
+
 
     handleNewCityButton = () => {
         this.setState({
-        showNewCityForm: !this.state.showNewCityForm
+            showNewCityForm: !this.state.showNewCityForm
         })
 
-        if(!this.state.showNewCityForm){
+        if (!this.state.showNewCityForm) {
             this.setState({
                 newCityButtonText: "hide"
             })
@@ -112,18 +132,40 @@ class AddSkiClub extends Component {
     }
 
     onSubmitClubForm = () => {
-        console.log("SUBMIT")
-        console.log(this.state.newClubCity)
-        console.log(this.state.newClubName)
+        console.log("onSubmitClubForm")
+        let postSuccessful = true
+
+        axios.post("/api/skiClub", {
+            name: this.state.newClubName,
+            cityId: this.state.newClubCity
+        })
+            .then(function (response) {
+                console.log(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                postSuccessful = false
+            });
+
+        if(postSuccessful){
+            window.alert(this.state.newClubName + " added!")
+        }else{
+            window.alert("Ups, something went wrong")
+        }
     }
 
     render() {
-        let list = <br/>
+
+        console.log("render" + this.state.newCityRegion)
+        console.log("newCityName" + this.state.newCityName)
+        console.log("newClubName" + this.state.newClubName)
+        console.log("newClubCity " + this.state.newClubCity)
+        let list = null
         let listItems = <ListItem>None</ListItem>
-        let listForm = <br/>
+        let listForm = null
         let newCityForm = null
 
-        if(this.state.showNewCityForm){
+        if (this.state.showNewCityForm) {
             newCityForm = <Form.Group>
                 <Form.Label>New city in {this.state.currentCountry}:</Form.Label>
                 <Form.Control type="text" placeholder="New city name"
@@ -132,11 +174,12 @@ class AddSkiClub extends Component {
                 <Form.Group as={Row}>
                     <Form.Label column sm={2}>Region:</Form.Label>
                     <Col sm={10}>
-                        <Form.Control as="select"
+                        <Form.Control as="select" defaultValue={""}
                                       onChange={e => this.setState({newCityRegion: e.target.value})}>
-                            <option disabled selected value/>
+
+                            <option value={""}/>
                             {this.state.regions.map(region =>
-                                <option key={region.id}>{region.name}</option>)}
+                                <option key={region.id} value={region.name}>{region.name}</option>)}
                         </Form.Control>
                     </Col>
                 </Form.Group>
@@ -147,8 +190,6 @@ class AddSkiClub extends Component {
                 </Button>
             </Form.Group>
         }
-
-
         if (this.state.clubListVisible) {
             listForm = <StyledFormSmall inline>
                 <Form.Group>
@@ -174,7 +215,6 @@ class AddSkiClub extends Component {
                 {listItems}
             </List>
         }
-
 
         return (
             <React.Fragment>
@@ -222,27 +262,25 @@ class AddSkiClub extends Component {
                     <Form.Group as={Row}>
                         <Form.Label column sm={2}>City:</Form.Label>
                         <Col sm={10}>
-                            <Form.Control as="select" onChange={ e => {
+                            <Form.Control as="select" defaultValue={""} onChange={e => {
                                 this.setState({
                                     newClubCity: e.target.value
                                 })
                             }}>
-                                <option value=""/>
+                                <option value={""}/>
                                 {this.state.cities.map(city =>
-                                    <option key={city.id} value={city.name}> {city.name}</option>)}
+                                    <option key={city.id} value={city.id}> {city.name}, {city.region}</option>)}
                             </Form.Control>
                         </Col>
                     </Form.Group>
 
-                    <Button onClick={this.handleNewCityButton} variant={"secondary"}>{this.state.newCityButtonText}</Button>
+                    <Button onClick={this.handleNewCityButton}
+                            variant={"secondary"}>{this.state.newCityButtonText}</Button>
                     {newCityForm}
 
                     <StyledDiv2>
                         <Button onClick={this.onSubmitClubForm}>Submit</Button>
                     </StyledDiv2>
-
-
-
 
 
                 </StyledForm>
