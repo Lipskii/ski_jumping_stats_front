@@ -145,13 +145,14 @@ class AddSkiClub extends Component {
             .catch(function (error) {
                 console.log(error);
                 postSuccessful = false
-            });
+            }).finally(() => {
+            if(postSuccessful){
+                window.alert(this.state.newClubName + " added!")
+            }else{
+                window.alert("Ups, something went wrong")
+            }
+        })
 
-        if(postSuccessful){
-            window.alert(this.state.newClubName + " added!")
-        }else{
-            window.alert("Ups, something went wrong")
-        }
     }
 
     render() {

@@ -57,17 +57,22 @@ export const StyledFormSelect = styled(Form.Control)`
 export const List = styled(ListGroup)`
   text-align: center;
   max-height: 300px;
-  max-width: 460px;
+  max-width: 500px;
+  margin-left: 120px;
   overflow: scroll;
   -webkit-overflow-scrolling: inherit;
   overflow-x: hidden;
   overflow-y: auto;
-  margin: auto;
+  //margin: auto;
   padding-bottom: 20px;
   
 `
 
 export const ListItem = styled(ListGroupItem)`
-  max-height: 40px;
+  max-height: 50px;
   font-size: smaller;
+`
+
+export const ShowNewCityFormButton = styled(Button)`
+  margin-bottom: 20px;
 `
