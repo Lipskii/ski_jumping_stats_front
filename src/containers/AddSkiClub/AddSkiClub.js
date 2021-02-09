@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Button, Col, Form, Row, Toast} from "react-bootstrap";
+import {Button, Col, Form, Row} from "react-bootstrap";
 import {
     CheckButton,
-    Header3, Header31,
+    Header5, Header31,
     List,
-    ListItem, StyledDiv1, StyledDiv2,
+    ListItem, StyledDiv1, StyledDiv2Right,
     StyledForm,
     StyledFormLabel,
     StyledFormSelect,
@@ -156,10 +156,6 @@ class AddSkiClub extends Component {
 
     render() {
 
-        console.log("render" + this.state.newCityRegion)
-        console.log("newCityName" + this.state.newCityName)
-        console.log("newClubName" + this.state.newClubName)
-        console.log("newClubCity " + this.state.newClubCity)
         let list = null
         let listItems = <ListItem>None</ListItem>
         let listForm = null
@@ -190,6 +186,8 @@ class AddSkiClub extends Component {
                 </Button>
             </Form.Group>
         }
+
+
         if (this.state.clubListVisible) {
             listForm = <StyledFormSmall inline>
                 <Form.Group>
@@ -220,7 +218,7 @@ class AddSkiClub extends Component {
             <React.Fragment>
 
                 <StyledDiv1>
-                    <Header3>Existing Ski Clubs</Header3>
+                    <Header5>Existing Ski Clubs</Header5>
                     <CheckButton size="sm" onClick={this.changeClubsListVisibility}>Toggle list</CheckButton>
                 </StyledDiv1>
 
@@ -278,9 +276,9 @@ class AddSkiClub extends Component {
                             variant={"secondary"}>{this.state.newCityButtonText}</Button>
                     {newCityForm}
 
-                    <StyledDiv2>
+                    <StyledDiv2Right>
                         <Button onClick={this.onSubmitClubForm}>Submit</Button>
-                    </StyledDiv2>
+                    </StyledDiv2Right>
 
 
                 </StyledForm>
