@@ -10,14 +10,11 @@ import {
     StyledFormLabel,
     StyledFormSelect,
     StyledFormSmall
-} from "./AddSkiClubStyledComponents";
+} from "../../components/StyledComponents";
+import NewCityForm from "../../components/CommonForms/NewCityForm";
 
 //TODO add spinner during loading
-//TODO add toasts as feedback after adding something
 //TODO place countries in global state (redux)
-//TODO fetch from api only those countries that have ski clubs in db
-//TODO try different solutions with passing an object post (also look at api), pass object instead of Map<String,String>
-//TODO split forms into different files
 
 class AddSkiClub extends Component {
 
@@ -32,11 +29,8 @@ class AddSkiClub extends Component {
         currentCountry: "",
         newClubName: "",
         newClubCity: "",
-        newCityName: "",
-        newCityRegion: null,
         showNewCityForm: false,
-        newCityButtonText: "Do you want to add new city?",
-        showToast: false
+        newCityButtonText: "Do you want to add new city?"
     }
 
     componentDidMount() {
@@ -71,47 +65,12 @@ class AddSkiClub extends Component {
                 })
             }).catch(error => console.log(error))
 
-        axios.get('/api/regions/' + this.state.currentCountry)
-            .then(res => {
-                this.setState({
-                    regions: res.data,
-                })
-            }).catch(error => console.log(error))
-
-        this.setState({
-            newCityName: ""
-        })
     }
 
     changeClubsListVisibility = () => {
         this.setState({
             clubListVisible: !this.state.clubListVisible
         })
-    }
-
-    addNewCity = () => {
-        console.log("addNewCity")
-        let postSuccessful = true
-
-
-        axios.post('/api/city', {name: this.state.newCityName, region: this.state.newCityRegion})
-            .then(function (response) {
-                console.log(response.data);
-
-            })
-            .catch(function (error) {
-                console.log(error);
-                postSuccessful = false
-            });
-
-        if(postSuccessful){
-            window.alert(this.state.newCityName + " added!")
-        }else{
-            window.alert("Ups, something went wrong")
-        }
-
-        this.updateCitiesAndRegionsList()
-
     }
 
 
@@ -163,29 +122,7 @@ class AddSkiClub extends Component {
         let newCityForm = null
 
         if (this.state.showNewCityForm) {
-            newCityForm = <Form.Group>
-                <Form.Label>New city in {this.state.currentCountry}:</Form.Label>
-                <Form.Control type="text" placeholder="New city name"
-                              onChange={e => this.setState({newCityName: e.target.value})}/>
-                <br/>
-                <Form.Group as={Row}>
-                    <Form.Label column sm={2}>Region:</Form.Label>
-                    <Col sm={10}>
-                        <Form.Control as="select" defaultValue={""}
-                                      onChange={e => this.setState({newCityRegion: e.target.value})}>
-
-                            <option value={""}/>
-                            {this.state.regions.map(region =>
-                                <option key={region.id} value={region.name}>{region.name}</option>)}
-                        </Form.Control>
-                    </Col>
-                </Form.Group>
-
-                <Button variant="secondary" onClick={this.addNewCity}
-                        disabled={this.state.newCityName.length < 1 || this.state.regions.length < 1}>
-                    Add City
-                </Button>
-            </Form.Group>
+            newCityForm = <NewCityForm currentCountry={this.state.currentCountry} updateLists={this.updateCitiesAndRegionsList}/>
         }
 
 

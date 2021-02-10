@@ -1,12 +1,40 @@
 import styled from "styled-components";
 import {Form, ListGroup, ListGroupItem, Button} from "react-bootstrap";
 
-export const Header5 = styled.h5`
+
+export const CheckButton = styled(Button)`
+    margin:auto;
+`
+
+export const Header3 = styled.h3`
   text-align: center;
+  margin-bottom: 20px;
 `
 
 export const Header31 = styled.h3`
   text-align: center;
+`
+
+export const Header5 = styled.h5`
+  text-align: center;
+`
+
+export const List = styled(ListGroup)`
+  text-align: center;
+  max-height: 300px;
+  max-width: 500px;
+  margin-left: 120px;
+  overflow: scroll;
+  -webkit-overflow-scrolling: inherit;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-bottom: 20px;
+  
+`
+
+export const ListItem = styled(ListGroupItem)`
+  max-height: 50px;
+  font-size: smaller;
 `
 
 export const StyledDiv1 = styled.div`
@@ -30,18 +58,15 @@ export const StyledDiv2Centered = styled.div`
   padding-bottom: 10px;
 `
 
-export const CheckButton = styled(Button)`
-    margin:auto;
+export const StyledForm = styled(Form)`
+  margin: auto;
+  max-width: 700px;
 `
 
 export const StyledFormSmall = styled(Form)`
   margin:auto;
   max-height: 150px;
   max-width: 250px;
-`
-export const StyledForm = styled(Form)`
-  margin: auto;
-  max-width: 700px;
 `
 
 export const StyledFormLabel = styled(Form.Label)`
@@ -54,24 +79,6 @@ export const StyledFormSelect = styled(Form.Control)`
   align-content: center;
 `
 
-export const List = styled(ListGroup)`
-  text-align: center;
-  max-height: 300px;
-  max-width: 500px;
-  margin-left: 120px;
-  overflow: scroll;
-  -webkit-overflow-scrolling: inherit;
-  overflow-x: hidden;
-  overflow-y: auto;
-  //margin: auto;
-  padding-bottom: 20px;
-  
-`
-
-export const ListItem = styled(ListGroupItem)`
-  max-height: 50px;
-  font-size: smaller;
-`
 
 export const ShowNewCityFormButton = styled(Button)`
   margin-bottom: 20px;

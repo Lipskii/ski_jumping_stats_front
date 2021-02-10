@@ -4,11 +4,11 @@ import {withRouter, Switch, Route} from 'react-router-dom'
 import NotFound from "./containers/NotFound";
 import AddSkiClub from "./containers/AddSkiClub/AddSkiClub";
 import AddAthlete from "./containers/AddAthlete/AddAthlete"
+import ContextMenu from "./components/ContextMenu";
 
 
 
 class App extends Component {
-
 
 
   render() {

@@ -1,21 +1,21 @@
 import React, {Component} from 'react'
 import axios from "axios";
-import {Header3} from "./AddAthleteStyledComponents";
 import {
     CheckButton,
     StyledDiv2Centered,
     StyledForm,
-    ListItem, List, ShowNewCityFormButton, StyledDiv2Right
-} from "../AddSkiClub/AddSkiClubStyledComponents";
+    ListItem, List, ShowNewCityFormButton, StyledDiv2Right, Header3
+} from "../../components/StyledComponents";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import DatePicker from "react-datepicker";
-
 import "react-datepicker/dist/react-datepicker.css";
+import NewCityForm from "../../components/CommonForms/NewCityForm";
+
 
 
 //TODO create one common styledComponentsFile
-//TODO move creating new city into different file
-//TODO change to use id`s everywhere instead of names
+
+
 
 class AddAthlete extends Component {
 
@@ -25,10 +25,6 @@ class AddAthlete extends Component {
         skiJumpers: [],
         cities: [],
         showNewCityForm: false,
-        newCityButtonText: "Do you want to add new city?",
-        newCityName: "",
-        newCityRegion: "",
-        regions: [],
         skis: [],
         currentCountry: "",
         athletesListVisibility: false,
@@ -42,7 +38,8 @@ class AddAthlete extends Component {
         newAthleteGenderId: null,
         newAthleteIsActive: false,
         newAthleteSkiClubId: null,
-        newAthleteSkisId: null
+        newAthleteSkisId: null,
+        newCityButtonText: "Do you want to add new city?"
     }
 
 
@@ -84,32 +81,6 @@ class AddAthlete extends Component {
         }
     }
 
-    addNewCity = () => {
-
-        let postSuccessful = true
-
-        axios.post('/api/city', {name: this.state.newCityName, region: this.state.newCityRegion})
-            .then(function (response) {
-                console.log(response.data);
-
-            })
-            .catch(function (error) {
-                console.log(error);
-                postSuccessful = false
-            }).finally(() => {
-
-            if (postSuccessful) {
-                window.alert(this.state.newCityName + " added!")
-            } else {
-                window.alert("Ups, something went wrong")
-            }
-
-            this.updateListsToCurrentCountry()
-        });
-
-
-    }
-
     updateListsToCurrentCountry = (e) => {
         let eTargetValue
 
@@ -143,13 +114,6 @@ class AddAthlete extends Component {
                     this.setState({
                         cities: res.data,
                         newClubCity: null
-                    })
-                }).catch(error => console.log(error))
-
-            axios.get('/api/regions/' + this.state.currentCountry)
-                .then(res => {
-                    this.setState({
-                        regions: res.data,
                     })
                 }).catch(error => console.log(error))
         })
@@ -189,6 +153,7 @@ class AddAthlete extends Component {
         })
     };
 
+
     onSubmitAthleteForm = () => {
         console.log(this.state)
         let postSuccessful = true
@@ -214,48 +179,29 @@ class AddAthlete extends Component {
             }).finally(() => {
                 if (postSuccessful) {
                     window.alert(this.state.newAthleteFirstName + " " + this.state.newAthleteLastName + " added!")
+                    this.updateListsToCurrentCountry();
                 } else {
                     window.alert("Ups, something went wrong")
                 }
 
-                this.updateListsToCurrentCountry();
+
             }
         )
     }
 
 
     render() {
+
         let athletesList = null
 
         let newCityForm = null
 
 
         if (this.state.showNewCityForm) {
-            newCityForm = <Form.Group>
-                <Form.Label>New city in {this.state.currentCountry}:</Form.Label>
-                <Form.Control type="text" placeholder="New city name"
-                              onChange={e => this.setState({newCityName: e.target.value})}/>
-                <br/>
-                <Form.Group as={Row}>
-                    <Form.Label column sm={2}>Region:</Form.Label>
-                    <Col sm={10}>
-                        <Form.Control as="select" defaultValue={""}
-                                      onChange={e => this.setState({newCityRegion: e.target.value})}>
-
-                            <option value={""}/>
-                            {this.state.regions.map(region =>
-                                <option key={region.id} value={region.name}>{region.name}</option>)}
-                        </Form.Control>
-                    </Col>
-                </Form.Group>
-
-                <Button variant="secondary" onClick={this.addNewCity}
-                        disabled={this.state.newCityName.length < 1 || this.state.regions.length < 1}>
-                    Add City
-                </Button>
-            </Form.Group>
+            newCityForm = <NewCityForm currentCountry={this.state.currentCountry} updateLists={this.updateListsToCurrentCountry}/>
         }
 
+        // whether to show athletesList or not
         if (this.state.athletesListVisibility) {
             let listItems = <p>There are currently no athletes in {this.state.currentCountry}</p>
 
@@ -274,6 +220,7 @@ class AddAthlete extends Component {
 
         return (
             <React.Fragment>
+
                 <Header3>Register an Athlete</Header3>
                 <StyledForm>
 
