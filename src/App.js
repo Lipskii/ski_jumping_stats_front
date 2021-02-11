@@ -5,30 +5,31 @@ import NotFound from "./containers/NotFound";
 import AddSkiClub from "./containers/AddSkiClub/AddSkiClub";
 import AddAthlete from "./containers/AddAthlete/AddAthlete"
 import ContextMenu from "./components/ContextMenu";
-
+import AddVenue from "./containers/AddVenue/AddVenue";
 
 
 class App extends Component {
 
 
-  render() {
+    render() {
 
-      const routes = (
-          <Switch>
-                <Route path="/addSkiClub" component={AddSkiClub} />
-                <Route path="/addAthlete" component={AddAthlete} />
+        const routes = (
+            <Switch>
+                <Route path="/addVenue" component={AddVenue}/>
+                <Route path="/addSkiClub" component={AddSkiClub}/>
+                <Route path="/addAthlete" component={AddAthlete}/>
                 <Route path="/" exact/>
                 <Route component={NotFound}/>
-          </Switch>
-      )
+            </Switch>
+        )
 
 
-    return (
+        return (
             <Layout>
                 {routes}
             </Layout>
-    )
-  }
+        )
+    }
 }
 
 export default withRouter(App);

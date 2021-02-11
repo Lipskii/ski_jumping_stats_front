@@ -12,9 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import NewCityForm from "../../components/CommonForms/NewCityForm";
 
 
-
 //TODO create one common styledComponentsFile
-
 
 
 class AddAthlete extends Component {
@@ -30,15 +28,15 @@ class AddAthlete extends Component {
         athletesListVisibility: false,
         newAthleteFirstName: "",
         newAthleteLastName: "",
-        newAthleteCityId: null,
+        newAthleteCityId: "",
         selectedDate: new Date(),
-        newAthleteDateDay: null,
-        newAthleteDateMonth: null,
-        newAthleteDateYear: null,
-        newAthleteGenderId: null,
-        newAthleteIsActive: false,
-        newAthleteSkiClubId: null,
-        newAthleteSkisId: null,
+        newAthleteDateDay: "",
+        newAthleteDateMonth: "",
+        newAthleteDateYear: "",
+        newAthleteGenderId: "",
+        newAthleteIsActive: "",
+        newAthleteSkiClubId: "",
+        newAthleteSkisId: "",
         newCityButtonText: "Do you want to add new city?"
     }
 
@@ -113,7 +111,6 @@ class AddAthlete extends Component {
                 .then(res => {
                     this.setState({
                         cities: res.data,
-                        newClubCity: null
                     })
                 }).catch(error => console.log(error))
         })
@@ -155,7 +152,6 @@ class AddAthlete extends Component {
 
 
     onSubmitAthleteForm = () => {
-        console.log(this.state)
         let postSuccessful = true
 
         axios.post("/api/skiJumper", {
@@ -198,7 +194,8 @@ class AddAthlete extends Component {
 
 
         if (this.state.showNewCityForm) {
-            newCityForm = <NewCityForm currentCountry={this.state.currentCountry} updateLists={this.updateListsToCurrentCountry}/>
+            newCityForm =
+                <NewCityForm currentCountry={this.state.currentCountry} updateLists={this.updateListsToCurrentCountry}/>
         }
 
         // whether to show athletesList or not
@@ -229,7 +226,7 @@ class AddAthlete extends Component {
                         <Form.Label column sm={2}>Country:</Form.Label>
                         <Col sm={10}>
                             <Form.Control as="select" defaultValue={""} onChange={this.updateListsToCurrentCountry}>
-                                <option value={""}/>
+                                <option value={""} disabled>Choose...</option>
                                 {this.state.countries.map(country =>
                                     <option key={country.id}>
                                         {country.name}
@@ -282,7 +279,7 @@ class AddAthlete extends Component {
                                     newAthleteGenderId: e.target.value
                                 })
                             }}>
-                                <option disabled value={""}/>
+                                <option value={""}>Choose...</option>
                                 <option value={1}>Female</option>
                                 <option value={2}>Male</option>
                             </Form.Control>
@@ -314,7 +311,7 @@ class AddAthlete extends Component {
                                     newAthleteCityId: e.target.value
                                 })
                             }}>
-                                <option disabled value={""}/>
+                                <option value={""} >Choose...</option>
                                 {this.state.cities.map(city =>
                                     <option key={city.id} value={city.id}>
                                         {city.name}, {city.region}
@@ -337,7 +334,7 @@ class AddAthlete extends Component {
                                     newAthleteSkiClubId: e.target.value
                                 })
                             }}>
-                                <option disabled value={""}/>
+                                <option value={""} disabled>Choose...</option>
                                 {this.state.skiClubs.map(skiClub =>
                                     <option key={skiClub.id} value={skiClub.id}>
                                         {skiClub.name}
@@ -354,7 +351,7 @@ class AddAthlete extends Component {
                                     newAthleteSkisId: e.target.value
                                 })
                             }}>
-                                <option disabled value={""}/>
+                                <option value={""}>Choose...</option>
                                 {this.state.skis.map(skis =>
                                     <option key={skis.id} value={skis.id}>
                                         {skis.brand}
@@ -371,7 +368,14 @@ class AddAthlete extends Component {
                     }}/>
 
                     <StyledDiv2Right>
-                        <Button onClick={this.onSubmitAthleteForm}>Submit</Button>
+                        <Button onClick={this.onSubmitAthleteForm} disabled={
+                            !(this.state.newAthleteFirstName.length > 0
+                                && this.state.newAthleteLastName.length > 0
+                                && this.state.newAthleteGenderId.length > 0
+                                && this.state.newAthleteDateDay.length > 0
+                                && this.state.newAthleteDateMonth.length > 0
+                                && this.state.newAthleteDateYear.length > 0
+                            )}>Submit</Button>
                     </StyledDiv2Right>
 
 

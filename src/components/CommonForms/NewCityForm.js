@@ -62,7 +62,7 @@ class NewCityForm extends Component {
                             <Form.Control as="select" defaultValue={""}
                                           onChange={e => this.setState({newCityRegion: e.target.value})}>
 
-                                <option value={""}/>
+                                <option value={""}>Choose...</option>
                                 {this.state.regions.map(region =>
                                     <option key={region.id} value={region.name}>{region.name}</option>)}
                             </Form.Control>

@@ -15,6 +15,7 @@ import NewCityForm from "../../components/CommonForms/NewCityForm";
 
 //TODO add spinner during loading
 //TODO place countries in global state (redux)
+//TODO change this to be similar to other registration forms
 
 class AddSkiClub extends Component {
 
@@ -34,7 +35,6 @@ class AddSkiClub extends Component {
     }
 
     componentDidMount() {
-        console.log("Component did mount")
         axios.get('/api/countries')
             .then(res => {
                 this.setState({
@@ -44,7 +44,6 @@ class AddSkiClub extends Component {
     }
 
     updateClubsList = (e) => {
-        console.log("updateClubsList")
         axios.get('/api/skiClubs/' + e.target.value)
             .then(res => {
                 this.setState({
@@ -55,8 +54,6 @@ class AddSkiClub extends Component {
     }
 
     updateCitiesAndRegionsList = () => {
-        console.log("updateCitiesAndRegionsList " + this.state.currentCountry)
-
         axios.get('/api/cities/' + this.state.currentCountry)
             .then(res => {
                 this.setState({
@@ -91,7 +88,6 @@ class AddSkiClub extends Component {
     }
 
     onSubmitClubForm = () => {
-        console.log("onSubmitClubForm")
         let postSuccessful = true
 
         axios.post("/api/skiClub", {
@@ -203,7 +199,7 @@ class AddSkiClub extends Component {
                                     newClubCity: e.target.value
                                 })
                             }}>
-                                <option value={""}/>
+                                <option value={""}>Choose..</option>
                                 {this.state.cities.map(city =>
                                     <option key={city.id} value={city.id}> {city.name}, {city.region}</option>)}
                             </Form.Control>
