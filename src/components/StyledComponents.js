@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {Form, ListGroup, ListGroupItem, Button} from "react-bootstrap";
+import {Form, ListGroup, ListGroupItem, Button, Table} from "react-bootstrap";
 
 
 export const CheckButton = styled(Button)`
@@ -23,7 +23,7 @@ export const List = styled(ListGroup)`
   text-align: center;
   max-height: 300px;
   max-width: 500px;
-  margin-left: 120px;
+  margin-left: 140px;
   overflow: scroll;
   -webkit-overflow-scrolling: inherit;
   overflow-x: hidden;
@@ -60,7 +60,7 @@ export const StyledDiv2Centered = styled.div`
 
 export const StyledForm = styled(Form)`
   margin: auto;
-  max-width: 700px;
+  max-width: 800px;
 `
 
 export const StyledFormSmall = styled(Form)`
@@ -78,7 +78,6 @@ export const StyledFormSelect = styled(Form.Control)`
   border-radius: 10px;
   align-content: center;
 `
-
 
 export const ShowNewCityFormButton = styled(Button)`
   margin-bottom: 20px;

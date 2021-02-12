@@ -10,6 +10,7 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NewCityForm from "../../components/CommonForms/NewCityForm";
+import EditModal from "../../components/Modal/EditModal";
 
 
 //TODO create one common styledComponentsFile
@@ -37,7 +38,10 @@ class AddAthlete extends Component {
         newAthleteIsActive: "",
         newAthleteSkiClubId: "",
         newAthleteSkisId: "",
-        newCityButtonText: "Do you want to add new city?"
+        newCityButtonText: "Do you want to add new city?",
+        selectedSkiJumperName: "",
+        selectedSkiJumperId: "",
+        showEditModal: false
     }
 
 
@@ -77,6 +81,14 @@ class AddAthlete extends Component {
                 newCityButtonText: "Do you want to add new city?"
             })
         }
+    }
+
+    deleteSkiJumper = () => {
+            this.setState({
+                showEditModal: !this.state.showEditModal,
+                selectedSkiJumperId: "",
+                selectedSkiJumperName: ""
+            })
     }
 
     updateListsToCurrentCountry = (e) => {
@@ -204,7 +216,12 @@ class AddAthlete extends Component {
 
             if (this.state.skiJumpers.length > 0) {
                 listItems = this.state.skiJumpers.map(skiJumper =>
-                    <ListItem key={skiJumper.id}>
+                    <ListItem key={skiJumper.id} id={skiJumper.id} onDoubleClick={e =>
+                        this.setState({
+                            selectedSkiJumperName: e.target.innerText,
+                            selectedSkiJumperId: e.target.id,
+                            showEditModal: true
+                        })}>
                         {skiJumper.firstName} {skiJumper.lastName} ({skiJumper.gender}), {skiJumper.birthdate}, {skiJumper.skiClub}, {skiJumper.city}
                     </ListItem>)
             }
@@ -217,6 +234,9 @@ class AddAthlete extends Component {
 
         return (
             <React.Fragment>
+
+                <EditModal show={this.state.showEditModal} handleClose={this.deleteSkiJumper}
+                           selectedName={this.state.selectedSkiJumperName} handleCloseNoAction={this.deleteSkiJumper}/>
 
                 <Header3>Register an Athlete</Header3>
                 <StyledForm>

@@ -34,6 +34,9 @@ const Toolbar = () => (
                     <LinkContainer to='/addAthlete'>
                         <NavDropdown.Item>Register an Athlete</NavDropdown.Item>
                     </LinkContainer>
+                    <LinkContainer to='/addHill'>
+                        <NavDropdown.Item>Register a Hill</NavDropdown.Item>
+                    </LinkContainer>
                     <LinkContainer to='/addSkiClub'>
                         <NavDropdown.Item>Register a Ski Club</NavDropdown.Item>
                     </LinkContainer>

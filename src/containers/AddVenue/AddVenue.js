@@ -11,6 +11,8 @@ import {
 import axios from "axios";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import NewCityForm from "../../components/CommonForms/NewCityForm";
+import EditModal from "../../components/Modal/EditModal";
+import {ListGroup} from "react-bootstrap";
 
 //TODO add form fields validation
 class AddVenue extends Component {
@@ -27,7 +29,10 @@ class AddVenue extends Component {
         newVenueName: "",
         newVenueCapacity: "",
         newVenueYearOfOpening: "",
-        newCityButtonText: "Do you want to add new city?"
+        newCityButtonText: "Do you want to add new city?",
+        selectedVenueId: "",
+        selectedVenueName: "",
+        showEditModal: false
     }
 
     componentDidMount() {
@@ -83,6 +88,26 @@ class AddVenue extends Component {
         })
     }
 
+
+    handleCloseNoAction = () => {
+        this.setState({
+            showEditModal: false,
+            selectedVenueId: "",
+            selectedVenueName: ""
+        })
+    }
+
+
+    deleteVenue = () => {
+        axios.delete('/api/venue/ ' + this.state.selectedVenueId)
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            }).catch(error => console.log(error)).finally(() => {
+            this.handleCloseNoAction()
+        })
+    }
+
     handleNewCityButton = () => {
         this.setState({
             showNewCityForm: !this.state.showNewCityForm
@@ -129,8 +154,6 @@ class AddVenue extends Component {
     }
 
     render() {
-        console.log(this.state)
-
         let venuesList = null
 
         let newCityForm = null
@@ -147,7 +170,14 @@ class AddVenue extends Component {
 
             if (this.state.venues.length > 0) {
                 listItems = this.state.venues.map(venue =>
-                    <ListItem key={venue.id}>
+                    <ListItem key={venue.id} id={venue.id}  onDoubleClick={e =>
+                        this.setState({
+                            selectedVenueName: e.target.innerText,
+                            selectedVenueId: e.target.id,
+                            showEditModal: true
+                        })}
+
+                        >
                         {venue.name}, {venue.city}
                     </ListItem>)
             }
@@ -162,6 +192,9 @@ class AddVenue extends Component {
         return (
 
             <React.Fragment>
+                <EditModal show={this.state.showEditModal} handleClose={this.deleteVenue}
+                           selectedName={this.state.selectedVenueName} handleCloseNoAction={this.handleCloseNoAction}/>
+
                 <Header3>Register a Venue</Header3>
 
                 <StyledForm>
@@ -280,7 +313,6 @@ class AddVenue extends Component {
                             this.state.newVenueName.length > 0 && this.state.newVenueSkiClubId.length > 0
                             && this.state.newVenueCityId !== "" && this.state.newVenueYearOfOpening.length > 0)}>Submit</Button>
                     </StyledDiv2Right>
-
 
                 </StyledForm>
             </React.Fragment>
