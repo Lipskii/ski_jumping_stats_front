@@ -29,6 +29,7 @@ export const List = styled(ListGroup)`
   overflow-x: hidden;
   overflow-y: auto;
   padding-bottom: 20px;
+  margin-bottom: 20px;
   
 `
 

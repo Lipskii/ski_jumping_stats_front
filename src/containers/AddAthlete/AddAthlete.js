@@ -11,6 +11,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NewCityForm from "../../components/CommonForms/NewCityForm";
 import EditModal from "../../components/Modal/EditModal";
+import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
+import TextInputForm from "../../components/CommonForms/TextInputForm";
+import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 
 
 //TODO create one common styledComponentsFile
@@ -242,18 +245,8 @@ class AddAthlete extends Component {
                 <StyledForm>
 
                     {/*Country*/}
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>Country:</Form.Label>
-                        <Col sm={10}>
-                            <Form.Control as="select" defaultValue={""} onChange={this.updateListsToCurrentCountry}>
-                                <option value={""} disabled>Choose...</option>
-                                {this.state.countries.map(country =>
-                                    <option key={country.id}>
-                                        {country.name}
-                                    </option>)}
-                            </Form.Control>
-                        </Col>
-                    </Form.Group>
+                    <TempCountryInputForm title={"Country"} items={this.state.countries} valuesToShow={["name"]}
+                                          onChangeValue={this.updateListsToCurrentCountry}/>
 
                     {/*Toggle Athletes List*/}
                     <StyledDiv2Centered>
@@ -263,32 +256,18 @@ class AddAthlete extends Component {
                     {athletesList}
 
                     {/*First Name*/}
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>
-                            First name:
-                        </Form.Label>
-                        <Col sm={10}>
-                            <Form.Control type="text" onChange={e => {
-                                this.setState({
-                                    newAthleteFirstName: e.target.value
-                                })
-                            }}/>
-                        </Col>
-                    </Form.Group>
+                    <TextInputForm title={"First name"} onChangeValue={e => {
+                        this.setState({
+                            newAthleteFirstName: e.target.value
+                        })
+                    }}/>
 
                     {/*Last Name*/}
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>
-                            Last name:
-                        </Form.Label>
-                        <Col sm={10}>
-                            <Form.Control type="text" onChange={e => {
-                                this.setState({
-                                    newAthleteLastName: e.target.value
-                                })
-                            }}/>
-                        </Col>
-                    </Form.Group>
+                    <TextInputForm title={"Last name"} onChangeValue={e => {
+                        this.setState({
+                            newAthleteLastName: e.target.value
+                        })
+                    }}/>
 
                     {/*Gender*/}
                     <Form.Group as={Row}>
@@ -305,6 +284,7 @@ class AddAthlete extends Component {
                             </Form.Control>
                         </Col>
                     </Form.Group>
+
 
                     {/*Birthdate*/}
                     <Form.Group as={Row}>
@@ -323,22 +303,15 @@ class AddAthlete extends Component {
                     </Form.Group>
 
                     {/*City*/}
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>City:</Form.Label>
-                        <Col sm={10}>
-                            <Form.Control as="select" defaultValue={""} onChange={e => {
-                                this.setState({
-                                    newAthleteCityId: e.target.value
-                                })
-                            }}>
-                                <option value={""} >Choose...</option>
-                                {this.state.cities.map(city =>
-                                    <option key={city.id} value={city.id}>
-                                        {city.name}, {city.region}
-                                    </option>)}
-                            </Form.Control>
-                        </Col>
-                    </Form.Group>
+                    <SelectInputForm title={"City"}
+                                     key={this.state.currentCountry}
+                                     items={this.state.cities}
+                                     valuesToShow={["name", "", "region"]}
+                                     onChangeValue={e => {
+                                         this.setState({
+                                             newAthleteCityId: e.target.value
+                                         })
+                                     }}/>
 
                     {/*New City Form*/}
                     <ShowNewCityFormButton onClick={this.handleNewCityButton}
@@ -346,39 +319,27 @@ class AddAthlete extends Component {
                     {newCityForm}
 
                     {/*Ski Club*/}
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>Ski club:</Form.Label>
-                        <Col sm={10}>
-                            <Form.Control as="select" defaultValue={""} onChange={e => {
-                                this.setState({
-                                    newAthleteSkiClubId: e.target.value
-                                })
-                            }}>
-                                <option value={""} disabled>Choose...</option>
-                                {this.state.skiClubs.map(skiClub =>
-                                    <option key={skiClub.id} value={skiClub.id}>
-                                        {skiClub.name}
-                                    </option>)}
-                            </Form.Control>
-                        </Col>
-                    </Form.Group>
+                    <SelectInputForm title={"Ski club"}
+                                     key={this.state.currentCountry + "1"}
+                                     items={this.state.skiClubs}
+                                     valuesToShow={["name"]}
+                                     onChangeValue={e => {
+                                         this.setState({
+                                             newAthleteSkiClubId: e.target.value
+                                         })
+                                     }}
+                    />
 
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>Skis</Form.Label>
-                        <Col sm={10}>
-                            <Form.Control as="select" defaultValue={""} onChange={e => {
-                                this.setState({
-                                    newAthleteSkisId: e.target.value
-                                })
-                            }}>
-                                <option value={""}>Choose...</option>
-                                {this.state.skis.map(skis =>
-                                    <option key={skis.id} value={skis.id}>
-                                        {skis.brand}
-                                    </option>)}
-                            </Form.Control>
-                        </Col>
-                    </Form.Group>
+                    {/*Skis*/}
+                    <SelectInputForm title={"Skis"}
+                                     items={this.state.skis}
+                                     valuesToShow={["brand"]}
+                                     onChangeValue={e => {
+                                         this.setState({
+                                             newAthleteSkisId: e.target.value
+                                         })
+                                     }}
+                    />
 
                     {/*Is Active*/}
                     <Form.Check type="checkbox" label="Is Active" onChange={e => {

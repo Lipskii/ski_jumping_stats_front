@@ -12,9 +12,13 @@ import axios from "axios";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import NewCityForm from "../../components/CommonForms/NewCityForm";
 import EditModal from "../../components/Modal/EditModal";
-import {ListGroup} from "react-bootstrap";
+import TextInputForm from "../../components/CommonForms/TextInputForm";
+import SelectInputForm from "../../components/CommonForms/SelectInputForm";
+import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
+
 
 //TODO add form fields validation
+//TODO add some sort of feedback that there is db action going on
 class AddVenue extends Component {
 
     state = {
@@ -170,15 +174,15 @@ class AddVenue extends Component {
 
             if (this.state.venues.length > 0) {
                 listItems = this.state.venues.map(venue =>
-                    <ListItem key={venue.id} id={venue.id}  onDoubleClick={e =>
+                    <ListItem key={venue.id} id={venue.id} onDoubleClick={e =>
                         this.setState({
                             selectedVenueName: e.target.innerText,
                             selectedVenueId: e.target.id,
                             showEditModal: true
                         })}
 
-                        >
-                        {venue.name}, {venue.city}
+                    >
+                        {venue.name}, {venue.city}, Opened in: {venue.yearOfOpening}, capacity: {venue.capacity}
                     </ListItem>)
             }
 
@@ -200,23 +204,13 @@ class AddVenue extends Component {
                 <StyledForm>
 
                     {/*Country*/}
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>Country:</Form.Label>
-                        <Col sm={10}>
-                            <Form.Control as="select" defaultValue={""} onChange={e => {
-                                this.setState({
-                                    newVenueCityId: "",
-                                    newVenueSkiClubId: ""
-                                }, () => this.updateListsToCurrentCountry(e))
-                            }}>
-                                <option value={""} disabled>Choose...</option>
-                                {this.state.countries.map(country =>
-                                    <option key={country.id}>
-                                        {country.name}
-                                    </option>)}
-                            </Form.Control>
-                        </Col>
-                    </Form.Group>
+                    <TempCountryInputForm title={"Country"} items={this.state.countries} valuesToShow={["name"]}
+                                          onChangeValue={e => {
+                                              this.setState({
+                                                  newVenueCityId: "",
+                                                  newVenueSkiClubId: ""
+                                              }, () => this.updateListsToCurrentCountry(e))
+                                          }}/>
 
                     {/*Toggle venues list*/}
                     <StyledDiv2Centered>
@@ -226,36 +220,23 @@ class AddVenue extends Component {
                     {venuesList}
 
                     {/*Name*/}
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>
-                            Name:
-                        </Form.Label>
-                        <Col sm={10}>
-                            <Form.Control type="text" onChange={e => {
-                                this.setState({
-                                    newVenueName: e.target.value
-                                })
-                            }}/>
-                        </Col>
-                    </Form.Group>
+                    <TextInputForm title={"Name"} onChangeValue={e => {
+                        this.setState({
+                            newVenueName: e.target.value
+                        })
+                    }}/>
 
                     {/*City*/}
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>City:</Form.Label>
-                        <Col sm={10}>
-                            <Form.Control as="select" defaultValue={""} onChange={e => {
-                                this.setState({
-                                    newVenueCityId: e.target.value
-                                })
-                            }}>
-                                <option value={""}>Choose...</option>
-                                {this.state.cities.map(city =>
-                                    <option key={city.id} value={city.id}>
-                                        {city.name}, {city.region}
-                                    </option>)}
-                            </Form.Control>
-                        </Col>
-                    </Form.Group>
+                    <SelectInputForm title={"City"}
+                                     key={this.state.currentCountry}
+                                     items={this.state.cities}
+                                     valuesToShow={["name", "", "region"]}
+                                     onChangeValue={e => {
+                                         this.setState({
+                                             newVenueCityId: e.target.value
+                                         })
+                                     }}/>
+
 
                     {/*New City Form*/}
                     <ShowNewCityFormButton onClick={this.handleNewCityButton}
@@ -263,50 +244,31 @@ class AddVenue extends Component {
                     {newCityForm}
 
                     {/*Ski Club*/}
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>Ski club:</Form.Label>
-                        <Col sm={10}>
-                            <Form.Control as="select" defaultValue={""} onChange={e => {
-                                this.setState({
-                                    newVenueSkiClubId: e.target.value
-                                })
-                            }}>
-                                <option value={""}>Choose...</option>
-                                {this.state.skiClubs.map(skiClub =>
-                                    <option key={skiClub.id} value={skiClub.id}>
-                                        {skiClub.name}
-                                    </option>)}
-                            </Form.Control>
-                        </Col>
-                    </Form.Group>
+                    <SelectInputForm title={"Ski club"}
+                                     key={this.state.currentCountry + "1"}
+                                     items={this.state.skiClubs}
+                                     valuesToShow={["name"]}
+                                     onChangeValue={e => {
+                                         this.setState({
+                                             newVenueSkiClubId: e.target.value
+                                         })
+                                     }}
+                                     />
 
                     {/*year of opening*/}
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>
-                            Opened in:
-                        </Form.Label>
-                        <Col sm={10}>
-                            <Form.Control type="text" onChange={e => {
-                                this.setState({
-                                    newVenueYearOfOpening: e.target.value
-                                })
-                            }}/>
-                        </Col>
-                    </Form.Group>
+                    <TextInputForm title={"Opened in"} onChangeValue={e => {
+                        this.setState({
+                            newVenueYearOfOpening: e.target.value
+                        })
+                    }}/>
 
                     {/*capacity*/}
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>
-                            Capacity:
-                        </Form.Label>
-                        <Col sm={10}>
-                            <Form.Control type="text" onChange={e => {
-                                this.setState({
-                                    newVenueCapacity: e.target.value
-                                })
-                            }}/>
-                        </Col>
-                    </Form.Group>
+                    <TextInputForm title={"Capacity"} onChangeValue={e => {
+                        this.setState({
+                            newVenueCapacity: e.target.value
+                        })
+                    }}/>
+
 
                     <StyledDiv2Right>
                         <Button onClick={this.onSubmitVenueForm} disabled={!(this.state.currentCountry !== null &&

@@ -12,10 +12,15 @@ import {
     StyledFormSmall
 } from "../../components/StyledComponents";
 import NewCityForm from "../../components/CommonForms/NewCityForm";
+import TextInputForm from "../../components/CommonForms/TextInputForm";
+import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
+import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 
 //TODO add spinner during loading
 //TODO place countries in global state (redux)
 //TODO change this to be similar to other registration forms
+
+//TODO This class will be rebuild completely later
 
 class AddSkiClub extends Component {
 
@@ -163,48 +168,31 @@ class AddSkiClub extends Component {
                 <Header31>Insert new ski club</Header31>
 
                 <StyledForm>
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>
-                            Name:
-                        </Form.Label>
-                        <Col sm={10}>
-                            <Form.Control type="text" placeholder="eg. AZS AWF Zakopane" onChange={e => {
-                                this.setState({
-                                    newClubName: e.target.value
-                                })
-                            }}/>
-                        </Col>
-                    </Form.Group>
+                    {/*Name*/}
+                    <TextInputForm title={"Name"} onChangeValue={e => {
+                        this.setState({
+                            newClubName: e.target.value
+                        })
+                    }}/>
 
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>Country:</Form.Label>
-                        <Col sm={10}>
-                            <Form.Control as="select" onChange={e => {
-                                this.state.currentCountry = e.target.value
-                                this.updateCitiesAndRegionsList()
-                            }}>
-                                {this.state.countries.map(country =>
-                                    <option key={country.code}>
-                                        {country.name}
-                                    </option>)}
-                            </Form.Control>
-                        </Col>
-                    </Form.Group>
+                    {/*Country*/}
+                    <TempCountryInputForm title={"Country"} items={this.state.countries} valuesToShow={["name"]}
+                                          onChangeValue={e => {
+                                              this.state.currentCountry = e.target.value
+                                              this.updateCitiesAndRegionsList()
+                                          }}/>
 
-                    <Form.Group as={Row}>
-                        <Form.Label column sm={2}>City:</Form.Label>
-                        <Col sm={10}>
-                            <Form.Control as="select" defaultValue={""} onChange={e => {
-                                this.setState({
-                                    newClubCity: e.target.value
-                                })
-                            }}>
-                                <option value={""}>Choose..</option>
-                                {this.state.cities.map(city =>
-                                    <option key={city.id} value={city.id}> {city.name}, {city.region}</option>)}
-                            </Form.Control>
-                        </Col>
-                    </Form.Group>
+
+                    {/*City*/}
+                    <SelectInputForm title={"City"}
+                                     key={this.state.currentCountry}
+                                     items={this.state.cities}
+                                     valuesToShow={["name", "", "region"]}
+                                     onChangeValue={e => {
+                                         this.setState({
+                                             newClubCity: e.target.value
+                                         })
+                                     }}/>
 
                     <Button onClick={this.handleNewCityButton}
                             variant={"secondary"}>{this.state.newCityButtonText}</Button>
