@@ -9,7 +9,7 @@ import {
     StyledForm
 } from "../../components/StyledComponents";
 import axios from "axios";
-import {Button, Col, Form, Row} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import NewCityForm from "../../components/CommonForms/NewCityForm";
 import EditModal from "../../components/Modal/EditModal";
 import TextInputForm from "../../components/CommonForms/TextInputForm";
@@ -174,7 +174,7 @@ class AddVenue extends Component {
 
             if (this.state.venues.length > 0) {
                 listItems = this.state.venues.map(venue =>
-                    <ListItem key={venue.id} id={venue.id} onDoubleClick={e =>
+                    <ListItem key={venue.id} id={venue.id} className="list-group-item list-group-item-action" onDoubleClick={e =>
                         this.setState({
                             selectedVenueName: e.target.innerText,
                             selectedVenueId: e.target.id,
@@ -230,7 +230,7 @@ class AddVenue extends Component {
                     <SelectInputForm title={"City"}
                                      key={this.state.currentCountry}
                                      items={this.state.cities}
-                                     valuesToShow={["name", "", "region"]}
+                                     valuesToShow={["name", ",", "region"]}
                                      onChangeValue={e => {
                                          this.setState({
                                              newVenueCityId: e.target.value

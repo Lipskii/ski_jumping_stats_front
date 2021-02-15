@@ -10,12 +10,12 @@ const SelectInputForm = (props) =>
                 <Form.Control as="select" defaultValue={""} onChange={props.onChangeValue}>
                     <option value={""} disabled>Choose...</option>
                     {props.items.map(item =>
-                        <option key={item.id} value={item.id}>
+                        <option key={item.id} value={item.id} name={item.name}>
                             {props.valuesToShow.map(value => {
-                                if (value === "") {
-                                    return ", "
-                                } else {
+                                if(item[value] !== undefined){
                                     return item[value]
+                                } else {
+                                    return value
                                 }
                             })}
                         </option>)}

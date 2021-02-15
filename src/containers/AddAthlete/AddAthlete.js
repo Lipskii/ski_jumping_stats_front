@@ -218,6 +218,7 @@ class AddAthlete extends Component {
             let listItems = <p>There are currently no athletes in {this.state.currentCountry}</p>
 
             if (this.state.skiJumpers.length > 0) {
+                // noinspection JSUnresolvedVariable
                 listItems = this.state.skiJumpers.map(skiJumper =>
                     <ListItem key={skiJumper.id} id={skiJumper.id} onDoubleClick={e =>
                         this.setState({
@@ -306,7 +307,7 @@ class AddAthlete extends Component {
                     <SelectInputForm title={"City"}
                                      key={this.state.currentCountry}
                                      items={this.state.cities}
-                                     valuesToShow={["name", "", "region"]}
+                                     valuesToShow={["name", ",", "region"]}
                                      onChangeValue={e => {
                                          this.setState({
                                              newAthleteCityId: e.target.value

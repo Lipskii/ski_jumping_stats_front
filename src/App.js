@@ -4,9 +4,8 @@ import {withRouter, Switch, Route} from 'react-router-dom'
 import NotFound from "./containers/NotFound";
 import AddSkiClub from "./containers/AddSkiClub/AddSkiClub";
 import AddAthlete from "./containers/AddAthlete/AddAthlete"
-import ContextMenu from "./components/ContextMenu";
 import AddVenue from "./containers/AddVenue/AddVenue";
-import AddHill from "./containers/AddHill";
+import AddHill from "./containers/AddHill/AddHill";
 
 
 class App extends Component {

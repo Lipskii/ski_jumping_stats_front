@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Button, Col, Form, Row} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import {
     CheckButton,
     Header5, Header31,
@@ -132,7 +132,7 @@ class AddSkiClub extends Component {
                 <Form.Group>
                     <StyledFormLabel>Search by country: </StyledFormLabel>
                     <StyledFormSelect as="select" onChange={this.updateClubsList}>
-                        <option disabled selected value></option>
+                        <option disabled selected value/>
                         {this.state.countries.map(country =>
                             <option key={country.code}>
                                 {country.name}
@@ -178,6 +178,7 @@ class AddSkiClub extends Component {
                     {/*Country*/}
                     <TempCountryInputForm title={"Country"} items={this.state.countries} valuesToShow={["name"]}
                                           onChangeValue={e => {
+                                              //to be changed, don't worry
                                               this.state.currentCountry = e.target.value
                                               this.updateCitiesAndRegionsList()
                                           }}/>
@@ -187,7 +188,7 @@ class AddSkiClub extends Component {
                     <SelectInputForm title={"City"}
                                      key={this.state.currentCountry}
                                      items={this.state.cities}
-                                     valuesToShow={["name", "", "region"]}
+                                     valuesToShow={["name", ",", "region"]}
                                      onChangeValue={e => {
                                          this.setState({
                                              newClubCity: e.target.value
