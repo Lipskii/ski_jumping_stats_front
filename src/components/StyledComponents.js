@@ -51,9 +51,7 @@ export const ListInForm = styled(ListGroup)`
   overflow-y: auto;
   padding-bottom: 20px;
   
-  
 `
-
 export const ListItem = styled(ListGroupItem)`
   max-height: 50px;
   font-size: smaller;
