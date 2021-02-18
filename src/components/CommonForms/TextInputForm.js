@@ -9,7 +9,7 @@ const TextInputForm = (props) => (
             {props.title}:
         </Form.Label>
         <Col sm={10}>
-            <Form.Control type="text" disabled={props.disabled} onChange={props.onChangeValue} placeholder={props.placeholder}/>
+            <Form.Control type="text" disabled={props.disabled} onChange={props.onChangeValue} placeholder={props.placeholder} isInvalid={props.isInvalid}/>
             {props.hintTextDown}
         </Col>
 

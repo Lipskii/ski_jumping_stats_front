@@ -14,7 +14,7 @@ import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import TextInputForm from "../../components/CommonForms/TextInputForm";
 import DatePicker from "react-datepicker";
 
-//TODO add v0 field
+//TODO form validation, e2 not mandatory, (in api) save hill only if hill version is valid
 class AddHill extends Component {
 
     state = {
@@ -60,16 +60,17 @@ class AddHill extends Component {
         newHillbu: "",
         newHilld: "",
         newHillq: "",
-        newHillV0: "",
-      //  selectedDate1: new Date(),
-      //  selectedDate2: new Date(),
+        newHillv0: "",
         newHillValidSinceDay: "",
         newHillValidSinceMonth: "",
         newHillValidSinceYear: "",
         newHillValidUntilDay: "",
         newHillValidUntilMonth: "",
         newHillValidUntilYear: "",
-        newHillCertificateLink: ""
+        newHillCertificateLink: "",
+        newHillValidSinceFullDate: "",
+        newHillValidUntilFullDate: "",
+        toggleNameField: false
 
     }
 
@@ -126,23 +127,33 @@ class AddHill extends Component {
 
         let newSelectedHillName
         let newSelectedHillId
+        let newNameFieldLabel
+        let newDisableNameField
 
         if(this.state.selectedHillId.length > 0){
             newSelectedHillName = ""
             newSelectedHillId = ""
+            newNameFieldLabel = "Name"
+            newDisableNameField = true
         } else {
             newSelectedHillName = e.target.innerText
             newSelectedHillId = e.target.id
+            newNameFieldLabel = "Name*"
+            newDisableNameField = false
         }
 
         this.setState({
             showHillVersionsList: !this.state.showHillVersionsList,
+            nameFieldLabel: newNameFieldLabel,
+            disableNameField: newDisableNameField,
             selectedHillName:  newSelectedHillName,
             selectedHillId: newSelectedHillId
         }, () => {
             this.state.hills.map(hill => {
                 this.setState({
                     hillVersions: hill.hillVersions
+                },() => {
+                    this.updateHillsList()
                 })
             })
         })
@@ -157,14 +168,14 @@ class AddHill extends Component {
                 newHillValidSinceDay: convertedDate[0],
                 newHillValidSinceMonth: convertedDate[1],
                 newHillValidSinceYear: convertedDate[2],
-             //   selectedDate1: date,
+                newHillValidSinceFullDate: date
             })
         } else {
             this.setState({
                 newHillValidUntilDay: convertedDate[0],
                 newHillValidUntilMonth: convertedDate[1],
                 newHillValidUntilYear: convertedDate[2],
-             //   selectedDate2: date,
+                newHillValidUntilFullDate: date
             })
         }
 
@@ -192,20 +203,56 @@ class AddHill extends Component {
         return [parts[2],months[parts[1]],parts[3]]
     };
 
-    addNewHill = () => {
-        if(this.state.selectedHillId.length > 0){
-            console.log("add new hill version")
-        } else {
-            console.log("add new hill")
-        }
 
+
+    addNewHill = () => {
 
         let postSuccessful = true
 
         axios.post("/api/hillVersion", {
-            id: "first",
-            hill: 2,
-            first_year: 2015
+            hillId: this.state.selectedHillId,
+            name: this.state.newHillName,
+            venueId: this.state.selectedVenueId,
+            sizeId: this.state.newHillSizeOfHillId,
+            kPoint: this.state.newHillKPoint.replace(",","."),
+            hillSize: this.state.newHillHS.replace(",","."),
+            es: this.state.newHilles.replace(",","."),
+            e1: this.state.newHille1.replace(",","."),
+            e2: this.state.newHille2.replace(",","."),
+            gamma: this.state.newHillGamma.replace(",","."),
+            r1: this.state.newHillr1.replace(",","."),
+            t: this.state.newHillt.replace(",","."),
+            alpha: this.state.newHillAlpha.replace(",","."),
+            s: this.state.newHills.replace(",","."),
+            v0: this.state.newHillv0.replace(",","."),
+            h: this.state.newHillh.replace(",","."),
+            n: this.state.newHilln.replace(",","."),
+            p: this.state.newHillP.replace(",","."),
+            l1: this.state.newHilll1.replace(",","."),
+            l2: this.state.newHilll2.replace(",","."),
+            betaP: this.state.newHillBetap.replace(",","."),
+            beta: this.state.newHillBeta.replace(",","."),
+            betaL: this.state.newHillBetal.replace(",","."),
+            l: this.state.newHillL.replace(",","."),
+            rl: this.state.newHillrl.replace(",","."),
+            r2l: this.state.newHillr2l.replace(",","."),
+            zu: this.state.newHillzu.replace(",","."),
+            r2: this.state.newHillr2.replace(",","."),
+            a: this.state.newHilla.replace(",","."),
+            b1: this.state.newHillb1.replace(",","."),
+            b2: this.state.newHillb2.replace(",","."),
+            bk: this.state.newHillbk.replace(",","."),
+            bu: this.state.newHillbu.replace(",","."),
+            d: this.state.newHilld.replace(",","."),
+            q: this.state.newHillq.replace(",","."),
+            certificate: this.state.newHillCertificateLink,
+            validSinceYear: this.state.newHillValidSinceYear,
+            validSinceMonth: this.state.newHillValidSinceMonth,
+            validSinceDay: this.state.newHillValidSinceDay,
+            validUntilYear: this.state.newHillValidUntilYear,
+            validUntilMonth: this.state.newHillValidUntilMonth,
+            validUntilDay: this.state.newHillValidUntilDay,
+
         }).then(function (response) {
             console.log(response.data);
         })
@@ -214,7 +261,7 @@ class AddHill extends Component {
                 postSuccessful = false
             }).finally(() => {
                 if (postSuccessful) {
-                    window.alert(this.state.newAthleteFirstName + " " + this.state.newAthleteLastName + " added!")
+                    window.alert(this.state.newHillName + " added!")
                     this.updateListsToCurrentCountry();
                 } else {
                     window.alert("Ups, something went wrong")
@@ -227,7 +274,7 @@ class AddHill extends Component {
 
     render() {
 
-        //console.log(this.state)
+        console.log(this.state)
 
         let hillsListItems = <ListItem disabled>no hills yet in this venue</ListItem>
         if (this.state.hills.length > 0) {
@@ -258,10 +305,16 @@ class AddHill extends Component {
 
         let selectHillHint = null
         let hillFormHeader
+        let nameField = null
 
         if(!this.state.selectedHillId.length > 0){
             selectHillHint = <small>select hill to add a new version of the existing hill</small>
             hillFormHeader = <Header3>Adding a new hill</Header3>
+            nameField = <TextInputForm title={"Name*"} disabled={!this.state.selectedVenueId.length > 0} onChangeValue={e => {
+                this.setState({
+                    newHillName: e.target.value
+                })
+            }}/>
         } else {
             hillFormHeader = <Header3>Adding new version of {this.state.selectedHillName}</Header3>
         }
@@ -325,11 +378,7 @@ class AddHill extends Component {
                     <Header5>Basic Parameters</Header5>
                     <small>Fields with (*) are mandatory</small>
                     {/*Name*/}
-                    <TextInputForm title={"Name*"} disabled={!this.state.selectedVenueId.length > 0} onChangeValue={e => {
-                        this.setState({
-                            newHillName: e.target.value
-                        })
-                    }}/>
+                    {nameField}
 
                     {/*Size of hill*/}
                     <SelectInputForm
@@ -421,12 +470,13 @@ class AddHill extends Component {
                                        })
                                    }}/>
 
+                    {/*v0*/}
                     <TextInputForm title={"Vo (m/s)*"}
                                    placeholder={"Speed at the end of the inrun"}
                                    disabled={!this.state.selectedVenueId.length > 0}
                                    onChangeValue={e => {
                                        this.setState({
-                                           newHillV0: e.target.value
+                                           newHillv0: e.target.value
                                        })
                                    }}/>
 
@@ -656,7 +706,7 @@ class AddHill extends Component {
                             <DatePicker
                                 closeOnScroll={true}
                                 disabled={!this.state.selectedVenueId.length > 0}
-                              //  selected={this.state.selectedDate1}
+                                selected={this.state.newHillValidSinceFullDate}
                                 onChange={date => this.setDate(date,0)}
                                 placeholderText="dd/mm/yyyy"
                                 dateFormat="dd/MM/yyyy"
@@ -673,7 +723,7 @@ class AddHill extends Component {
                             <DatePicker
                                 closeOnScroll={true}
                                 disabled={!this.state.selectedVenueId.length > 0}
-                                //selected={this.state.selectedDate2}
+                                selected={this.state.newHillValidUntilFullDate}
                                 onChange={date => this.setDate(date,1)}
                                 placeholderText="dd/mm/yyyy"
                                 dateFormat="dd/MM/yyyy"
@@ -695,47 +745,48 @@ class AddHill extends Component {
                     <Form.Group>
                         <StyledDiv2Right800>
                             <Button variant="primary" onClick={this.addNewHill}
-                                    // disabled={
-                                    //     this.state.selectedVenueId.length < 1
-                                    //     || this.state.newHillName.length < 1
-                                    //     || this.state.newHillSizeOfHillId.length < 1
-                                    //     || this.state.newHillKPoint.length < 1
-                                    //     || this.state.newHillHS.length < 1
-                                    //     || this.state.newHille1.length <1
-                                    //     || this.state.newHille2.length < 1
-                                    //     || this.state.newHilles.length < 1
-                                    //     || this.state.newHillt.length < 1
-                                    //     || this.state.newHillGamma.length < 1
-                                    //     || this.state.newHillAlpha.length < 1
-                                    //     || this.state.newHillr1.length < 1
-                                    //     || this.state.newHillh.length < 1
-                                    //     || this.state.newHilln.length < 1
-                                    //     || this.state.newHills.length < 1
-                                    //     || this.state.newHilll1.length < 1
-                                    //     || this.state.newHilll2.length < 1
-                                    //     || this.state.newHilla.length < 1
-                                    //     || this.state.newHillBetap.length < 1
-                                    //     || this.state.newHillBeta.length < 1
-                                    //     || this.state.newHillBetal.length < 1
-                                    //     || this.state.newHillrl.length < 1
-                                    //     || this.state.newHillr2.length < 1
-                                    //     || this.state.newHillzu.length < 1
-                                    //     || this.state.newHillP.length < 1
-                                    //     || this.state.newHillL.length < 1
-                                    //     || this.state.newHillb1.length < 1
-                                    //     || this.state.newHillb2.length < 1
-                                    //     || this.state.newHillbk.length < 1
-                                    //     || this.state.newHillbu.length < 1
-                                    //     || this.state.newHilld.length < 1
-                                    //     || this.state.newHillq.length < 1
-                                    //     || this.state.newHillValidSinceDay.length < 1
-                                    //     || this.state.newHillValidSinceMonth.length < 1
-                                    //     || this.state.newHillValidSinceYear.length < 1
-                                    //     || this.state.newHillValidUntilDay.length < 1
-                                    //     || this.state.newHillValidUntilMonth.length < 1
-                                    //     || this.state.newHillValidUntilYear.length < 1
-                                    //     || this.state.newHillCertificateLink.length < 1
-                                    // }
+                                    disabled={
+                                        this.state.selectedVenueId.length < 1
+                                        || this.state.newHillName.length < 1
+                                        || this.state.newHillSizeOfHillId.length < 1
+                                        || this.state.newHillKPoint.length < 1
+                                        || this.state.newHillHS.length < 1
+                                        || this.state.newHille1.length <1
+                                        || this.state.newHille2.length < 1
+                                        || this.state.newHilles.length < 1
+                                        || this.state.newHillt.length < 1
+                                        || this.state.newHillGamma.length < 1
+                                        || this.state.newHillAlpha.length < 1
+                                        || this.state.newHillr1.length < 1
+                                        || this.state.newHillv0.length < 1
+                                        || this.state.newHillh.length < 1
+                                        || this.state.newHilln.length < 1
+                                        || this.state.newHills.length < 1
+                                        || this.state.newHilll1.length < 1
+                                        || this.state.newHilll2.length < 1
+                                        || this.state.newHilla.length < 1
+                                        || this.state.newHillBetap.length < 1
+                                        || this.state.newHillBeta.length < 1
+                                        || this.state.newHillBetal.length < 1
+                                        || this.state.newHillrl.length < 1
+                                        || this.state.newHillr2.length < 1
+                                        || this.state.newHillzu.length < 1
+                                        || this.state.newHillP.length < 1
+                                        || this.state.newHillL.length < 1
+                                        || this.state.newHillb1.length < 1
+                                        || this.state.newHillb2.length < 1
+                                        || this.state.newHillbk.length < 1
+                                        || this.state.newHillbu.length < 1
+                                        || this.state.newHilld.length < 1
+                                        || this.state.newHillq.length < 1
+                                        || this.state.newHillValidSinceDay.length < 1
+                                        || this.state.newHillValidSinceMonth.length < 1
+                                        || this.state.newHillValidSinceYear.length < 1
+                                        || this.state.newHillValidUntilDay.length < 1
+                                        || this.state.newHillValidUntilMonth.length < 1
+                                        || this.state.newHillValidUntilYear.length < 1
+                                        || this.state.newHillCertificateLink.length < 1
+                                    }
                             >
                                 Add new hill
                             </Button>
