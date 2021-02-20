@@ -16,7 +16,6 @@ import TextInputForm from "../../components/CommonForms/TextInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 
 
-//TODO create one common styledComponentsFile
 
 
 class AddAthlete extends Component {
@@ -87,11 +86,11 @@ class AddAthlete extends Component {
     }
 
     deleteSkiJumper = () => {
-            this.setState({
-                showEditModal: !this.state.showEditModal,
-                selectedSkiJumperId: "",
-                selectedSkiJumperName: ""
-            })
+        this.setState({
+            showEditModal: !this.state.showEditModal,
+            selectedSkiJumperId: "",
+            selectedSkiJumperName: ""
+        })
     }
 
     updateListsToCurrentCountry = (e) => {
@@ -203,39 +202,6 @@ class AddAthlete extends Component {
 
     render() {
 
-        let athletesList = null
-
-        let newCityForm = null
-
-
-        if (this.state.showNewCityForm) {
-            newCityForm =
-                <NewCityForm currentCountry={this.state.currentCountry} updateLists={this.updateListsToCurrentCountry}/>
-        }
-
-        // whether to show athletesList or not
-        if (this.state.athletesListVisibility) {
-            let listItems = <p>There are currently no athletes in {this.state.currentCountry}</p>
-
-            if (this.state.skiJumpers.length > 0) {
-                // noinspection JSUnresolvedVariable
-                listItems = this.state.skiJumpers.map(skiJumper =>
-                    <ListItem key={skiJumper.id} id={skiJumper.id} onDoubleClick={e =>
-                        this.setState({
-                            selectedSkiJumperName: e.target.innerText,
-                            selectedSkiJumperId: e.target.id,
-                            showEditModal: true
-                        })}>
-                        {skiJumper.firstName} {skiJumper.lastName} ({skiJumper.gender}), {skiJumper.birthdate}, {skiJumper.skiClub}, {skiJumper.city}
-                    </ListItem>)
-            }
-
-            athletesList = <List>
-                {listItems}
-            </List>
-
-        }
-
         return (
             <React.Fragment>
 
@@ -254,7 +220,17 @@ class AddAthlete extends Component {
                         <CheckButton size="sm" onClick={this.changeAthletesListVisibility}>Toggle athletes
                             list</CheckButton>
                     </StyledDiv2Centered>
-                    {athletesList}
+
+
+                    {this.state.athletesListVisibility ? <List>{this.state.skiJumpers.length > 0 ? this.state.skiJumpers.map(skiJumper =>
+                        <ListItem key={skiJumper.id} id={skiJumper.id} onDoubleClick={e =>
+                            this.setState({
+                                selectedSkiJumperName: e.target.innerText,
+                                selectedSkiJumperId: e.target.id,
+                                showEditModal: true
+                            })}>
+                            {skiJumper.firstName} {skiJumper.lastName} ({skiJumper.gender}), {skiJumper.birthdate}, {skiJumper.skiClub}, {skiJumper.city}
+                        </ListItem>)  : <p>There are currently no athletes in {this.state.currentCountry}</p> }</List> : null}
 
                     {/*First Name*/}
                     <TextInputForm title={"First name"} onChangeValue={e => {
@@ -317,7 +293,9 @@ class AddAthlete extends Component {
                     {/*New City Form*/}
                     <ShowNewCityFormButton onClick={this.handleNewCityButton}
                                            variant={"secondary"}>{this.state.newCityButtonText}</ShowNewCityFormButton>
-                    {newCityForm}
+
+                    {this.state.showNewCityForm ? <NewCityForm currentCountry={this.state.currentCountry}
+                                                               updateLists={this.updateListsToCurrentCountry}/> : null}
 
                     {/*Ski Club*/}
                     <SelectInputForm title={"Ski club"}

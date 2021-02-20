@@ -15,6 +15,9 @@ import TextInputForm from "../../components/CommonForms/TextInputForm";
 import DatePicker from "react-datepicker";
 
 //TODO form validation, e2 not mandatory, (in api) save hill only if hill version is valid
+//TODO add form fields validation
+//TODO add some sort of feedback that there is db action going on
+
 class AddHill extends Component {
 
     state = {
@@ -130,7 +133,7 @@ class AddHill extends Component {
         let newNameFieldLabel
         let newDisableNameField
 
-        if(this.state.selectedHillId.length > 0){
+        if (this.state.selectedHillId.length > 0) {
             newSelectedHillName = ""
             newSelectedHillId = ""
             newNameFieldLabel = "Name"
@@ -146,13 +149,13 @@ class AddHill extends Component {
             showHillVersionsList: !this.state.showHillVersionsList,
             nameFieldLabel: newNameFieldLabel,
             disableNameField: newDisableNameField,
-            selectedHillName:  newSelectedHillName,
+            selectedHillName: newSelectedHillName,
             selectedHillId: newSelectedHillId
         }, () => {
             this.state.hills.map(hill => {
                 this.setState({
                     hillVersions: hill.hillVersions
-                },() => {
+                }, () => {
                     this.updateHillsList()
                 })
             })
@@ -163,7 +166,7 @@ class AddHill extends Component {
     setDate = (date, option) => {
         const convertedDate = this.convertDate(date)
 
-        if(option === 0){
+        if (option === 0) {
             this.setState({
                 newHillValidSinceDay: convertedDate[0],
                 newHillValidSinceMonth: convertedDate[1],
@@ -200,9 +203,8 @@ class AddHill extends Component {
             Dec: "12"
         };
 
-        return [parts[2],months[parts[1]],parts[3]]
+        return [parts[2], months[parts[1]], parts[3]]
     };
-
 
 
     addNewHill = () => {
@@ -214,37 +216,37 @@ class AddHill extends Component {
             name: this.state.newHillName,
             venueId: this.state.selectedVenueId,
             sizeId: this.state.newHillSizeOfHillId,
-            kPoint: this.state.newHillKPoint.replace(",","."),
-            hillSize: this.state.newHillHS.replace(",","."),
-            es: this.state.newHilles.replace(",","."),
-            e1: this.state.newHille1.replace(",","."),
-            e2: this.state.newHille2.replace(",","."),
-            gamma: this.state.newHillGamma.replace(",","."),
-            r1: this.state.newHillr1.replace(",","."),
-            t: this.state.newHillt.replace(",","."),
-            alpha: this.state.newHillAlpha.replace(",","."),
-            s: this.state.newHills.replace(",","."),
-            v0: this.state.newHillv0.replace(",","."),
-            h: this.state.newHillh.replace(",","."),
-            n: this.state.newHilln.replace(",","."),
-            p: this.state.newHillP.replace(",","."),
-            l1: this.state.newHilll1.replace(",","."),
-            l2: this.state.newHilll2.replace(",","."),
-            betaP: this.state.newHillBetap.replace(",","."),
-            beta: this.state.newHillBeta.replace(",","."),
-            betaL: this.state.newHillBetal.replace(",","."),
-            l: this.state.newHillL.replace(",","."),
-            rl: this.state.newHillrl.replace(",","."),
-            r2l: this.state.newHillr2l.replace(",","."),
-            zu: this.state.newHillzu.replace(",","."),
-            r2: this.state.newHillr2.replace(",","."),
-            a: this.state.newHilla.replace(",","."),
-            b1: this.state.newHillb1.replace(",","."),
-            b2: this.state.newHillb2.replace(",","."),
-            bk: this.state.newHillbk.replace(",","."),
-            bu: this.state.newHillbu.replace(",","."),
-            d: this.state.newHilld.replace(",","."),
-            q: this.state.newHillq.replace(",","."),
+            kPoint: this.state.newHillKPoint.replace(",", "."),
+            hillSize: this.state.newHillHS.replace(",", "."),
+            es: this.state.newHilles.replace(",", "."),
+            e1: this.state.newHille1.replace(",", "."),
+            e2: this.state.newHille2.replace(",", "."),
+            gamma: this.state.newHillGamma.replace(",", "."),
+            r1: this.state.newHillr1.replace(",", "."),
+            t: this.state.newHillt.replace(",", "."),
+            alpha: this.state.newHillAlpha.replace(",", "."),
+            s: this.state.newHills.replace(",", "."),
+            v0: this.state.newHillv0.replace(",", "."),
+            h: this.state.newHillh.replace(",", "."),
+            n: this.state.newHilln.replace(",", "."),
+            p: this.state.newHillP.replace(",", "."),
+            l1: this.state.newHilll1.replace(",", "."),
+            l2: this.state.newHilll2.replace(",", "."),
+            betaP: this.state.newHillBetap.replace(",", "."),
+            beta: this.state.newHillBeta.replace(",", "."),
+            betaL: this.state.newHillBetal.replace(",", "."),
+            l: this.state.newHillL.replace(",", "."),
+            rl: this.state.newHillrl.replace(",", "."),
+            r2l: this.state.newHillr2l.replace(",", "."),
+            zu: this.state.newHillzu.replace(",", "."),
+            r2: this.state.newHillr2.replace(",", "."),
+            a: this.state.newHilla.replace(",", "."),
+            b1: this.state.newHillb1.replace(",", "."),
+            b2: this.state.newHillb2.replace(",", "."),
+            bk: this.state.newHillbk.replace(",", "."),
+            bu: this.state.newHillbu.replace(",", "."),
+            d: this.state.newHilld.replace(",", "."),
+            q: this.state.newHillq.replace(",", "."),
             certificate: this.state.newHillCertificateLink,
             validSinceYear: this.state.newHillValidSinceYear,
             validSinceMonth: this.state.newHillValidSinceMonth,
@@ -276,45 +278,19 @@ class AddHill extends Component {
 
         console.log(this.state)
 
-        let hillsListItems = <ListItem disabled>no hills yet in this venue</ListItem>
-        if (this.state.hills.length > 0) {
-            hillsListItems = this.state.hills.map(hill =>
-                <ListItem key={hill.id} id={hill.id} className="list-group-item list-group-item-action"
-                          onClick={e => this.handleHillsListOnClick(e)}>
-                    {hill.name}
-                </ListItem>
-            )
-        }
-
-        let selectedHillHeader = null
-        let hillVersionsListItems = null
-        if (this.state.showHillVersionsList) {
-            selectedHillHeader = <Header6>Current hill versions of {this.state.selectedHillName} </Header6>
-            hillVersionsListItems = this.state.hillVersions.map(hillVersion =>
-                <ListItem key={hillVersion.id} id={hillVersion.id}>
-                    From: {hillVersion.first_year}, Until: {hillVersion.last_year}, K: {hillVersion.kPoint},
-                    HS: {hillVersion.hillSize}
-                </ListItem>
-            )
-        }
-
-        let selectVenue = null
-        if(!this.state.selectedVenueId.length > 0){
-            selectVenue = <small>Select a venue to continue</small>
-        }
 
         let selectHillHint = null
         let hillFormHeader
         let nameField = null
-
-        if(!this.state.selectedHillId.length > 0){
+        if (!this.state.selectedHillId.length > 0) {
             selectHillHint = <small>select hill to add a new version of the existing hill</small>
             hillFormHeader = <Header3>Adding a new hill</Header3>
-            nameField = <TextInputForm title={"Name*"} disabled={!this.state.selectedVenueId.length > 0} onChangeValue={e => {
-                this.setState({
-                    newHillName: e.target.value
-                })
-            }}/>
+            nameField =
+                <TextInputForm title={"Name*"} disabled={!this.state.selectedVenueId.length > 0} onChangeValue={e => {
+                    this.setState({
+                        newHillName: e.target.value
+                    })
+                }}/>
         } else {
             hillFormHeader = <Header3>Adding new version of {this.state.selectedHillName}</Header3>
         }
@@ -347,7 +323,9 @@ class AddHill extends Component {
                         title={"Venue"}
                         items={this.state.venues}
                         valuesToShow={["name"]}
-                        hintTextDown={selectVenue}
+                        // hintTextDown={selectVenue}
+                        hintTextDown={!this.state.selectedVenueId.length > 0 ?
+                            <small>Select a venue to continue</small> : null}
                         onChangeValue={e =>
                             this.setState({
                                 selectedVenueId: e.target.value,
@@ -360,7 +338,14 @@ class AddHill extends Component {
                     <Form.Group as={Row}>
                         <Form.Label column sm={2}>Hills:</Form.Label>
                         <Col sm={10}>
-                            <ListInForm>{hillsListItems}</ListInForm>
+                            <ListInForm>
+                                {this.state.hills.length > 0 ? this.state.hills.map(hill =>
+                                    <ListItem key={hill.id} id={hill.id}
+                                              className="list-group-item list-group-item-action"
+                                              onClick={e => this.handleHillsListOnClick(e)}>
+                                        {hill.name}
+                                    </ListItem>) : <ListItem disabled>no hills yet in this venue</ListItem>}
+                            </ListInForm>
                             <Form.Text className="text-muted">
                                 {selectHillHint}
                             </Form.Text>
@@ -369,12 +354,19 @@ class AddHill extends Component {
                     </Form.Group>
 
 
-                    {selectedHillHeader}
+                    {this.state.showHillVersionsList ?
+                        <Header6>Current hill versions of {this.state.selectedHillName} </Header6> : null}
 
-                    <List>{hillVersionsListItems}</List>
+
+                    <List>{this.state.showHillVersionsList ? this.state.hillVersions.map(hillVersion =>
+                        <ListItem key={hillVersion.id} id={hillVersion.id}>
+                            From: {hillVersion.first_year}, Until: {hillVersion.last_year}, K: {hillVersion.kPoint},
+                            HS: {hillVersion.hillSize}
+                        </ListItem>) : null}</List>
 
 
                     {hillFormHeader}
+
                     <Header5>Basic Parameters</Header5>
                     <small>Fields with (*) are mandatory</small>
                     {/*Name*/}
@@ -392,14 +384,16 @@ class AddHill extends Component {
                     />
 
                     {/*K*/}
-                    <TextInputForm title={"K-Point (m)*"} placeholder={"K"} disabled={!this.state.selectedVenueId.length > 0} onChangeValue={e => {
+                    <TextInputForm title={"K-Point (m)*"} placeholder={"K"}
+                                   disabled={!this.state.selectedVenueId.length > 0} onChangeValue={e => {
                         this.setState({
                             newHillKPoint: e.target.value
                         })
                     }}/>
 
                     {/*HS*/}
-                    <TextInputForm title={"Hill Size (m)*"} placeholder={"HS"} disabled={!this.state.selectedVenueId.length > 0} onChangeValue={e => {
+                    <TextInputForm title={"Hill Size (m)*"} placeholder={"HS"}
+                                   disabled={!this.state.selectedVenueId.length > 0} onChangeValue={e => {
                         this.setState({
                             newHillHS: e.target.value
                         })
@@ -440,13 +434,14 @@ class AddHill extends Component {
                     <TextInputForm title={"t (m)*"} placeholder={"Length of the table"}
                                    disabled={!this.state.selectedVenueId.length > 0}
                                    onChangeValue={e => {
-                        this.setState({
-                            newHillt: e.target.value
-                        })
-                    }}/>
+                                       this.setState({
+                                           newHillt: e.target.value
+                                       })
+                                   }}/>
 
                     {/*gamma*/}
-                    <TextInputForm title={"\u03B3 (\u00B0)*"} disabled={!this.state.selectedVenueId.length > 0} placeholder={"Angle of the straight part of the inrun"}
+                    <TextInputForm title={"\u03B3 (\u00B0)*"} disabled={!this.state.selectedVenueId.length > 0}
+                                   placeholder={"Angle of the straight part of the inrun"}
                                    onChangeValue={e => {
                                        this.setState({
                                            newHillGamma: e.target.value
@@ -454,7 +449,8 @@ class AddHill extends Component {
                                    }}/>
 
                     {/*alpha*/}
-                    <TextInputForm title={"\u03B1 (\u00B0)*"} placeholder={"Angle of the table"} disabled={!this.state.selectedVenueId.length > 0} onChangeValue={e => {
+                    <TextInputForm title={"\u03B1 (\u00B0)*"} placeholder={"Angle of the table"}
+                                   disabled={!this.state.selectedVenueId.length > 0} onChangeValue={e => {
                         this.setState({
                             newHillAlpha: e.target.value
                         })
@@ -505,20 +501,19 @@ class AddHill extends Component {
                     <Form.Group as={Row}>
                         <Form.Label column sm={2}>h/n:</Form.Label>
                         <Col sm={10}>
-                        <Form.Control type="text" placeholder={this.state.newHillh/this.state.newHilln} readOnly />
+                            <Form.Control type="text" placeholder={this.state.newHillh / this.state.newHilln} readOnly/>
                         </Col>
                     </Form.Group>
-
 
 
                     {/*s*/}
                     <TextInputForm title={"s (m)*"} placeholder={"Height of the table"}
                                    disabled={!this.state.selectedVenueId.length > 0}
                                    onChangeValue={e => {
-                        this.setState({
-                            newHills: e.target.value
-                        })
-                    }}/>
+                                       this.setState({
+                                           newHills: e.target.value
+                                       })
+                                   }}/>
 
                     {/*l1*/}
                     <TextInputForm title={"l1 (m)*"}
@@ -621,28 +616,28 @@ class AddHill extends Component {
                     <TextInputForm title={"P (m)*"} placeholder={"Beginning of the landing area"}
                                    disabled={!this.state.selectedVenueId.length > 0}
                                    onChangeValue={e => {
-                        this.setState({
-                            newHillP: e.target.value
-                        })
-                    }}/>
+                                       this.setState({
+                                           newHillP: e.target.value
+                                       })
+                                   }}/>
 
                     {/*L*/}
                     <TextInputForm title={"L (m)*"} placeholder={"End of the landing area"}
                                    disabled={!this.state.selectedVenueId.length > 0}
                                    onChangeValue={e => {
-                        this.setState({
-                            newHillL: e.target.value
-                        })
-                    }}/>
+                                       this.setState({
+                                           newHillL: e.target.value
+                                       })
+                                   }}/>
 
                     {/*b1*/}
                     <TextInputForm title={"b1 (m)*"} placeholder={"Prepared width of the inrun"}
                                    disabled={!this.state.selectedVenueId.length > 0}
                                    onChangeValue={e => {
-                        this.setState({
-                            newHillb1: e.target.value
-                        })
-                    }}/>
+                                       this.setState({
+                                           newHillb1: e.target.value
+                                       })
+                                   }}/>
 
                     {/*b2*/}
                     <TextInputForm title={"b2 (m)"} placeholder={"Width of the knoll at the base of the takeoff"}
@@ -707,7 +702,7 @@ class AddHill extends Component {
                                 closeOnScroll={true}
                                 disabled={!this.state.selectedVenueId.length > 0}
                                 selected={this.state.newHillValidSinceFullDate}
-                                onChange={date => this.setDate(date,0)}
+                                onChange={date => this.setDate(date, 0)}
                                 placeholderText="dd/mm/yyyy"
                                 dateFormat="dd/MM/yyyy"
                             />
@@ -724,7 +719,7 @@ class AddHill extends Component {
                                 closeOnScroll={true}
                                 disabled={!this.state.selectedVenueId.length > 0}
                                 selected={this.state.newHillValidUntilFullDate}
-                                onChange={date => this.setDate(date,1)}
+                                onChange={date => this.setDate(date, 1)}
                                 placeholderText="dd/mm/yyyy"
                                 dateFormat="dd/MM/yyyy"
                             />
@@ -751,7 +746,7 @@ class AddHill extends Component {
                                         || this.state.newHillSizeOfHillId.length < 1
                                         || this.state.newHillKPoint.length < 1
                                         || this.state.newHillHS.length < 1
-                                        || this.state.newHille1.length <1
+                                        || this.state.newHille1.length < 1
                                         || this.state.newHille2.length < 1
                                         || this.state.newHilles.length < 1
                                         || this.state.newHillt.length < 1

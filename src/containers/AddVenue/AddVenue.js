@@ -17,8 +17,7 @@ import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
 
 
-//TODO add form fields validation
-//TODO add some sort of feedback that there is db action going on
+
 class AddVenue extends Component {
 
     state = {
@@ -158,40 +157,6 @@ class AddVenue extends Component {
     }
 
     render() {
-        let venuesList = null
-
-        let newCityForm = null
-
-
-        if (this.state.showNewCityForm) {
-            newCityForm =
-                <NewCityForm currentCountry={this.state.currentCountry} updateLists={this.updateListsToCurrentCountry}/>
-        }
-
-        if (this.state.showVenuesList) {
-
-            let listItems = <p>There are currently no venues in {this.state.currentCountry}</p>
-
-            if (this.state.venues.length > 0) {
-                listItems = this.state.venues.map(venue =>
-                    <ListItem key={venue.id} id={venue.id} className="list-group-item list-group-item-action" onDoubleClick={e =>
-                        this.setState({
-                            selectedVenueName: e.target.innerText,
-                            selectedVenueId: e.target.id,
-                            showEditModal: true
-                        })}
-
-                    >
-                        {venue.name}, {venue.city}, Opened in: {venue.yearOfOpening}, capacity: {venue.capacity}
-                    </ListItem>)
-            }
-
-            venuesList = <List>
-                {listItems}
-            </List>
-
-
-        }
 
         return (
 
@@ -217,7 +182,21 @@ class AddVenue extends Component {
                         <CheckButton size="sm" onClick={this.changeVenuesListVisibility}>Toggle venues
                             list</CheckButton>
                     </StyledDiv2Centered>
-                    {venuesList}
+
+                    {/*venues list*/}
+                    {this.state.showVenuesList ? <List> {this.state.venues.length > 0 ? this.state.venues.map(venue =>
+                            this.state.venues.map(venue =>
+                                <ListItem key={venue.id} id={venue.id} className="list-group-item list-group-item-action"
+                                          onDoubleClick={e =>
+                                              this.setState({
+                                                  selectedVenueName: e.target.innerText,
+                                                  selectedVenueId: e.target.id,
+                                                  showEditModal: true
+                                              })}
+                                >
+                                    {venue.name}, {venue.city}, Opened in: {venue.yearOfOpening}, capacity: {venue.capacity}
+                                </ListItem>)) :
+                        <p>There are currently no venues in {this.state.currentCountry}</p>} </List> : null}
 
                     {/*Name*/}
                     <TextInputForm title={"Name"} onChangeValue={e => {
@@ -241,7 +220,8 @@ class AddVenue extends Component {
                     {/*New City Form*/}
                     <ShowNewCityFormButton onClick={this.handleNewCityButton}
                                            variant={"secondary"}>{this.state.newCityButtonText}</ShowNewCityFormButton>
-                    {newCityForm}
+                    {this.state.showNewCityForm ? <NewCityForm currentCountry={this.state.currentCountry}
+                                                               updateLists={this.updateListsToCurrentCountry}/> : null}
 
                     {/*Ski Club*/}
                     <SelectInputForm title={"Ski club"}
@@ -253,7 +233,7 @@ class AddVenue extends Component {
                                              newVenueSkiClubId: e.target.value
                                          })
                                      }}
-                                     />
+                    />
 
                     {/*year of opening*/}
                     <TextInputForm title={"Opened in"} onChangeValue={e => {
