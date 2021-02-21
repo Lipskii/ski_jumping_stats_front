@@ -5,7 +5,7 @@ import NotFound from "./containers/NotFound";
 import AddSkiClub from "./containers/AddSkiClub/AddSkiClub";
 import AddAthlete from "./containers/AddAthlete/AddAthlete"
 import AddVenue from "./containers/AddVenue/AddVenue";
-import AddHill from "./containers/AddHill/AddHill";
+import Hills from "./containers/Hills/Hills";
 
 
 class App extends Component {
@@ -17,7 +17,7 @@ class App extends Component {
             <Switch>
                 <Route path="/addVenue" component={AddVenue}/>
                 <Route path="/addSkiClub" component={AddSkiClub}/>
-                <Route path="/addHill" component={AddHill}/>
+                <Route path="/addHill" component={Hills}/>
                 <Route path="/addAthlete" component={AddAthlete}/>
                 <Route path="/" exact/>
                 <Route component={NotFound}/>

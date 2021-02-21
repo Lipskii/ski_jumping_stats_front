@@ -165,7 +165,9 @@ class AddAthlete extends Component {
     };
 
 
-    onSubmitAthleteForm = () => {
+    onSubmitAthleteForm = (e) => {
+        e.preventDefault()
+
         let postSuccessful = true
 
         axios.post("/api/skiJumper", {
@@ -209,7 +211,7 @@ class AddAthlete extends Component {
                            selectedName={this.state.selectedSkiJumperName} handleCloseNoAction={this.deleteSkiJumper}/>
 
                 <Header3>Register an Athlete</Header3>
-                <StyledForm>
+                <StyledForm onSubmit={this.onSubmitAthleteForm}>
 
                     {/*Country*/}
                     <TempCountryInputForm title={"Country"} items={this.state.countries} valuesToShow={["name"]}
@@ -328,7 +330,7 @@ class AddAthlete extends Component {
                     }}/>
 
                     <StyledDiv2Right>
-                        <Button onClick={this.onSubmitAthleteForm} disabled={
+                        <Button type="submit" onClick={this.onSubmitAthleteForm} disabled={
                             !(this.state.newAthleteFirstName.length > 0
                                 && this.state.newAthleteLastName.length > 0
                                 && this.state.newAthleteGenderId.length > 0

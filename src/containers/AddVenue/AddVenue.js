@@ -127,8 +127,10 @@ class AddVenue extends Component {
         }
     }
 
-    onSubmitVenueForm = () => {
+    onSubmitVenueForm = (e) => {
         let postSuccessful = true
+
+        e.preventDefault()
 
         axios.post("/api/venue", {
             name: this.state.newVenueName,
@@ -156,8 +158,10 @@ class AddVenue extends Component {
         )
     }
 
+
     render() {
 
+        console.log(this.state)
         return (
 
             <React.Fragment>
@@ -166,7 +170,7 @@ class AddVenue extends Component {
 
                 <Header3>Register a Venue</Header3>
 
-                <StyledForm>
+                <StyledForm onSubmit={this.onSubmitVenueForm}>
 
                     {/*Country*/}
                     <TempCountryInputForm title={"Country"} items={this.state.countries} valuesToShow={["name"]}
@@ -251,7 +255,7 @@ class AddVenue extends Component {
 
 
                     <StyledDiv2Right>
-                        <Button onClick={this.onSubmitVenueForm} disabled={!(this.state.currentCountry !== null &&
+                        <Button  type="submit" disabled={!(this.state.currentCountry !== null &&
                             this.state.newVenueName.length > 0 && this.state.newVenueSkiClubId.length > 0
                             && this.state.newVenueCityId !== "" && this.state.newVenueYearOfOpening.length > 0)}>Submit</Button>
                     </StyledDiv2Right>
