@@ -1,22 +1,15 @@
 import React, {Component} from "react";
 import {
-    Header3, Header5,
-    Header6,
-    List,
-    ListInForm,
-    ListItem, SmallTd, StyledDiv2Right1000,
-    StyledForm, TableButton
+    Header3, SmallTd, StyledDiv2Right1000, StyledDivCentered1000, TableButton
 } from "../../components/StyledComponents";
 import {Button, Col, Form, Row, Table} from "react-bootstrap";
 import axios from "axios";
 import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import TextInputForm from "../../components/CommonForms/TextInputForm";
-import DatePicker from "react-datepicker";
 import AddEditHillForm from "./AddEditHillForm";
 
 
-//TODO (in api) save hill only if hill version is valid
 //TODO add some sort of feedback that there is db action going on
 
 class Hills extends Component {
@@ -24,7 +17,6 @@ class Hills extends Component {
     state = {
         countries: [],
         currentCountry: null,
-        newHillName: "",
         venues: [],
         selectedVenueId: "",
         hills: [],
@@ -33,49 +25,7 @@ class Hills extends Component {
         hillVersions: [],
         sizesOfHill: [],
         showNewHillForm: false,
-        newHillSizeOfHillId: "",
-        newHillKPoint: "",
-        newHillHS: "",
-        newHille1: "",
-        newHille2: "",
-        newHilles: "",
-        newHillt: "",
-        newHillGamma: "",
-        newHillAlpha: "",
-        newHillr1: "",
-        newHillh: "",
-        newHilln: "",
-        newHills: "",
-        newHilll1: "",
-        newHilll2: "",
-        newHilla: "",
-        newHillBetap: "",
-        newHillBeta: "",
-        newHillBetal: "",
-        newHillrl: "",
-        newHillr2l: "",
-        newHillr2: "",
-        newHillzu: "",
-        newHillP: "",
-        newHillL: "",
-        newHillb1: "",
-        newHillb2: "",
-        newHillbk: "",
-        newHillbu: "",
-        newHilld: "",
-        newHillq: "",
-        newHillv0: "",
-        newHillValidSinceDay: "",
-        newHillValidSinceMonth: "",
-        newHillValidSinceYear: "",
-        newHillValidUntilDay: "",
-        newHillValidUntilMonth: "",
-        newHillValidUntilYear: "",
-        newHillCertificateLink: "",
-        newHillValidSinceFullDate: "",
-        newHillValidUntilFullDate: "",
         toggleNameField: false
-
     }
 
     componentDidMount() {
@@ -210,53 +160,10 @@ class Hills extends Component {
 
     addNewHill = (e) => {
 
-        e.preventDefault()
 
         let postSuccessful = true
 
         axios.post("/api/hillVersion", {
-            hillId: this.state.selectedHillId,
-            name: this.state.newHillName,
-            venueId: this.state.selectedVenueId,
-            sizeId: this.state.newHillSizeOfHillId,
-            kPoint: this.state.newHillKPoint.replace(",", "."),
-            hillSize: this.state.newHillHS.replace(",", "."),
-            es: this.state.newHilles.replace(",", "."),
-            e1: this.state.newHille1.replace(",", "."),
-            e2: this.state.newHille2.replace(",", "."),
-            gamma: this.state.newHillGamma.replace(",", "."),
-            r1: this.state.newHillr1.replace(",", "."),
-            t: this.state.newHillt.replace(",", "."),
-            alpha: this.state.newHillAlpha.replace(",", "."),
-            s: this.state.newHills.replace(",", "."),
-            v0: this.state.newHillv0.replace(",", "."),
-            h: this.state.newHillh.replace(",", "."),
-            n: this.state.newHilln.replace(",", "."),
-            p: this.state.newHillP.replace(",", "."),
-            l1: this.state.newHilll1.replace(",", "."),
-            l2: this.state.newHilll2.replace(",", "."),
-            betaP: this.state.newHillBetap.replace(",", "."),
-            beta: this.state.newHillBeta.replace(",", "."),
-            betaL: this.state.newHillBetal.replace(",", "."),
-            l: this.state.newHillL.replace(",", "."),
-            rl: this.state.newHillrl.replace(",", "."),
-            r2l: this.state.newHillr2l.replace(",", "."),
-            zu: this.state.newHillzu.replace(",", "."),
-            r2: this.state.newHillr2.replace(",", "."),
-            a: this.state.newHilla.replace(",", "."),
-            b1: this.state.newHillb1.replace(",", "."),
-            b2: this.state.newHillb2.replace(",", "."),
-            bk: this.state.newHillbk.replace(",", "."),
-            bu: this.state.newHillbu.replace(",", "."),
-            d: this.state.newHilld.replace(",", "."),
-            q: this.state.newHillq.replace(",", "."),
-            certificate: this.state.newHillCertificateLink,
-            validSinceYear: this.state.newHillValidSinceYear,
-            validSinceMonth: this.state.newHillValidSinceMonth,
-            validSinceDay: this.state.newHillValidSinceDay,
-            validUntilYear: this.state.newHillValidUntilYear,
-            validUntilMonth: this.state.newHillValidUntilMonth,
-            validUntilDay: this.state.newHillValidUntilDay,
 
         }).then(function (response) {
             console.log(response.data);
@@ -282,15 +189,8 @@ class Hills extends Component {
         //  console.log(this.state)
 
         let hillFormHeader
-        let nameField = null
         if (!this.state.selectedHillId.length > 0) {
             hillFormHeader = <Header3>Adding a new hill</Header3>
-            nameField =
-                <TextInputForm title={"Name*"} disabled={!this.state.selectedVenueId.length > 0} onChangeValue={e => {
-                    this.setState({
-                        newHillName: e.target.value
-                    })
-                }}/>
         } else {
             hillFormHeader = <Header3>Adding new version of {this.state.selectedHillName}</Header3>
         }
@@ -300,8 +200,7 @@ class Hills extends Component {
             <React.Fragment>
                 <Header3>Hills</Header3>
 
-                {/*TODO remove StyledForm from here, add styled substitute (form will be in different file)*/}
-                <StyledForm onSubmit={this.addNewHill}>
+                <StyledDivCentered1000>
 
                     {/*Country*/}
                     <TempCountryInputForm
@@ -334,6 +233,7 @@ class Hills extends Component {
                             }, () => this.updateHillsList())}
                     />
 
+                    {/*Table*/}
                     {this.state.hills.length > 0 ? <Table bordered hover>
                             <thead>
                             <tr>
@@ -369,27 +269,31 @@ class Hills extends Component {
                             </tbody>
                         </Table>
                         : null}
-
-                    {this.state.selectedVenueId.length > 0 ? <StyledDiv2Right1000>
-                        <Button onClick={() => this.setState({
-                            showNewHillForm: !this.state.showNewHillForm
-                        })} variant={"success"}>New Hill</Button>
-                    </StyledDiv2Right1000> : null}
-
                     {this.state.selectedVenueId.length > 0 && !this.state.hills.length > 0 ?
                         <Form.Text muted>no hills yet in this venue</Form.Text> : null
                     }
 
+                    {/*Add Hill Button*/}
+                    {this.state.selectedVenueId.length > 0 ? <StyledDiv2Right1000>
+                        <Button onClick={() => this.setState({
+                            selectedHillId: "",
+                            selectedHillName: "",
+                            showNewHillForm: !this.state.showNewHillForm
+                        })} variant={"success"}>New Hill</Button>
+                    </StyledDiv2Right1000> : null}
 
+
+                    {/*New Version Form*/}
                     {this.state.showNewHillForm ?
                         <AddEditHillForm
                             mainHeader={hillFormHeader}
-                            nameField={nameField}
+                            showNameField={this.state.selectedHillId.length > 0}
                             selectedVenueId={this.state.selectedVenueId}
                             sizesOfHill={this.state.sizesOfHill}
+                            onSubmit={this.addNewHill}
                         /> : null}
 
-                </StyledForm>
+                </StyledDivCentered1000>
 
 
             </React.Fragment>

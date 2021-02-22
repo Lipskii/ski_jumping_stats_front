@@ -64,6 +64,11 @@ export const SmallTd = styled.td`
   max-width: 170px;
 `
 
+export const StyledDivCentered1000 = styled.div`
+  margin: auto;
+  max-width: 1000px;
+`
+
 export const StyledDiv1 = styled.div`
   margin: auto;
   max-width: 500px;

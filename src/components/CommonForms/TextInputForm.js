@@ -1,7 +1,9 @@
 import React from "react";
 import {Col, Form, Row} from "react-bootstrap";
 
-
+/**
+ * @deprecated
+ */
 const TextInputForm = (props) => (
 
     <Form.Group as={Row}>

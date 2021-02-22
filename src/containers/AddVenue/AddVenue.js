@@ -220,7 +220,6 @@ class AddVenue extends Component {
                                          })
                                      }}/>
 
-
                     {/*New City Form*/}
                     <ShowNewCityFormButton onClick={this.handleNewCityButton}
                                            variant={"secondary"}>{this.state.newCityButtonText}</ShowNewCityFormButton>
