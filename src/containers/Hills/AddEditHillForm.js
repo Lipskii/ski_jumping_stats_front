@@ -3,7 +3,7 @@ import {Formik} from "formik";
 import {Header5, StyledDiv2Right1000, StyledForm} from "../../components/StyledComponents";
 import * as Yup from 'yup';
 import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
-import {Button, Col, Form, Row} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
 import {DatePickerField} from "../../components/CommonForms/FormikDatePicker";
 
@@ -12,7 +12,7 @@ const AddEditHillForm = (props) => (
 
     <Formik
         initialValues={{
-            name: '',
+            name: props.initialName,
             sizeOfHillId: '',
             kPoint: '',
             hs: '',
@@ -37,8 +37,8 @@ const AddEditHillForm = (props) => (
             r2l: '',
             r2: '',
             zu: '',
-            P: '',
-            L: '',
+            p: '',
+            l: '',
             b1: '',
             b2: '',
             bk: '',
@@ -89,7 +89,7 @@ const AddEditHillForm = (props) => (
                 .positive('Must be a positive number')
                 .max(999.99, 'Too large')
                 .required('Required'),
-            vo: Yup.number()
+            v0: Yup.number()
                 .positive('Must be a positive number')
                 .max(99.99, 'Too large')
                 .required('Required'),
@@ -144,11 +144,11 @@ const AddEditHillForm = (props) => (
                 .positive('Must be a positive number')
                 .max(999.99, 'Too large')
                 .required('Required'),
-            P: Yup.number()
+            p: Yup.number()
                 .positive('Must be a positive number')
                 .max(250, 'Too large')
                 .required('Required'),
-            L: Yup.number()
+           l: Yup.number()
                 .positive('Must be a positive number')
                 .max(260, 'Too large')
                 .required('Required'),
@@ -185,7 +185,6 @@ const AddEditHillForm = (props) => (
                 .required('Required')
         })}
         onSubmit={(values) => {
-            console.log(values)
             props.onSubmit(values)
         }}
     >
@@ -386,14 +385,14 @@ const AddEditHillForm = (props) => (
 
                 {/*P*/}
                 <FormikTextInputForm
-                    name="P"
+                    name="p"
                     label={"P (m)*:"}
                     placeholder={"Beginning of the landing area"}
                 />
 
                 {/*L*/}
                 <FormikTextInputForm
-                    name="L"
+                    name="l"
                     label={"L (m)*:"}
                     placeholder={"End of the landing area"}
                 />

@@ -6,7 +6,6 @@ import {Button, Col, Form, Row, Table} from "react-bootstrap";
 import axios from "axios";
 import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
-import TextInputForm from "../../components/CommonForms/TextInputForm";
 import AddEditHillForm from "./AddEditHillForm";
 
 
@@ -22,10 +21,14 @@ class Hills extends Component {
         hills: [],
         selectedHillName: "",
         selectedHillId: "",
-        hillVersions: [],
         sizesOfHill: [],
         showNewHillForm: false,
-        toggleNameField: false
+        toggleNameField: false,
+        newHillValidSinceDay: "",
+        newHillValidSinceMonth: "",
+        newHillValidSinceYear: "",
+        newHillValidSinceFullDate: ""
+
     }
 
     componentDidMount() {
@@ -77,31 +80,28 @@ class Hills extends Component {
             })
     }
 
+    handleAddVersionButton = (e) => {
+        this.setState({
+            selectedHillName: e.target.name,
+            selectedHillId: e.target.id,
+            showNewHillForm: true
+        })
+    }
+
     handleHillsListOnClick = (e) => {
 
         let newSelectedHillName
-        let newSelectedHillId
-        let newNameFieldLabel
-        let newDisableNameField
 
         if (this.state.selectedHillId.length > 0) {
             newSelectedHillName = ""
-            newSelectedHillId = ""
-            newNameFieldLabel = "Name"
-            newDisableNameField = true
         } else {
             newSelectedHillName = e.target.name
-            newSelectedHillId = e.target.id
-            newNameFieldLabel = "Name*"
-            newDisableNameField = false
         }
 
         this.setState({
             showHillVersionsList: !this.state.showHillVersionsList,
-            nameFieldLabel: newNameFieldLabel,
-            disableNameField: newDisableNameField,
             selectedHillName: newSelectedHillName,
-            selectedHillId: newSelectedHillId,
+            selectedHillId: e.target.id,
             showNewHillForm: !this.state.showNewHillForm
         }, () => {
             this.state.hills.map(hill => {
@@ -112,7 +112,6 @@ class Hills extends Component {
                 })
             })
         })
-
     }
 
     setDate = (date, option) => {
@@ -133,8 +132,6 @@ class Hills extends Component {
                 newHillValidUntilFullDate: date
             })
         }
-
-
     }
 
     convertDate = str => {
@@ -158,12 +155,57 @@ class Hills extends Component {
         return [parts[2], months[parts[1]], parts[3]]
     };
 
-    addNewHill = (e) => {
+    addNewHill = (values) => {
+
+        this.setDate(values.validSince,0)
+        this.setDate(values.validUntil,1)
 
 
         let postSuccessful = true
 
         axios.post("/api/hillVersion", {
+            hillId: this.state.selectedHillId,
+            name: values.name,
+            venueId: this.state.selectedVenueId,
+            sizeId: values.sizeOfHillId,
+            kPoint: values.kPoint,
+            hillSize: values.hs,
+            es: values.es,
+            e1: values.e1,
+            e2: values.e2,
+            gamma: values.gamma,
+            r1: values.r1,
+            t: values.t,
+            alpha: values.alpha,
+            s: values.s,
+            v0: values.v0,
+            h: values.h,
+            n: values.n,
+            p: values.p,
+            l1: values.l1,
+            l2: values.l2,
+            betaP: values.betap,
+            beta: values.beta,
+            betaL: values.betal,
+            l: values.l,
+            rl: values.rl,
+            r2l: values.r2l,
+            zu: values.zu,
+            r2: values.r2,
+            a: values.a,
+            b1: values.b1,
+            b2: values.b2,
+            bk: values.bk,
+            bu: values.bu,
+            d: values.d,
+            q: values.q,
+            certificate: values.certificate,
+            validSinceYear: this.state.newHillValidSinceDay,
+            validSinceMonth: this.state.newHillValidSinceMonth,
+            validSinceDay: this.state.newHillValidSinceDay,
+            validUntilYear: this.state.newHillValidUntilDay,
+            validUntilMonth: this.state.newHillValidUntilMonth,
+            validUntilDay: this.state.newHillValidUntilDay,
 
         }).then(function (response) {
             console.log(response.data);
@@ -173,7 +215,7 @@ class Hills extends Component {
                 postSuccessful = false
             }).finally(() => {
                 if (postSuccessful) {
-                    window.alert(this.state.newHillName + " added!")
+                    window.alert(values.name + " added!")
                     this.updateListsToCurrentCountry();
                 } else {
                     window.alert("Ups, something went wrong")
@@ -186,7 +228,6 @@ class Hills extends Component {
 
     render() {
 
-        //  console.log(this.state)
 
         let hillFormHeader
         if (!this.state.selectedHillId.length > 0) {
@@ -258,12 +299,16 @@ class Hills extends Component {
                                         </td>
                                         <SmallTd>
                                             <TableButton id={hill.id} name={hill.name} size="sm"
-                                                         onClick={e => this.handleHillsListOnClick(e)}>Add
-                                                version</TableButton>
+                                                         onClick={e => this.handleAddVersionButton(e)}>
+                                                Add version
+                                            </TableButton>
                                             <TableButton id={hill.id} name={hill.name} size="sm" variant={"info"}
-                                                         onClick={e => this.handleHillsListOnClick(e)}>Edit</TableButton>
-                                            <TableButton id={hill.id} name={hill.name} variant={"danger"} size="sm"
-                                            >Delete</TableButton></SmallTd>
+                                                         onClick={e => this.handleHillsListOnClick(e)}>
+                                                Edit
+                                            </TableButton>
+                                            <TableButton id={hill.id} name={hill.name} variant={"danger"} size="sm">
+                                                Delete
+                                            </TableButton></SmallTd>
                                     </tr>
                             )}
                             </tbody>
@@ -278,7 +323,8 @@ class Hills extends Component {
                         <Button onClick={() => this.setState({
                             selectedHillId: "",
                             selectedHillName: "",
-                            showNewHillForm: !this.state.showNewHillForm
+                            showNameField: true,
+                            showNewHillForm: true
                         })} variant={"success"}>New Hill</Button>
                     </StyledDiv2Right1000> : null}
 
@@ -287,8 +333,9 @@ class Hills extends Component {
                     {this.state.showNewHillForm ?
                         <AddEditHillForm
                             mainHeader={hillFormHeader}
-                            showNameField={this.state.selectedHillId.length > 0}
+                            showNameField={!this.state.selectedHillId.length > 0}
                             selectedVenueId={this.state.selectedVenueId}
+                            initialName={this.state.selectedHillName}
                             sizesOfHill={this.state.sizesOfHill}
                             onSubmit={this.addNewHill}
                         /> : null}
