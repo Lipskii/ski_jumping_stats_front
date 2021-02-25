@@ -1,8 +1,5 @@
 import React from 'react'
 import {Col, Form, Row} from "react-bootstrap";
-/**
- * @deprecated
- */
 
 const SelectInputForm = (props) =>
     (

@@ -60,6 +60,10 @@ export const ListItem = styled(ListGroupItem)`
   font-size: smaller;
 `
 
+export const HillNameTd = styled.td`
+  width: 350px;
+`
+
 export const SmallTd = styled.td`
   max-width: 170px;
 `
