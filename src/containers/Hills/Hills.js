@@ -7,7 +7,9 @@ import axios from "axios";
 import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import AddHillForm from "./AddHillForm";
-import DeleteModal from "../../components/Modal/DeleteModal";
+import DeleteModal from "../../components/Modals/DeleteModal";
+import ReadMoreModal from "../../components/Modals/ReadMoreModal";
+import EditModal from "../../components/Modals/EditModal";
 
 
 //TODO add some sort of feedback that there is db action going on
@@ -17,6 +19,7 @@ class Hills extends Component {
     state = {
         countries: [],
         currentCountry: null,
+        formHeaderText: "",
         venues: [],
         selectedVenueId: "",
         hills: [],
@@ -30,7 +33,8 @@ class Hills extends Component {
         newHillValidSinceYear: "",
         newHillValidSinceFullDate: "",
         showDeleteModal: false,
-        showEditForm: false,
+        showEditModal: false,
+        showReadMoreModal: false
     }
 
     componentDidMount() {
@@ -87,7 +91,8 @@ class Hills extends Component {
         this.setState({
             selectedHillName: e.target.name,
             selectedHillId: e.target.id,
-            showHillForm: true
+            showHillForm: true,
+            formHeaderText: "Adding new version of " + e.target.name
         })
     }
 
@@ -96,7 +101,7 @@ class Hills extends Component {
         this.setState({
             selectedHillName: e.target.name,
             selectedHillId: e.target.id,
-            showEditForm: true,
+            showEditModal: true,
         })
     }
 
@@ -106,6 +111,10 @@ class Hills extends Component {
             selectedHillId: e.target.id,
             showDeleteModal: true
         })
+    }
+
+    handleReadMoreButton = (latestVersion) => {
+
     }
 
     setDate = (date, option) => {
@@ -239,15 +248,6 @@ class Hills extends Component {
 
         console.log(this.state)
 
-
-        let hillFormHeader
-        if (this.state.selectedHillId === -1) {
-            hillFormHeader = <Header3>Adding a new hill</Header3>
-        } else {
-            hillFormHeader = <Header3>Adding new version of {this.state.selectedHillName}</Header3>
-        }
-
-
         return (
             <React.Fragment>
 
@@ -296,7 +296,7 @@ class Hills extends Component {
                     />
 
                     {/*Table*/}
-                    {this.state.hills.length > 0 ? <Table bordered hover>
+                    {this.state.hills.length > 0 ? <Table bordered hover >
                             <thead>
                             <tr>
                                 <th>Name</th>
@@ -313,12 +313,27 @@ class Hills extends Component {
                                         <HillNameTd>{hill.name}</HillNameTd>
                                         <td>
                                             <ul>
-                                                <li>K: {latestVersion.kPoint}m</li>
-                                                <li>HS: {latestVersion.hillSize}m</li>
+                                                <li>K: {latestVersion.kPoint} m</li>
+                                                <li>HS: {latestVersion.hillSize} m</li>
                                                 <li>Valid since: {latestVersion.validSince}</li>
                                                 <li>Valid until: {latestVersion.validUntil}</li>
                                             </ul>
-                                            <Button size={"sm"} variant={"outline-dark"}>Read more</Button>
+                                            <Button
+                                                size={"sm"}
+                                                variant={"outline-dark"}
+                                                onClick={() => this.setState({
+                                                    showReadMoreModal: true
+                                                })}
+                                            >Read more</Button>
+                                            <ReadMoreModal
+                                                hill={hill}
+                                                version={latestVersion}
+                                                show={this.state.showReadMoreModal}
+                                                onHide={() => this.setState({
+                                                    showReadMoreModal: false
+                                                })}
+                                                handleDelete={this.deleteHill}
+                                            />
                                         </td>
                                         <SmallTd>
                                             <TableButton id={hill.id} name={hill.name} size="sm"
@@ -327,8 +342,16 @@ class Hills extends Component {
                                             </TableButton>
                                             <TableButton id={hill.id} name={hill.name} size="sm" variant={"info"}
                                                          onClick={e => this.handleEditButton(e)}>
-                                                Edit
+                                                Edit name
                                             </TableButton>
+                                            <EditModal
+                                                hillName={this.state.selectedHillName}
+                                                show={this.state.showEditModal}
+                                                onHide={() => this.setState({
+                                                    shoEditModal: false
+                                                })}
+                                                onSubmit={this.editHill}
+                                            />
                                             <TableButton id={hill.id} name={hill.name} variant={"danger"} size="sm"
                                                          onClick={e => this.handleDeleteButton(e)}>
                                                 Delete
@@ -348,8 +371,8 @@ class Hills extends Component {
                         <Button onClick={() => this.setState({
                             selectedHillId: "",
                             selectedHillName: "",
-                            showNameField: true,
-                            showHillForm: true
+                            showHillForm: !this.state.showHillForm,
+                            formHeaderText: "Adding new Hill"
                         })} variant={"success"}>New Hill</Button>
                     </StyledDiv2Right1000> : null}
 
@@ -364,8 +387,8 @@ class Hills extends Component {
                             })} variant={"secondary"}>Hide</Button>
                         </StyledDiv2Right1000>
                         <AddHillForm
-                            mainHeader={hillFormHeader}
-                            showNameField={this.state.selectedHillId !== ""}
+                            mainHeader={this.state.formHeaderText}
+                            showNameField={this.state.selectedHillId === ""}
                             selectedVenueId={this.state.selectedVenueId}
                             initialName={this.state.selectedHillName}
                             sizesOfHill={this.state.sizesOfHill}

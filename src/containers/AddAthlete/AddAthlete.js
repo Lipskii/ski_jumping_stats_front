@@ -10,7 +10,7 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NewCityForm from "../../components/CommonForms/NewCityForm";
-import EditModal from "../../components/Modal/EditModal";
+import EditModal from "../../components/Modals/EditModal";
 import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
 import TextInputForm from "../../components/CommonForms/TextInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";

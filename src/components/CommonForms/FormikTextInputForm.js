@@ -1,6 +1,7 @@
 import {Col, Form, Row} from "react-bootstrap";
 import React from "react";
 import {useField} from "formik";
+import {ErrorLabel} from "../StyledComponents";
 
 const FormikTextInputForm = ({label, ...props}) => {
 
@@ -14,7 +15,7 @@ const FormikTextInputForm = ({label, ...props}) => {
             <Col sm={10}>
                 <Form.Control {...field} {...props} type="text"/>
                 {meta.touched && meta.error ? (
-                    <div className="error">{meta.error}</div>
+                    <ErrorLabel>{meta.error}</ErrorLabel>
                 ) : null}
                 {props.hintTextDown}
             </Col>

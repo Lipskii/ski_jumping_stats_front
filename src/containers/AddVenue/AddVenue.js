@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import {Button} from "react-bootstrap";
 import NewCityForm from "../../components/CommonForms/NewCityForm";
-import EditModal from "../../components/Modal/EditModal";
+import EditModal from "../../components/Modals/EditModal";
 import TextInputForm from "../../components/CommonForms/TextInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";

@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import {Form, ListGroup, ListGroupItem, Button} from "react-bootstrap";
 
-export const TableButton = styled(Button)`
-  margin-top: 3px;
-  margin-right: 10px;
-`
 export const CheckButton = styled(Button)`
     margin:auto;
+`
+
+export const ErrorLabel = styled.div`
+    color: red;
 `
 
 export const Header3 = styled.h3`
@@ -65,7 +65,7 @@ export const HillNameTd = styled.td`
 `
 
 export const SmallTd = styled.td`
-  max-width: 170px;
+  max-width: 180px;
 `
 
 export const StyledDivCentered1000 = styled.div`
@@ -124,4 +124,9 @@ export const StyledFormSelect = styled(Form.Control)`
 
 export const ShowNewCityFormButton = styled(Button)`
   margin-bottom: 20px;
+`
+
+export const TableButton = styled(Button)`
+  margin-top: 3px;
+  margin-right: 10px;
 `

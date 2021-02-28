@@ -6,15 +6,15 @@ const DeleteModal = (props) => {
     return (
         <Modal show={props.show} onHide={props.onHide}>
             <Modal.Header closeButton>
-                <Modal.Title>{props.title}</Modal.Title>
+                <Modal.Title>Deleting {props.title}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Do you want to delete it?</Modal.Body>
+            <Modal.Body>This will remove {props.title} hill from database permanently. Are you sure you want to continue?</Modal.Body>
             <Modal.Footer>
                 <Button variant="danger" onClick={props.handleDelete}>
-                    Yes
+                    Delete
                 </Button>
                 <Button variant="secondary" onClick={props.onHide}>
-                    No
+                    Cancel
                 </Button>
             </Modal.Footer>
         </Modal>

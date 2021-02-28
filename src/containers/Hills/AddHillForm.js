@@ -1,6 +1,6 @@
 import React from "react";
 import {Formik} from "formik";
-import {Header5, StyledDiv2Right1000, StyledForm} from "../../components/StyledComponents";
+import {Header3, Header5, StyledDiv2Right1000, StyledForm} from "../../components/StyledComponents";
 import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
 import {Button} from "react-bootstrap";
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
@@ -62,7 +62,7 @@ const AddHillForm = (props) => (
                 handleSubmit()
             }}>
 
-                {props.mainHeader}
+                <Header3>{props.mainHeader}</Header3>
 
                 <Header5>Basic Parameters</Header5>
                 <small>Fields with (*) are mandatory</small>
@@ -72,7 +72,6 @@ const AddHillForm = (props) => (
                     name="name"
                     label="Name*:"
                 /> : null}
-
 
                 {/*Size of hill*/}
                 <FormikSelectInputForm
@@ -308,6 +307,8 @@ const AddHillForm = (props) => (
                     placeholder={"Horizontal distance between the front of the judge tower and the jumping hill\n" +
                     "axis line"}
                 />
+
+                <Header5>Certificate</Header5>
 
                 {/*valid since*/}
                 <DatePickerField
