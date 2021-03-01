@@ -1,5 +1,9 @@
 import styled from "styled-components";
-import {Form, ListGroup, ListGroupItem, Button} from "react-bootstrap";
+import {Form, ListGroup, ListGroupItem, Button, Accordion} from "react-bootstrap";
+
+export const AccordionWithPadding = styled(Accordion)`
+  padding: 10px;
+`
 
 export const CheckButton = styled(Button)`
     margin:auto;
