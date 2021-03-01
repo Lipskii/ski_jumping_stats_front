@@ -9,7 +9,7 @@ export const CheckButton = styled(Button)`
     margin:auto;
 `
 
-export const ErrorLabel = styled.div`
+export const ErrorLabel = styled.label`
     color: red;
 `
 

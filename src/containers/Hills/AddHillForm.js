@@ -17,6 +17,7 @@ import {HillsValidationSchema} from "./HillsValidationSchema";
 const AddHillForm = (props) => (
 
     <Formik
+        isInitialValid={false}
         initialValues={{
             name: props.initialName,
             sizeOfHillId: '',
@@ -62,20 +63,34 @@ const AddHillForm = (props) => (
     >
         {({
               handleSubmit,
+              errors,
+              touched,
+              values
+
           }) => (
             <StyledForm onSubmit={(e) => {
                 e.preventDefault()
                 handleSubmit()
             }}>
 
+                {console.log("VALUES")}
+                {console.log(values)}
                 <Header3>{props.mainHeader}</Header3>
 
                 <small>Fields with (*) are mandatory</small>
                 <AccordionWithPadding defaultActiveKey="0">
 
+                    {/*Basic Parameters*/}
                     <Card style={{borderRadius: '10px'}}>
                         <Accordion.Toggle as={Card.Header} eventKey="0">
                             <Header5>Basic Parameters</Header5>
+                            {
+                                (errors['name'] !== undefined && touched['name']) ||
+                                (errors['sizeOfHillId'] !== undefined && touched['sizeOfHillId']) ||
+                                (errors['kPoint'] !== undefined && touched['kPoint']) ||
+                                (errors['hs'] !== undefined && touched['hs']) ?
+                                    <text style={{marginRight: "2px"}}>errors</text> : null
+                            }
                         </Accordion.Toggle>
 
                         <Accordion.Collapse eventKey="0">
@@ -114,9 +129,21 @@ const AddHillForm = (props) => (
                         </Accordion.Collapse>
                     </Card>
 
+                    {/*Inrun*/}
                     <Card style={{borderRadius: '10px'}}>
                         <Accordion.Toggle as={Card.Header} eventKey="1">
                             <Header5>Inrun</Header5>
+                            {
+                                (errors['e1'] !== undefined && touched['e1']) ||
+                                (errors['e2'] !== undefined && touched['e2']) ||
+                                (errors['es'] !== undefined && touched['es']) ||
+                                (errors['t'] !== undefined && touched['t']) ||
+                                (errors['gamma'] !== undefined && touched['gamma']) ||
+                                (errors['alpha'] !== undefined && touched['alpha']) ||
+                                (errors['r1'] !== undefined && touched['r1']) ||
+                                (errors['v0'] !== undefined && touched['v0'])
+                                    ? <text style={{marginRight: "2px"}}>errors</text> : null
+                            }
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
@@ -179,10 +206,31 @@ const AddHillForm = (props) => (
                         </Accordion.Collapse>
                     </Card>
 
-
+                    {/*Landing Profile*/}
                     <Card style={{borderRadius: '10px'}}>
                         <Accordion.Toggle as={Card.Header} eventKey="2">
                             <Header5>Landing Profile</Header5>
+                            {
+                                (errors['h'] !== undefined && touched['h']) ||
+                                (errors['n'] !== undefined && touched['n']) ||
+                                (errors['s'] !== undefined && touched['s']) ||
+                                (errors['l1'] !== undefined && touched['l1']) ||
+                                (errors['l2'] !== undefined && touched['l2']) ||
+                                (errors['a'] !== undefined && touched['a']) ||
+                                (errors['betap'] !== undefined && touched['betap']) ||
+                                (errors['beta'] !== undefined && touched['beta']) ||
+                                (errors['betal'] !== undefined && touched['betal']) ||
+                                (errors['rl'] !== undefined && touched['rl']) ||
+                                (errors['r2l'] !== undefined && touched['r2l']) ||
+                                (errors['r2'] !== undefined && touched['r2']) ||
+                                (errors['zu'] !== undefined && touched['zu']) ||
+                                (errors['p'] !== undefined && touched['p']) ||
+                                (errors['l'] !== undefined && touched['l']) ||
+                                (errors['b1'] !== undefined && touched['b1']) ||
+                                (errors['b2'] !== undefined && touched['b2']) ||
+                                (errors['bk'] !== undefined && touched['bk']) ||
+                                (errors['bu'] !== undefined && touched['bu'])
+                                    ? <text style={{marginRight: "2px"}}>errors</text> : null}
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="2">
                             <Card.Body>
@@ -324,9 +372,14 @@ const AddHillForm = (props) => (
                         </Accordion.Collapse>
                     </Card>
 
+                    {/*Judge Tower*/}
                     <Card style={{borderRadius: '10px'}}>
                         <Accordion.Toggle as={Card.Header} eventKey="3">
                             <Header5>Judge Tower</Header5>
+                            {
+                                (errors['d'] !== undefined && touched['d']) ||
+                                (errors['q'] !== undefined && touched['q'])
+                                    ? <text style={{marginRight: "2px"}}>errors</text> : null}
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="3">
                             <Card.Body>
@@ -349,10 +402,15 @@ const AddHillForm = (props) => (
                         </Accordion.Collapse>
                     </Card>
 
-
+                    {/*Certificate*/}
                     <Card style={{borderRadius: '10px'}}>
                         <Accordion.Toggle as={Card.Header} eventKey="4">
                             <Header5>Certificate</Header5>
+                            {
+                                (errors['validSince'] !== undefined && touched['validSince']) ||
+                                (errors['validUntil'] !== undefined && touched['validUntil'])||
+                                (errors['certificate'] !== undefined && touched['certificate'])
+                                    ? <text style={{marginRight: "2px"}}>errors</text> : null}
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="4">
                             <Card.Body>

@@ -10,7 +10,7 @@ const SelectInputForm = (props) =>
                     <option value={""} disabled>Choose...</option>
                     {props.items.map(item =>
                         <option key={item.id} value={item.id} name={item.name}>
-                            {props.valuesToShow.map(value => {
+                            {props.stringsToDisplay.map(value => {
                                 if(item[value] !== undefined){
                                     return item[value]
                                 } else {

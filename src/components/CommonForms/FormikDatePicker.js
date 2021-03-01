@@ -12,7 +12,7 @@ export const DatePickerField = ({ label, ...props }) => {
             <Form.Label column sm={2}>
                 {label}
             </Form.Label>
-            <Col sm={10}>
+            <Col sm={2}>
             <DatePicker
                 {...field}
                 {...props}
@@ -27,6 +27,7 @@ export const DatePickerField = ({ label, ...props }) => {
                     <ErrorLabel>{meta.error}</ErrorLabel>
                 ) : null}
             </Col>
+
         </Form.Group>
 
     );

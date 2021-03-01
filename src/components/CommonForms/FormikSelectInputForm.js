@@ -9,6 +9,7 @@ const FormikSelectInputForm = ({label, hintTextDown, ...props}) =>{
     const [field, meta] = useField(props);
 
     return (
+        <div>
         <Form.Group as={Row}>
             <Form.Label column sm={2}>{label}:</Form.Label>
             <Col sm={10}>
@@ -22,6 +23,8 @@ const FormikSelectInputForm = ({label, hintTextDown, ...props}) =>{
                 ) : null}
             </Col>
         </Form.Group>
+
+        </div>
     )
 }
 

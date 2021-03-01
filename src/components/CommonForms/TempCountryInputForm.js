@@ -4,12 +4,12 @@ import React from "react";
 const TempCountryInputForm = (props) =>
     (
         <Form.Group as={Row}>
-            <Form.Label column sm={2}>{props.title}:</Form.Label>
+            <Form.Label column sm={2}>{props.title}</Form.Label>
             <Col sm={10}>
                 <Form.Control as="select" defaultValue={""} onChange={props.onChangeValue}>
-                    <option value={""} disabled>Choose...</option>
+                    <option value={""} >All countries</option>
                     {props.items.map(item =>
-                        <option key={item.id} >
+                        <option key={item.id} value={item.id} >
                             {props.valuesToShow.map(value => {
                                 if (value === "") {
                                     return ", "

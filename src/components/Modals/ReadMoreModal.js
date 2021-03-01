@@ -7,12 +7,11 @@ const ReadMoreModal = (props) => {
     return (
         <Modal show={props.show} onHide={props.onHide}>
             <Modal.Header closeButton>
-                <Modal.Title>{props.hill.name}</Modal.Title>
+                <Modal.Title>{props.hill.name} (latest version)</Modal.Title>
                 <br/>
             </Modal.Header>
             <Modal.Body>
                 <ul>
-                    <h4>Version: {props.version.validSince} / {props.version.validUntil}</h4>
                     <h5>Basic Parameters</h5>
                     <li>K-point: {props.version.kPoint} m</li>
                     <li>HS: {props.version.hillSize} m</li>
