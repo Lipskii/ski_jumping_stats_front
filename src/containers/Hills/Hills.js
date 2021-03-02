@@ -41,25 +41,21 @@ class Hills extends Component {
     }
 
     componentDidMount() {
-        axios.get('/api/countries/venues')
-            .then(res => {
+        axios.all([
+            axios.get('/api/countries/venues'),
+            axios.get('/api/sizeOfHill')
+        ])
+            .then(axios.spread((countriesData, sizesData)=> {
                 this.setState({
-                    countries: res.data
+                    countries: countriesData.data,
+                    sizesOfHill: sizesData.data
                 }, () => this.updateVenues())
-            }).catch(error => console.log(error))
-        axios.get('/api/sizeOfHill')
-            .then(res => {
-                this.setState({
-                    sizesOfHill: res.data
-                })
-            }).catch(error => console.log(error))
+            }))
+            .catch(error => console.log(error))
     }
 
     updateVenues = (e) => {
         let eTargetValue
-
-        console.log("UPDATELISTTO COUNTRY ")
-        console.log(e)
 
         if (e === undefined) {
             eTargetValue = ''

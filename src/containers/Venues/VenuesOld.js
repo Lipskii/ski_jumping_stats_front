@@ -18,7 +18,7 @@ import TempCountryInputForm from "../../components/CommonForms/TempCountryInputF
 
 
 
-class AddVenue extends Component {
+class VenuesOld extends Component {
 
     state = {
         countries: [],
@@ -265,4 +265,4 @@ class AddVenue extends Component {
     }
 }
 
-export default AddVenue
+export default VenuesOld
