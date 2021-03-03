@@ -1,12 +1,13 @@
 import React, {Component} from "react";
 import {
+    ErrorLabel,
     Header3, HillNameTd, SmallTd, StyledDiv2Right1000, StyledDivCentered1000, TableButton
 } from "../../components/StyledComponents";
 import {Button, Form, Table} from "react-bootstrap";
 import axios from "axios";
 import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
-import AddHillForm from "./AddHillForm";
+import HillForm from "./HillForm";
 import DeleteModal from "../../components/Modals/DeleteModal";
 import ReadMoreModal from "../../components/Modals/ReadMoreModal";
 import EditModal from "../../components/Modals/EditModal";
@@ -45,7 +46,7 @@ class Hills extends Component {
             axios.get('/api/countries/venues'),
             axios.get('/api/sizeOfHill')
         ])
-            .then(axios.spread((countriesData, sizesData)=> {
+            .then(axios.spread((countriesData, sizesData) => {
                 this.setState({
                     countries: countriesData.data,
                     sizesOfHill: sizesData.data
@@ -80,21 +81,10 @@ class Hills extends Component {
     }
 
     updateHillsList = () => {
+        const venue = this.state.venues.find(venue => venue.id === this.state.selectedVenueId)
         this.setState({
-            setHillsLoading: true
-        }, () => {
-            axios.get('/api/hills/' + this.state.selectedVenueId)
-                .then(res => {
-                    this.setState(
-                        {
-                            setHillsLoading: false,
-                            hills: res.data,
-                            showHillForm: false
-                        }
-                    )
-                })
+            hills: venue.hills
         })
-
     }
 
     handleAddVersionButton = (e) => {
@@ -311,11 +301,11 @@ class Hills extends Component {
                         items={this.state.venues}
                         stringsToDisplay={["name", ", ", "city"]}
                         disabled={this.state.setVenuesLoading}
-                        hintTextDown={!this.state.selectedVenueId.length > 0 ?
+                        hintTextDown={!(this.state.selectedVenueId !== "") ?
                             <small>Select a venue to continue</small> : null}
                         onChangeValue={e =>
                             this.setState({
-                                selectedVenueId: e.target.value,
+                                selectedVenueId: parseInt(e.target.value),
                                 selectedHillName: "",
                                 selectedHillId: "",
                             }, () => this.updateHillsList())}
@@ -348,8 +338,15 @@ class Hills extends Component {
                                         return o.last_year;
                                     }))
 
-                                    if(hill.hillVersions.length > 0){
+                                    if (hill.hillVersions.length > 0) {
                                         const latestVersion = hill.hillVersions.find(hillVersion => hillVersion.last_year === maxYear)
+                                        const validUntil = new Date(latestVersion.validUntil)
+
+                                        let validityError = null
+                                        if (validUntil < new Date()) {
+                                            validityError = <ErrorLabel>Certificate expired!</ErrorLabel>
+                                        }
+
                                         return (<tr key={hill.id} id={hill.name}>
                                             <HillNameTd>{hill.name}</HillNameTd>
                                             <td>
@@ -358,6 +355,7 @@ class Hills extends Component {
                                                     <li>HS: {latestVersion.hillSize} m</li>
                                                     <li>Valid since: {latestVersion.validSince}</li>
                                                     <li>Valid until: {latestVersion.validUntil}</li>
+                                                    {validityError}
                                                 </ul>
                                                 <Button
                                                     size={"sm"}
@@ -401,24 +399,26 @@ class Hills extends Component {
                                     } else {
                                         return (
                                             <tr>
-                                            <HillNameTd>{hill.name}</HillNameTd>
-                                            <td/>
-                                            <SmallTd/>
+                                                <HillNameTd>{hill.name}</HillNameTd>
+                                                <td/>
+                                                <SmallTd/>
                                             </tr>
-                                            )
+                                        )
                                     }
 
                                 }
                             )}
                             </tbody>
                         </Table>
-                        : null}
-                    {this.state.selectedVenueId.length > 0 && !this.state.hills.length > 0 ?
+                        :
+                        null
+                    }
+                    {this.state.selectedVenueId !== "" && !this.state.hills.length > 0 ?
                         <Form.Text muted>no hills yet in this venue</Form.Text> : null
                     }
 
                     {/*Add Hill Button*/}
-                    {this.state.selectedVenueId.length > 0 ? <StyledDiv2Right1000>
+                    {this.state.selectedVenueId !== "" ? <StyledDiv2Right1000>
                         <Button onClick={() => this.setState({
                             selectedHillId: "",
                             selectedHillName: "",
@@ -436,7 +436,7 @@ class Hills extends Component {
                                     showHillForm: false
                                 })} variant={"secondary"}>Hide</Button>
                             </StyledDiv2Right1000>
-                            <AddHillForm
+                            <HillForm
                                 mainHeader={this.state.formHeaderText}
                                 showNameField={this.state.selectedHillId === ""}
                                 selectedVenueId={this.state.selectedVenueId}

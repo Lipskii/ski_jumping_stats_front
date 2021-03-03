@@ -14,7 +14,7 @@ import {DatePickerField} from "../../components/CommonForms/FormikDatePicker";
 import {HillsValidationSchema} from "./HillsValidationSchema";
 
 
-const AddHillForm = (props) => (
+const HillForm = (props) => (
 
     <Formik
         isInitialValid={false}
@@ -73,8 +73,6 @@ const AddHillForm = (props) => (
                 handleSubmit()
             }}>
 
-                {console.log("VALUES")}
-                {console.log(values)}
                 <Header3>{props.mainHeader}</Header3>
 
                 <small>Fields with (*) are mandatory</small>
@@ -453,4 +451,4 @@ const AddHillForm = (props) => (
 )
 
 
-export default AddHillForm
+export default HillForm
