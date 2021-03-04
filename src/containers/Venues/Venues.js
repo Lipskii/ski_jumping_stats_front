@@ -134,7 +134,7 @@ class Venues extends Component {
                                 </thead>
                                 <tbody>
                                 {this.state.venues.map(venue => {
-                                    if (((this.state.activePage - 1) * 7 <= this.state.venues.indexOf(venue)) && (this.state.venues.indexOf(venue) < this.state.activePage * 7 + 1)) {
+                                    if (((this.state.activePage - 1) * 7 <= this.state.venues.indexOf(venue)) && (this.state.venues.indexOf(venue) < this.state.activePage * 7)) {
                                         return (
                                             <tr key={venue.id} id={venue.id}>
                                                 <td>{venue.name}</td>

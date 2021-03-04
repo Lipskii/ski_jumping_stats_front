@@ -19,7 +19,7 @@ class Hills extends Component {
 
     state = {
         countries: [],
-        currentCountry: null,
+        currentCountry: '',
         formHeaderText: "",
         venues: [],
         selectedVenueId: "",
@@ -59,7 +59,7 @@ class Hills extends Component {
         let eTargetValue
 
         if (e === undefined) {
-            eTargetValue = ''
+            eTargetValue = this.state.currentCountry
         } else {
             eTargetValue = e.target.value
         }
@@ -74,17 +74,19 @@ class Hills extends Component {
                     this.setState({
                         venues: res.data,
                         setVenuesLoading: false
-                    })
+                    }, () => this.updateHillsList())
                 }).catch(error => console.log(error))
         })
 
     }
 
     updateHillsList = () => {
-        const venue = this.state.venues.find(venue => venue.id === this.state.selectedVenueId)
-        this.setState({
-            hills: venue.hills
-        })
+        if(this.state.selectedVenueId !== ""){
+            const venue = this.state.venues.find(venue => venue.id === this.state.selectedVenueId)
+            this.setState({
+                hills: venue.hills
+            })
+        }
     }
 
     handleAddVersionButton = (e) => {
@@ -164,74 +166,92 @@ class Hills extends Component {
         let postSuccessful = true
         this.setState({
             showAddingModal: true
-        }, () => axios.post("/api/hillVersion", {
-            hillId: this.state.selectedHillId,
-            name: values.name,
-            venueId: this.state.selectedVenueId,
-            sizeId: values.sizeOfHillId,
-            kPoint: values.kPoint,
-            hillSize: values.hs,
-            es: values.es,
-            e1: values.e1,
-            e2: values.e2,
-            gamma: values.gamma,
-            r1: values.r1,
-            t: values.t,
-            alpha: values.alpha,
-            s: values.s,
-            v0: values.v0,
-            h: values.h,
-            n: values.n,
-            p: values.p,
-            l1: values.l1,
-            l2: values.l2,
-            betaP: values.betap,
-            beta: values.beta,
-            betaL: values.betal,
-            l: values.l,
-            rl: values.rl,
-            r2l: values.r2l,
-            zu: values.zu,
-            r2: values.r2,
-            a: values.a,
-            b1: values.b1,
-            b2: values.b2,
-            bk: values.bk,
-            bu: values.bu,
-            d: values.d,
-            q: values.q,
-            certificate: values.certificate,
-            validSinceYear: this.state.newHillValidSinceDay,
-            validSinceMonth: this.state.newHillValidSinceMonth,
-            validSinceDay: this.state.newHillValidSinceDay,
-            validUntilYear: this.state.newHillValidUntilDay,
-            validUntilMonth: this.state.newHillValidUntilMonth,
-            validUntilDay: this.state.newHillValidUntilDay,
-
-        }).then(function (response) {
-            console.log(response.data);
-        })
-            .catch(function (error) {
-                console.log(error);
-                postSuccessful = false
-            })
-            .finally(() => {
-                this.setState({
-                    showAddingModal: false
-                }, () => {
-                    if (postSuccessful) {
-                        window.alert(values.name + " added!")
-                        this.updateVenues();
-                    } else {
-                        window.alert("Ups, something went wrong")
-                    }
-                    this.updateHillsList()
-                })
-            }))
+         }, () => {
+            //TODO finish it tomorrow
+        } )
+        // () => axios.post("/api/hillVersion", {
+        //     // hillId: this.state.selectedHillId,
+        //     // name: values.name,
+        //     // venueId: this.state.selectedVenueId,
+        //     // sizeId: values.sizeOfHillId,
+        //     // kPoint: values.kPoint,
+        //     // hillSize: values.hs,
+        //     // es: values.es,
+        //     // e1: values.e1,
+        //     // e2: values.e2,
+        //     // gamma: values.gamma,
+        //     // r1: values.r1,
+        //     // t: values.t,
+        //     // alpha: values.alpha,
+        //     // s: values.s,
+        //     // v0: values.v0,
+        //     // h: values.h,
+        //     // n: values.n,
+        //     // p: values.p,
+        //     // l1: values.l1,
+        //     // l2: values.l2,
+        //     // betaP: values.betap,
+        //     // beta: values.beta,
+        //     // betaL: values.betal,
+        //     // l: values.l,
+        //     // rl: values.rl,
+        //     // r2l: values.r2l,
+        //     // zu: values.zu,
+        //     // r2: values.r2,
+        //     // a: values.a,
+        //     // b1: values.b1,
+        //     // b2: values.b2,
+        //     // bk: values.bk,
+        //     // bu: values.bu,
+        //     // d: values.d,
+        //     // q: values.q,
+        //     // certificate: values.certificate,
+        //     // validSinceYear: this.state.newHillValidSinceDay,
+        //     // validSinceMonth: this.state.newHillValidSinceMonth,
+        //     // validSinceDay: this.state.newHillValidSinceDay,
+        //     // validUntilYear: this.state.newHillValidUntilDay,
+        //     // validUntilMonth: this.state.newHillValidUntilMonth,
+        //     // validUntilDay: this.state.newHillValidUntilDay,
+        //
+        // }).then(function (response) {
+        //     console.log(response.data);
+        // })
+        //     .catch(function (error) {
+        //         console.log(error);
+        //         postSuccessful = false
+        //     })
+        //     .finally(() => {
+        //         this.setState({
+        //             showAddingModal: false
+        //         }, () => {
+        //             if (postSuccessful) {
+        //                 window.alert(values.name + " added!")
+        //                 this.updateVenues();
+        //             } else {
+        //                 window.alert("Ups, something went wrong")
+        //             }
+        //             this.updateHillsList()
+        //         })
+        //     }))
     }
 
     editHill = (values) => {
-        window.alert("Edit Hill called")
+        axios.put("/api/hills/" + parseInt(this.state.selectedHillId), {
+            name: values.name,
+            venue: this.state.venues.find(venue => venue.id === this.state.selectedVenueId),
+            sizeOfHill: this.state.sizesOfHill[1]
+        })
+            .then(function (res) {
+                console.log(res.data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+            .finally(() => {
+                this.setState({
+                    showEditModal: false
+                }, () => this.updateVenues())
+            })
     }
 
     deleteHill = () => {
@@ -323,7 +343,7 @@ class Hills extends Component {
                         : null}
 
                     {/*Table*/}
-                    {this.state.hills.length > 0 && !this.state.setHillsLoading ? <Table bordered hover>
+                    {this.state.hills.length > 0 && !this.state.setHillsLoading ? <Table  bordered hover>
                             <thead>
                             <tr>
                                 <th>Name</th>
@@ -347,7 +367,7 @@ class Hills extends Component {
                                             validityError = <ErrorLabel>Certificate expired!</ErrorLabel>
                                         }
 
-                                        return (<tr key={hill.id} id={hill.name}>
+                                        return (<tr key={hill.name} id={hill.id}>
                                             <HillNameTd>{hill.name}</HillNameTd>
                                             <td>
                                                 <ul>
@@ -387,7 +407,7 @@ class Hills extends Component {
                                                     hillName={this.state.selectedHillName}
                                                     show={this.state.showEditModal}
                                                     onHide={() => this.setState({
-                                                        shoEditModal: false
+                                                        showEditModal: false
                                                     })}
                                                     onSubmit={this.editHill}
                                                 />

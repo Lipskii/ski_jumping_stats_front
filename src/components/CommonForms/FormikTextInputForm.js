@@ -9,7 +9,7 @@ const FormikTextInputForm = ({label, ...props}) => {
 
     return (
         <Form.Group as={Row}>
-            <Form.Label column sm={2}>
+             <Form.Label column sm={2}>
                 {label}
             </Form.Label>
             <Col sm={10}>

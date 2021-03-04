@@ -138,7 +138,6 @@ class VenuesOld extends Component {
             skiClub: this.state.newVenueSkiClubId,
             yearOfOpening: this.state.newVenueYearOfOpening,
             capacity: this.state.newVenueCapacity
-
         }).then(function (response) {
             console.log(response.data);
         })
