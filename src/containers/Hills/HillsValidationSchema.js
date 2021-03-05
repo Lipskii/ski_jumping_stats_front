@@ -12,7 +12,7 @@ export const HillsValidationSchema = () => Yup.object(
             .min(0, 'Cannot be negative')
             .round('floor')
             .required('Required'),
-        hs: Yup.number()
+        hillSize: Yup.number()
             .max(250, 'Too large. Value should be less than 250 m.')
             .min(0, 'Cannot be negative')
             .required('Required'),

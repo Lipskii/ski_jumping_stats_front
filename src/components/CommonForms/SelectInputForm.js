@@ -7,7 +7,7 @@ const SelectInputForm = (props) =>
             <Form.Label column sm={2}>{props.title}:</Form.Label>
             <Col sm={10}>
                 <Form.Control as="select" defaultValue={""} disabled={props.disabled} onChange={props.onChangeValue}>
-                    <option value={""} disabled>Choose...</option>
+                    {props.firstOption}
                     {props.items.map(item =>
                         <option key={item.id} value={item.id} name={item.name}>
                             {props.stringsToDisplay.map(value => {

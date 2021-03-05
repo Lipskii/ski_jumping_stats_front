@@ -58,7 +58,7 @@ const ReadMoreModal = (props) => {
                     <h5>Certificate</h5>
                     <li>Valid since: {props.version.validSince}</li>
                     <li>Valid until: {props.version.validUntil}</li>
-                    <li>URL: <a href={props.version.fisCertificate} target="_blank">click</a></li>
+                    <li>URL: <a href={props.version.fisCertificate} target="_blank" rel="noreferrer">click</a></li>
                 </ul>
             </Modal.Body>
         </Modal>
