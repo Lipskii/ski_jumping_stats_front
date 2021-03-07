@@ -72,7 +72,6 @@ const HillForm = (props) => (
                 e.preventDefault()
                 handleSubmit()
             }}>
-
                 <Header3>{props.mainHeader}</Header3>
 
                 <small>Fields with (*) are mandatory</small>

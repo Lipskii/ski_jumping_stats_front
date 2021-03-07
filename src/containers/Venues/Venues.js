@@ -6,17 +6,17 @@ import {Table, Pagination, Button} from "react-bootstrap";
 import VenueForm from "./VenueForm";
 import Loader from "react-loader-spinner";
 
-
+//TODO fetch cities in different request; finish form; fetch venues in different request
 class Venues extends Component {
     state = {
         activePage: 1,
         countries: [],
+        cities: [],
         formHeaderText: '',
         venues: [],
         venuesLoading: true,
         selectedCountryId: '',
         showVenueForm: false
-
     }
 
 
@@ -24,35 +24,61 @@ class Venues extends Component {
         axios.get('/api/countries/venues')
             .then(res => {
                 this.setState({
-                    countries: res.data,
+                    countries: res.data
                 }, () => this.updateVenues(0))
-            }).catch(error => console.log(error))
+            },).catch(error => console.log(error))
     }
 
     updateVenues = (x) => {
-
 
         if (Number.isNaN(x)) {
             x = 0
         }
 
         let venuesList = []
-        let countries = this.state.countries
+        const countries = this.state.countries
 
         if (x !== 0) {
             const country = countries.find(country => country.id === x)
-            for (const venue of country.venues) {
-                venuesList.push(venue)
+            let citiesWithVenues
+            citiesWithVenues = country.cities.filter(city => city.venues.length > 0)
+            for (const city of citiesWithVenues) {
+                for (const club of city.skiClubs) {
+                    if (club.venues.length > 0) {
+                        for (const venue of city.venues) {
+                            let listObject = {
+                                venue: venue,
+                                city: city,
+                                clubs: club
+                            }
+                            venuesList.push(listObject)
+                        }
+                    }
+                }
             }
         } else {
             for (const country of countries) {
-                for (const venue of country.venues) {
-                    venuesList.push(venue)
+                let citiesWithVenues
+                citiesWithVenues = country.cities.filter(city => city.venues.length > 0)
+                for (const city of citiesWithVenues) {
+                    for (const club of city.skiClubs) {
+                        if (club.venues.length > 0) {
+                            for (const venue of city.venues) {
+                                let listObject = {
+                                    venue: venue,
+                                    city: city,
+                                    clubs: club
+                                }
+                                venuesList.push(listObject)
+                            }
+                        }
+                    }
                 }
             }
         }
-        venuesList.sort((a, b) => a.name.localeCompare(b.name))
+        venuesList.sort((a, b) => a.venue.name.localeCompare(b.venue.name))
 
+        console.log(venuesList)
         this.setState({
             venues: venuesList,
             venuesLoading: false
@@ -136,19 +162,19 @@ class Venues extends Component {
                                 {this.state.venues.map(venue => {
                                     if (((this.state.activePage - 1) * 7 <= this.state.venues.indexOf(venue)) && (this.state.venues.indexOf(venue) < this.state.activePage * 7)) {
                                         return (
-                                            <tr key={venue.id} id={venue.id}>
-                                                <td>{venue.name}</td>
-                                                <td>{venue.city}</td>
-                                                <td>{venue.yearOfOpening}</td>
-                                                <td>{venue.capacity}</td>
-                                                <td>{venue.skiClub}</td>
+                                            <tr key={venue.venue.id} id={venue.venue.id}>
+                                                <td>{venue.venue.name}</td>
+                                                <td>{venue.city.name}</td>
+                                                <td>{venue.venue.yearOfOpening}</td>
+                                                <td>{venue.venue.capacity}</td>
+                                                <td>{venue.clubs.name}</td>
                                                 <td>
-                                                    <TableButton id={venue.id} name={venue.name} size="sm"
+                                                    <TableButton id={venue.venue.id} name={venue.venue.name} size="sm"
                                                                  variant={"info"}
                                                                  onClick={e => this.handleEditButton(e)}>
                                                         Edit
                                                     </TableButton>
-                                                    <TableButton id={venue.id} name={venue.name} size="sm"
+                                                    <TableButton id={venue.venue.id} name={venue.venue.name} size="sm"
                                                                  variant={"danger"}
                                                                  onClick={e => this.handleDeleteButton(e)}>
                                                         Delete
@@ -164,7 +190,6 @@ class Venues extends Component {
                         </div>
                     }
 
-
                     <StyledDiv2Right1000>
                         <Button onClick={() => this.setState({
                             showVenueForm: !this.state.showVenueForm,
@@ -172,13 +197,19 @@ class Venues extends Component {
                         })} variant={"success"}>New Venue</Button>
                     </StyledDiv2Right1000>
 
-                    {/*{this.state.showVenueForm ? <VenueForm*/}
-                    {/*    initialName={''}*/}
-                    {/*    mainHeader={this.state.formHeaderText}*/}
-                    {/*/> : null}*/}
+
 
 
                 </StyledDivCentered1000>
+
+                {this.state.showVenueForm ?
+                    <>
+                        <VenueForm
+                            initialName={""}
+                            mainHeader={"SE"}
+                        />
+                    </>
+                    : null}
 
 
             </React.Fragment>

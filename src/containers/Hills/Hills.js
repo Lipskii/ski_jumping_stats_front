@@ -14,8 +14,6 @@ import EditModal from "../../components/Modals/EditModal";
 import Loader from "react-loader-spinner";
 import AddingModal from "../../components/Modals/AddingModal";
 
-//TODO solve issue with dates in table and add modal that db action during adding is going on
-
 class Hills extends Component {
 
     state = {
@@ -34,10 +32,6 @@ class Hills extends Component {
         sizesOfHill: [],
         showHillForm: false,
         toggleNameField: false,
-        newHillValidSinceDay: "",
-        newHillValidSinceMonth: "",
-        newHillValidSinceYear: "",
-        newHillValidSinceFullDate: "",
         showAddingModal: false,
         showDeleteModal: false,
         showEditModal: false,
@@ -62,7 +56,6 @@ class Hills extends Component {
     }
 
     updateVenues = (e) => {
-        console.log("Update Venues start")
         let eTargetValue
         let urlString
 
@@ -88,7 +81,6 @@ class Hills extends Component {
                 }).catch(error => {
                 console.log(error)
             })
-                .finally(() => console.log("Update Venues ends"))
         })
 
     }
@@ -128,48 +120,10 @@ class Hills extends Component {
         })
     }
 
-    setDate = (date, option) => {
-        const convertedDate = this.convertDate(date)
-
-        if (option === 0) {
-            this.setState({
-                newHillValidSinceDay: convertedDate[0],
-                newHillValidSinceMonth: convertedDate[1],
-                newHillValidSinceYear: convertedDate[2],
-                newHillValidSinceFullDate: date
-            })
-        } else {
-            this.setState({
-                newHillValidUntilDay: convertedDate[0],
-                newHillValidUntilMonth: convertedDate[1],
-                newHillValidUntilYear: convertedDate[2],
-                newHillValidUntilFullDate: date
-            })
-        }
-    }
-
-    convertDate = str => {
-        str = str.toString();
-        let parts = str.split(" ");
-        let months = {
-            Jan: "01",
-            Feb: "02",
-            Mar: "03",
-            Apr: "04",
-            May: "05",
-            Jun: "06",
-            Jul: "07",
-            Aug: "08",
-            Sep: "09",
-            Oct: "10",
-            Nov: "11",
-            Dec: "12"
-        };
-
-        return [parts[2], months[parts[1]], parts[3]]
-    };
-
     postData = (values) => {
+        this.setState({
+            showAddingModal: true
+        })
         if (this.state.selectedHillId !== "") {
             this.postHillVersion(values)
         } else {
@@ -312,8 +266,6 @@ class Hills extends Component {
 
     render() {
 
-        console.log(this.state)
-
         return (
             <React.Fragment>
 
@@ -405,15 +357,13 @@ class Hills extends Component {
                             {this.state.hills.map(
                                 hill => {
 
-                                    const maxValidUntil = new Date(Math.max(...hill.hillVersions.map(e => new Date(e.validUntil))))
+                                    const maxValidUntil = hill.hillVersions.reduce((r, a) => {
+                                        return r.date > a.data ? a : r
+                                    })
 
-                                    console.log(maxValidUntil)
 
                                     if (hill.hillVersions.length > 0) {
-                                        const latestVersion = hill.hillVersions.find(hillVersion => hillVersion.validUntil === maxValidUntil)
-                                        console.log("LATEST VERSION")
-                                        console.log(latestVersion)
-                                        const validUntil = new Date(latestVersion.validUntil)
+                                        const validUntil = new Date(maxValidUntil.validUntil)
 
                                         let validityError = null
                                         if (validUntil < new Date()) {
@@ -424,10 +374,10 @@ class Hills extends Component {
                                             <HillNameTd>{hill.name}</HillNameTd>
                                             <td>
                                                 <ul>
-                                                    <li>K: {latestVersion.kPoint} m</li>
-                                                    <li>HS: {latestVersion.hillSize} m</li>
-                                                    <li>Valid since: {latestVersion.validSince}</li>
-                                                    <li>Valid until: {latestVersion.validUntil}</li>
+                                                    <li>K: {maxValidUntil.kPoint} m</li>
+                                                    <li>HS: {maxValidUntil.hillSize} m</li>
+                                                    <li>Valid since: {maxValidUntil.validSince}</li>
+                                                    <li>Valid until: {maxValidUntil.validUntil}</li>
                                                     {validityError}
                                                 </ul>
                                                 <Button
@@ -439,7 +389,7 @@ class Hills extends Component {
                                                 >Read more</Button>
                                                 <ReadMoreModal
                                                     hill={hill}
-                                                    version={latestVersion}
+                                                    version={maxValidUntil}
                                                     show={this.state.showReadMoreModal}
                                                     onHide={() => this.setState({
                                                         showReadMoreModal: false

@@ -3,7 +3,6 @@ import * as Yup from 'yup';
 export const VenuesValidationSchema = () => Yup.object(
     {
         name: Yup.string()
-            .trim()
             .required('Required'),
         capacity: Yup.number()
             .required('Required'),
