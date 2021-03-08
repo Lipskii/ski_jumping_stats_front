@@ -42,7 +42,7 @@ class Hills extends Component {
         axios.all([
             axios.get('/api/countries/venues'),
             axios.get('/api/sizeOfHill'),
-            axios.get('api/venues')
+            axios.get('/api/venues')
 
         ])
             .then(axios.spread((countriesData, sizesData, venuesData) => {
@@ -133,7 +133,6 @@ class Hills extends Component {
     }
 
     postNewHill = (values) => {
-        console.log("postNewHIll start")
         let id = -1
 
         const hill = {
@@ -142,21 +141,14 @@ class Hills extends Component {
             sizeOfHill: this.state.sizesOfHill.find(size => size.id === parseInt(values.sizeOfHillId))
         }
 
-        axios.post("/api/hill", {
-            name: values.name,
-            venue: this.state.venues.find(venue => venue.id === parseInt(this.state.selectedVenueId)),
-            sizeOfHill: this.state.sizesOfHill.find(size => size.id === parseInt(values.sizeOfHillId)),
-        })
+        axios.post("/api/hill", {...hill})
             .then(response => {
-                console.log(response.data.id);
                 id = response.data.id
             })
             .catch(error => {
                 console.log(error)
             })
             .finally(() => {
-                console.log(id)
-                console.log("postNewHIll end")
                 this.setState({
                     addedHillId: id
                 }, () => {
@@ -265,7 +257,7 @@ class Hills extends Component {
 
 
     render() {
-
+        console.log(this.state)
         return (
             <React.Fragment>
 
@@ -290,11 +282,10 @@ class Hills extends Component {
                 <StyledDivCentered1000>
 
                     {/*Country*/}
-                    <TempCountryInputForm
-                        title={"Show venues from:"}
-                        valuesToShow={["name"]}
-                        items={this.state.countries}
-                        onChangeValue={e => {
+                    <SelectInputForm
+                        title={"Country"}
+                        defaultValue={""}
+                        onChange={e => {
                             this.setState({
                                     selectedVenueId: "",
                                     selectedHillName: "",
@@ -303,7 +294,14 @@ class Hills extends Component {
                                     hillVersions: []
                                 }, () => this.updateVenues(e)
                             )
-                        }}/>
+                        }}
+                    >
+                        <option value={""}>All countries</option>
+                        {this.state.countries.map(country =>
+                            <option key={country.id} value={country.id}>
+                                {country.name}
+                            </option>)}
+                    </SelectInputForm>
 
                     {this.state.setVenuesLoading ?
                         <Loader
@@ -315,23 +313,29 @@ class Hills extends Component {
                         />
                         : null}
 
-                    {/*Venue*/}
-                    {this.state.venues.length > 0 ? <SelectInputForm
-                        key={this.state.currentCountry}
-                        title={"Venue"}
-                        items={this.state.venues}
-                        stringsToDisplay={["name"]}
-                        disabled={this.state.setVenuesLoading}
-                        firstOption={<option value={""} disabled>Choose...</option>}
-                        hintTextDown={!(this.state.selectedVenueId !== "") ?
-                            <small>Select a venue to continue</small> : null}
-                        onChangeValue={e =>
-                            this.setState({
-                                selectedVenueId: parseInt(e.target.value),
-                                selectedHillName: "",
-                                selectedHillId: "",
-                            }, () => this.updateHillsList())}
-                    /> : null}
+                    {this.state.venues.length > 0 ?
+                        <SelectInputForm
+                            key={this.state.currentCountry}
+                            title={"Venue"}
+                            disabled={this.state.setVenuesLoading}
+                            hintTextDown={!(this.state.selectedVenueId !== "") ?
+                                <small>Select a venue to continue</small> : null}
+                            defaultValue={""}
+                            onChange={e =>
+                                this.setState({
+                                    selectedVenueId: parseInt(e.target.value),
+                                    selectedHillName: "",
+                                    selectedHillId: "",
+                                }, () => this.updateHillsList())}
+                        >
+                            <option value={""} disabled>Choose...</option>
+                            {this.state.venues.map(venue =>
+                                <option key={venue.id} value={venue.id} name={venue.name}>
+                                    {venue.name}
+                                </option>
+                            )}
+                        </SelectInputForm> : null
+                    }
 
 
                     {this.state.setHillsLoading ?
@@ -345,7 +349,7 @@ class Hills extends Component {
                         : null}
 
                     {/*Table*/}
-                    {this.state.hills.length > 0 && !this.state.setHillsLoading ? <Table bordered hover>
+                    {this.state.hills.length > 0 && !this.state.setHillsLoading ? <Table bordered hover striped>
                             <thead>
                             <tr>
                                 <th>Name</th>

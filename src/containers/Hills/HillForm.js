@@ -64,8 +64,7 @@ const HillForm = (props) => (
         {({
               handleSubmit,
               errors,
-              touched,
-              values
+              touched
 
           }) => (
             <StyledForm onSubmit={(e) => {

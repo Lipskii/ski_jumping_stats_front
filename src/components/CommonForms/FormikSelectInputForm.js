@@ -11,7 +11,7 @@ const FormikSelectInputForm = ({label, hintTextDown, ...props}) =>{
     return (
         <div>
         <Form.Group as={Row}>
-            <Form.Label column sm={2}>{label}:</Form.Label>
+            <Form.Label column sm={2}>{label}</Form.Label>
             <Col sm={10}>
                 <Form.Control as="select" {...field} {...props} >
                 </Form.Control>
