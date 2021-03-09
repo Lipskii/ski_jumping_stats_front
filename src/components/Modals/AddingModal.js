@@ -6,7 +6,7 @@ const AddingModal = (props) => {
 
     return (
         <Modal show={props.show} onHide={props.onHide} size={"xl"}>
-            <Modal.Header closeButton>
+            <Modal.Header>
                 <Modal.Title>Saving...</Modal.Title>
             </Modal.Header>
             <Modal.Body>

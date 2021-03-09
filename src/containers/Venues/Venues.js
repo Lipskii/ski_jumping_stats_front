@@ -62,8 +62,8 @@ class Venues extends Component {
         } else {
             eTargetValue = e.target.value
             urlStringVenues = '/api/venues/country/' + e.target.value
-            urlStringCities = '/api/cities/' + e.target.value
-            urlStringClubs = '/api/skiClubs/' + e.target.value
+            urlStringCities = '/api/cities/country/' + e.target.value
+            urlStringClubs = '/api/skiClubs/country/' + e.target.value
         }
 
         this.setState({
@@ -77,10 +77,12 @@ class Venues extends Component {
 
             ])
                 .then(axios.spread((venuesData, skiClubsData, citiesData) => {
+                    console.log(urlStringCities)
+                    console.log(citiesData)
                     this.setState({
                         venues: venuesData.data,
                         clubs: skiClubsData.data,
-                        cities: citiesData.data,
+                        citiesWithVenues: citiesData.data,
                         venuesLoading: false
                     })
                 }))
@@ -93,7 +95,7 @@ class Venues extends Component {
 
 
         if (e === undefined || e.target.value === "") {
-            urlStringVenues = '/api/venues' + this.state.currentCountry
+            urlStringVenues = '/api/venues/country/' + this.state.currentCountry
         } else {
             urlStringVenues = '/api/venues/city/' + e.target.value
         }
@@ -116,9 +118,21 @@ class Venues extends Component {
 
     filterFormCities = (e) => {
 
+        let urlStringCities
+        let urlStringClubs
+
+        if (e === undefined || e.target.value === "") {
+            urlStringCities = '/api/cities'
+            urlStringClubs = '/api/skiClubs'
+        } else {
+            urlStringCities = '/api/cities/country/' + e.target.value
+            urlStringClubs = '/api/skiClubs/country/' + e.target.value
+        }
+
+
         axios.all([
-            axios.get('/api/cities/' + e.target.value),
-            axios.get('/api/skiClubs/' + e.target.value)
+            axios.get(urlStringCities),
+            axios.get(urlStringClubs)
         ])
             .then(axios.spread((citiesData,skiClubsData)=>{
                 this.setState({
@@ -127,9 +141,6 @@ class Venues extends Component {
                 })
             }))
             .catch(error => console.log(error))
-
-        console.log("FILTER ")
-        console.log(e.target.value)
     }
 
     handleEditButton = (e) => {
@@ -281,8 +292,9 @@ class Venues extends Component {
                             cities={this.state.citiesForForm}
                             clubs={this.state.clubsForForm}
                             countries={this.state.countries}
-                            defaultCountry={this.state.currentCountry}
+                            currentCountry={this.state.currentCountry}
                             filterByCountry={this.filterFormCities}
+                            updateCities={this.updateToCountry}
                         />
                     </>
                     : null}
