@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import FormikTextInputForm from "../CommonForms/FormikTextInputForm";
 
 
-const EditModal = (props) => {
+const EditHillModal = (props) => {
 
     return (
         <Modal show={props.show} onHide={props.onHide} size={"lg"} centered>
@@ -52,4 +52,4 @@ const EditModal = (props) => {
 
 }
 
-export default EditModal
+export default EditHillModal

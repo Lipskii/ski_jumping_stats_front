@@ -25,7 +25,7 @@ const VenueForm = (props) => {
             {/*to prevent premature component did mount in NewCityModal*/}
             {showModal ? <NewCityModal
                 show={showModal}
-                onHide={() =>{
+                onHide={() => {
                     setShowModal(false)
                     setCities(props.cities)
                 }}
@@ -34,7 +34,7 @@ const VenueForm = (props) => {
                 cities={cities}
                 afterAdding={() => {
                     setCurrentCountry("")
-                    props.updateCities()
+                    props.updateCities()   //TODO change it, so the citiesForForm would be updated
                 }}
             /> : null}
 
@@ -42,13 +42,14 @@ const VenueForm = (props) => {
                 isInitialValid={false}
                 initialValues={{
                     name: props.initialName,
-                    capacity: '',
-                    cityId: '',
-                    skiClubId: '',
-                    yearOfOpening: '',
+                    capacity: props.initialCapacity,
+                    cityId: props.initialCityId,
+                    skiClubId: props.initialClubId,
+                    yearOfOpening: props.initialYearOfOpening,
                 }}
                 validationSchema={VenuesValidationSchema}
                 onSubmit={(values) => {
+                    console.log("ON SUBMIT")
                     props.onSubmit(values)
                 }}
             >{({
@@ -72,7 +73,7 @@ const VenueForm = (props) => {
                                 label="Name*:"
                             />
 
-                            <SelectInputForm
+                            {props.isEdit ? null :  <SelectInputForm
                                 title={"Country:"}
                                 defaultValue={currentCountry}
                                 onChange={e => {
@@ -85,9 +86,10 @@ const VenueForm = (props) => {
                                     <option key={country.id} value={country.id}>
                                         {country.name}
                                     </option>)}
-                            </SelectInputForm>
+                            </SelectInputForm>}
 
-                            <FormikSelectInputForm
+
+                            {props.isEdit  ? null : <FormikSelectInputForm
                                 key={cities}
                                 name="cityId"
                                 label="City*:"
@@ -103,7 +105,8 @@ const VenueForm = (props) => {
                                 {props.cities.map(city => (
                                     <option key={city.id} value={city.id}>{city.name}</option>
                                 ))}
-                            </FormikSelectInputForm>
+                            </FormikSelectInputForm> }
+
 
                             <FormikSelectInputForm
                                 name="skiClubId"
@@ -116,10 +119,10 @@ const VenueForm = (props) => {
                                 ))}
                             </FormikSelectInputForm>
 
-                            <FormikTextInputForm
+                            {props.isEdit ? null : <FormikTextInputForm
                                 name="yearOfOpening"
                                 label="Opened in*:"
-                            />
+                            />}
 
                             <FormikTextInputForm
                                 name="capacity"

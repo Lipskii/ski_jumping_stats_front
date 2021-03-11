@@ -10,7 +10,7 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NewCityForm from "../../components/CommonForms/NewCityForm";
-import EditModal from "../../components/Modals/EditModal";
+import EditHillModal from "../../components/Modals/EditHillModal";
 import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
 import TextInputForm from "../../components/CommonForms/TextInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
@@ -207,8 +207,8 @@ class AddAthlete extends Component {
         return (
             <React.Fragment>
 
-                <EditModal show={this.state.showEditModal} handleClose={this.deleteSkiJumper}
-                           selectedName={this.state.selectedSkiJumperName} handleCloseNoAction={this.deleteSkiJumper}/>
+                <EditHillModal show={this.state.showEditModal} handleClose={this.deleteSkiJumper}
+                               selectedName={this.state.selectedSkiJumperName} handleCloseNoAction={this.deleteSkiJumper}/>
 
                 <Header3>Register an Athlete</Header3>
                 <StyledForm onSubmit={this.onSubmitAthleteForm}>

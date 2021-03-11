@@ -10,7 +10,7 @@ import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import HillForm from "./HillForm";
 import DeleteModal from "../../components/Modals/DeleteModal";
 import ReadMoreModal from "../../components/Modals/ReadMoreModal";
-import EditModal from "../../components/Modals/EditModal";
+import EditHillModal from "../../components/Modals/EditHillModal";
 import Loader from "react-loader-spinner";
 import AddingModal from "../../components/Modals/AddingModal";
 
@@ -27,6 +27,7 @@ class Hills extends Component {
         hills: [],
         selectedHillName: "",
         selectedHillId: "",
+        selectedHillSize: '',
         setHillsLoading: false,
         setVenuesLoading: false,
         sizesOfHill: [],
@@ -233,7 +234,7 @@ class Hills extends Component {
         axios.put("/api/hills/" + parseInt(this.state.selectedHillId), {
             name: values.name,
             venue: this.state.venues.find(venue => venue.id === this.state.selectedVenueId),
-            sizeOfHill: this.state.sizesOfHill[1]
+            sizeOfHill: this.state.sizesOfHill.find(size => size.id === parseInt(this.state.selectedHillSize))
         })
             .then(function (res) {
                 console.log(res.data)
@@ -406,11 +407,18 @@ class Hills extends Component {
                                                              onClick={e => this.handleAddVersionButton(e)}>
                                                     Add version
                                                 </TableButton>
-                                                <TableButton id={hill.id} name={hill.name} size="sm" variant={"info"}
-                                                             onClick={e => this.handleEditButton(e)}>
+                                                <TableButton id={hill.id} size="sm" variant={"info"}
+                                                             onClick={e => {
+                                                                 console.log(hill)
+                                                                 this.setState({
+                                                                 selectedHillName: hill.name,
+                                                                 selectedHillId: hill.id,
+                                                                 selectHillSize: hill.sizeOfHill,
+                                                                 showEditModal: true,
+                                                             })}}>
                                                     Edit name
                                                 </TableButton>
-                                                <EditModal
+                                                <EditHillModal
                                                     hillName={this.state.selectedHillName}
                                                     show={this.state.showEditModal}
                                                     onHide={() => this.setState({

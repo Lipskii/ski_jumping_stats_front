@@ -5,6 +5,8 @@ import {Table, Pagination, Button, Form} from "react-bootstrap";
 import VenueForm from "./VenueForm";
 import Loader from "react-loader-spinner";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
+import AddingModal from "../../components/Modals/AddingModal";
+import DeleteModal from "../../components/Modals/DeleteModal";
 
 //TODO finish form
 class Venues extends Component {
@@ -16,11 +18,15 @@ class Venues extends Component {
         citiesWithVenues: [],
         clubs: [],
         clubsForForm: [],
-        formHeaderText: '',
+        editVenue: false,
+        venueToDelete: '',
+        venueToEdit: '',
         venues: [],
         venuesLoading: false,
         currentCountry: '',
-        showVenueForm: false
+        newVenue: false,
+        showAddingModal: false,
+        showDeleteModal: false
     }
 
     componentDidMount() {
@@ -134,7 +140,7 @@ class Venues extends Component {
             axios.get(urlStringCities),
             axios.get(urlStringClubs)
         ])
-            .then(axios.spread((citiesData,skiClubsData)=>{
+            .then(axios.spread((citiesData, skiClubsData) => {
                 this.setState({
                     clubsForForm: skiClubsData.data,
                     citiesForForm: citiesData.data,
@@ -143,13 +149,80 @@ class Venues extends Component {
             .catch(error => console.log(error))
     }
 
-    handleEditButton = (e) => {
+    postVenue = (values) => {
+        let successful = false
+        this.setState({
+            showAddingModal: true
+        },() => {
+            axios.post('/api/venues', {
+                name: values.name,
+                yearOfOpening: values.yearOfOpening,
+                capacity: values.capacity,
+                skiClub: this.state.clubsForForm.find(club => club.id === parseInt(values.skiClubId)),
+                city: this.state.citiesForForm.find(city => city.id === parseInt(values.cityId))
+            })
+                .then(res => {
+                    if (res.status === 200) {
+                        successful = true
+                    }
+                    console.log(res)
+                    this.updateToCountry()
+                })
+                .catch(error => console.log(error))
+                .finally(() => {
+                    if (successful) {
+                        window.alert(values.name + " added!")
+                    } else {
+                        window.alert("Something went wrong")
+                    }
+                    this.setState({
+                        showAddingModal: false
+                    })
+                })
+        })
 
     }
 
-    handleDeleteButton = (e) => {
-
+    editVenue = (values) => {
+        let successful = false
+        this.setState({
+            showAddingModal: true
+        },() => {
+            axios.put('/api/venues/' + this.state.venueToEdit.id, {
+                name: values.name,
+                yearOfOpening: values.yearOfOpening,
+                capacity: values.capacity,
+                skiClub: this.state.clubsForForm.find(club => club.id === parseInt(values.skiClubId)),
+                city: this.state.citiesForForm.find(city => city.id === parseInt(values.cityId))
+            })
+                .then(res => {
+                    if (res.status === 200) {
+                        successful = true
+                    }
+                    console.log(res)
+                    this.updateToCountry()
+                })
+                .catch(error => console.log(error))
+                .finally(() => {
+                    if (successful) {
+                        window.alert(values.name + " edited!")
+                    } else {
+                        window.alert("Something went wrong")
+                    }
+                    this.setState({
+                        showAddingModal: false
+                    })
+                })
+        })
     }
+
+    deleteVenue = () =>{
+        window.alert("Delete venue called " + this.state.venueToDelete.id)
+        this.setState({
+            showDeleteModal: false
+        })
+    }
+
 
     render() {
         console.log(this.state)
@@ -176,6 +249,18 @@ class Venues extends Component {
 
         return (
             <React.Fragment>
+
+                <DeleteModal
+                    show={this.state.showDeleteModal}
+                    onHide={() => this.setState({
+                        showDeleteModal: false,
+                        venueToDelete: ''
+                    })}
+                    title={this.state.venueToDelete.name}
+                    handleDelete={this.deleteVenue}
+                />
+                <AddingModal show={this.state.showAddingModal}/>
+
                 <Header3>Venues</Header3>
 
                 <StyledDivCentered1000>
@@ -202,7 +287,7 @@ class Venues extends Component {
 
                     {/*City*/}
                     <SelectInputForm
-                        key={this.state.currentCountry}
+                        key={this.state.citiesWithVenues}
                         title={"City:"}
                         disabled={this.state.citiesWithVenues.length < 1}
                         defaultValue={""}
@@ -255,12 +340,23 @@ class Venues extends Component {
                                                 <td>
                                                     <TableButton id={venue.id} name={venue.name} size="sm"
                                                                  variant={"info"}
-                                                                 onClick={e => this.handleEditButton(e)}>
+                                                                 onClick={() =>
+                                                                 this.setState({
+                                                                     editVenue: false,
+                                                                     newVenue: false,
+                                                                    venueToEdit: venue
+                                                                 },() => this.setState({
+                                                                     editVenue: true
+                                                                 }))}>
                                                         Edit
                                                     </TableButton>
                                                     <TableButton id={venue.id} name={venue.name} size="sm"
                                                                  variant={"danger"}
-                                                                 onClick={e => this.handleDeleteButton(e)}>
+                                                                 onClick={() => this.setState({
+                                                                     showDeleteModal: true,
+                                                                     venueToDelete: venue
+                                                                 })
+                                                                 }>
                                                         Delete
                                                     </TableButton>
                                                 </td>
@@ -276,28 +372,45 @@ class Venues extends Component {
 
                     <StyledDiv2Right1000>
                         <Button onClick={() => this.setState({
-                            showVenueForm: !this.state.showVenueForm,
-                            formHeaderText: "Adding new venue"
+                            newVenue: !this.state.newVenue,
+                            editVenue: false,
                         })} variant={"success"}>New Venue</Button>
                     </StyledDiv2Right1000>
 
 
                 </StyledDivCentered1000>
 
-                {this.state.showVenueForm ?
-                    <>
+                {this.state.newVenue ?
                         <VenueForm
-                            initialName={""}
-                            mainHeader={this.state.formHeaderText}
+                            initialName={''}
+                            initialClubId={''}
+                            initialCapacity={''}
+                            initialCityId={''}
+                            initialYearOfOpening={''}
+                            mainHeader={"Adding new venue"}
                             cities={this.state.citiesForForm}
                             clubs={this.state.clubsForForm}
                             countries={this.state.countries}
                             currentCountry={this.state.currentCountry}
                             filterByCountry={this.filterFormCities}
                             updateCities={this.updateToCountry}
+                            isEdit={false}
+                            onSubmit={this.postVenue}
                         />
-                    </>
                     : null}
+
+                {this.state.editVenue ? <VenueForm
+                    initialName={this.state.venueToEdit.name}
+                    initialClubId={this.state.venueToEdit.skiClub.id}
+                    initialCapacity={this.state.venueToEdit.capacity}
+                    initialCityId={this.state.venueToEdit.city.id}
+                    initialYearOfOpening={this.state.venueToEdit.yearOfOpening}
+                    mainHeader={"Editing " + this.state.venueToEdit.name}
+                    clubs={this.state.clubsForForm}
+                    isEdit={true}
+                    showCities={false}
+                    onSubmit={this.editVenue}
+                /> : null}
 
 
             </React.Fragment>

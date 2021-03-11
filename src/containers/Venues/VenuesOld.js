@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import {Button} from "react-bootstrap";
 import NewCityForm from "../../components/CommonForms/NewCityForm";
-import EditModal from "../../components/Modals/EditModal";
+import EditHillModal from "../../components/Modals/EditHillModal";
 import TextInputForm from "../../components/CommonForms/TextInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
@@ -164,8 +164,8 @@ class VenuesOld extends Component {
         return (
 
             <React.Fragment>
-                <EditModal show={this.state.showEditModal} handleClose={this.deleteVenue}
-                           selectedName={this.state.selectedVenueName} handleCloseNoAction={this.handleCloseNoAction}/>
+                <EditHillModal show={this.state.showEditModal} handleClose={this.deleteVenue}
+                               selectedName={this.state.selectedVenueName} handleCloseNoAction={this.handleCloseNoAction}/>
 
                 <Header3>Register a Venue</Header3>
 

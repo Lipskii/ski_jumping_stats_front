@@ -5,7 +5,7 @@ export const VenuesValidationSchema = () => Yup.object(
         name: Yup.string()
             .required('Required'),
         capacity: Yup.number()
-            .positive('Must be a positive number')
+            .min(0,"Cannot be less than 0")
             .required('Required'),
         cityId: Yup.number()
             .required('Required'),
