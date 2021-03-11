@@ -5,7 +5,7 @@ import Loader from "react-loader-spinner";
 const AddingModal = (props) => {
 
     return (
-        <Modal show={props.show} onHide={props.onHide} size={"xl"}>
+        <Modal show={props.show} onHide={props.onHide} size={"m"}>
             <Modal.Header>
                 <Modal.Title>Saving...</Modal.Title>
             </Modal.Header>

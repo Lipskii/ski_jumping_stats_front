@@ -7,12 +7,14 @@ import Loader from "react-loader-spinner";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import AddingModal from "../../components/Modals/AddingModal";
 import DeleteModal from "../../components/Modals/DeleteModal";
+import CompletedModal from "../../components/Modals/CompletedModal";
 
-//TODO finish form
+
 class Venues extends Component {
     state = {
         activePage: 1,
         countriesWithVenues: [],
+        countries: [],
         cities: [],
         citiesForForm: [],
         citiesWithVenues: [],
@@ -26,7 +28,10 @@ class Venues extends Component {
         currentCountry: '',
         newVenue: false,
         showAddingModal: false,
-        showDeleteModal: false
+        showDeleteModal: false,
+        showCompletedModal: false,
+        completedModalText: "",
+        completedModalStatus: false
     }
 
     componentDidMount() {
@@ -83,8 +88,6 @@ class Venues extends Component {
 
             ])
                 .then(axios.spread((venuesData, skiClubsData, citiesData) => {
-                    console.log(urlStringCities)
-                    console.log(citiesData)
                     this.setState({
                         venues: venuesData.data,
                         clubs: skiClubsData.data,
@@ -170,12 +173,16 @@ class Venues extends Component {
                 })
                 .catch(error => console.log(error))
                 .finally(() => {
-                    if (successful) {
-                        window.alert(values.name + " added!")
+                    let modalText
+                    if(successful){
+                        modalText = values.name + " added."
                     } else {
-                        window.alert("Something went wrong")
+                        modalText = "Ups, there was a problem. Try again."
                     }
                     this.setState({
+                        showCompletedModal: true,
+                        completedModalText: modalText,
+                        completedModalStatus: successful,
                         showAddingModal: false
                     })
                 })
@@ -199,17 +206,20 @@ class Venues extends Component {
                     if (res.status === 200) {
                         successful = true
                     }
-                    console.log(res)
                     this.updateToCountry()
                 })
                 .catch(error => console.log(error))
                 .finally(() => {
-                    if (successful) {
-                        window.alert(values.name + " edited!")
-                    } else {
-                        window.alert("Something went wrong")
-                    }
-                    this.setState({
+                    let modalText
+                        if(successful){
+                            modalText = values.name + " edited."
+                        } else {
+                            modalText = "Ups, there was a problem. Try again."
+                        }
+                        this.setState({
+                        showCompletedModal: true,
+                        completedModalText: modalText,
+                        completedModalStatus: successful,
                         showAddingModal: false
                     })
                 })
@@ -250,6 +260,16 @@ class Venues extends Component {
         return (
             <React.Fragment>
 
+                <CompletedModal
+                    show={this.state.showCompletedModal}
+                    text={this.state.completedModalText}
+                    onHide={() => this.setState({
+                        showCompletedModal: false,
+                        completedModalText: ""
+                    })}
+                    status={this.state.completedModalStatus}
+                />
+
                 <DeleteModal
                     show={this.state.showDeleteModal}
                     onHide={() => this.setState({
@@ -272,7 +292,6 @@ class Venues extends Component {
                         defaultValue={""}
                         onChange={e => {
                             this.setState({
-                                selectedCountryId: e.target.value,
                                 activePage: 1,
                                 venuesLoading: true
                             }, () => this.updateToCountry(e))

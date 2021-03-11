@@ -16,9 +16,9 @@ import TextInputForm from "../../components/CommonForms/TextInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 
 
+//TODO whole class will be changed till sunday
 
-
-class AddAthlete extends Component {
+class Athletes extends Component {
 
     state = {
         countries: [],
@@ -349,4 +349,4 @@ class AddAthlete extends Component {
 }
 
 
-export default AddAthlete
+export default Athletes

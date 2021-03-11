@@ -5,7 +5,6 @@ import {
 } from "../../components/StyledComponents";
 import {Button, Form, Table} from "react-bootstrap";
 import axios from "axios";
-import TempCountryInputForm from "../../components/CommonForms/TempCountryInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import HillForm from "./HillForm";
 import DeleteModal from "../../components/Modals/DeleteModal";
@@ -13,6 +12,7 @@ import ReadMoreModal from "../../components/Modals/ReadMoreModal";
 import EditHillModal from "../../components/Modals/EditHillModal";
 import Loader from "react-loader-spinner";
 import AddingModal from "../../components/Modals/AddingModal";
+import CompletedModal from "../../components/Modals/CompletedModal";
 
 class Hills extends Component {
 
@@ -36,7 +36,10 @@ class Hills extends Component {
         showAddingModal: false,
         showDeleteModal: false,
         showEditModal: false,
-        showReadMoreModal: false
+        showReadMoreModal: false,
+        showCompletedModal: false,
+        completedModalText: "",
+        completedModalStatus: false
     }
 
     componentDidMount() {
@@ -135,7 +138,7 @@ class Hills extends Component {
 
     postNewHill = (values) => {
         let id = -1
-
+        let successful = true
         const hill = {
             name: values.name,
             venue: this.state.venues.find(venue => venue.id === parseInt(this.state.selectedVenueId)),
@@ -147,14 +150,24 @@ class Hills extends Component {
                 id = response.data.id
             })
             .catch(error => {
+                successful = false
                 console.log(error)
             })
             .finally(() => {
-                this.setState({
-                    addedHillId: id
-                }, () => {
-                    this.postHillVersion(values, hill)
-                })
+                if (successful) {
+                    this.setState({
+                        addedHillId: id
+                    }, () => {
+                        this.postHillVersion(values, hill)
+                    })
+                } else {
+                    this.setState({
+                        showCompletedModal: true,
+                        completedModalText: "Ups, something went wrong. Try again.",
+                        completedModalStatus: successful,
+                        showAddingModal: false
+                    })
+                }
             })
 
     }
@@ -171,7 +184,7 @@ class Hills extends Component {
         } else {
             hillToVersion = this.state.hills.find(hill => hill.id === parseInt(this.state.selectedHillId))
         }
-        let postSuccessful = true
+        let successful = true
 
         axios.post("/api/hillVersion", {
             hill: hillToVersion,
@@ -214,23 +227,26 @@ class Hills extends Component {
             })
             .catch(error => {
                 console.log(error)
-                postSuccessful = false
+                successful = false
             })
             .finally(() => {
+                let modalText
+                if (successful) {
+                    modalText = values.name + " added."
+                } else {
+                    modalText = "Ups, there was a problem. Try again."
+                }
                 this.setState({
+                    showCompletedModal: true,
+                    completedModalText: modalText,
+                    completedModalStatus: successful,
                     showAddingModal: false
-                }, () => {
-                    if (postSuccessful) {
-                        window.alert(values.name + " added!")
-                        this.updateVenues();
-                    } else {
-                        window.alert("Ups, something went wrong")
-                    }
-                })
+                }, () => this.updateVenues())
             })
     }
 
     editHill = (values) => {
+        let successful = true
         axios.put("/api/hills/" + parseInt(this.state.selectedHillId), {
             name: values.name,
             venue: this.state.venues.find(venue => venue.id === this.state.selectedVenueId),
@@ -241,11 +257,21 @@ class Hills extends Component {
             })
             .catch(function (error) {
                 console.log(error)
+                successful = false
             })
             .finally(() => {
+                let modalText
+                if (successful) {
+                    modalText = values.name + " edited."
+                } else {
+                    modalText = "Ups, there was a problem. Try again."
+                }
                 this.setState({
-                    showEditModal: false
-                }, () => this.updateVenues())
+                    showCompletedModal: true,
+                    completedModalText: modalText,
+                    completedModalStatus: successful,
+                    showAddingModal: false
+                })
             })
     }
 
@@ -261,6 +287,15 @@ class Hills extends Component {
         console.log(this.state)
         return (
             <React.Fragment>
+
+                <CompletedModal
+                    show={this.state.showCompletedModal}
+                    text={this.state.completedModalText}
+                    onHide={() => this.setState({
+                        showCompletedModal: false,
+                        completedModalText: ""
+                    })}
+                />
 
                 <AddingModal
                     show={this.state.showAddingModal}
@@ -408,14 +443,14 @@ class Hills extends Component {
                                                     Add version
                                                 </TableButton>
                                                 <TableButton id={hill.id} size="sm" variant={"info"}
-                                                             onClick={e => {
-                                                                 console.log(hill)
+                                                             onClick={() => {
                                                                  this.setState({
-                                                                 selectedHillName: hill.name,
-                                                                 selectedHillId: hill.id,
-                                                                 selectHillSize: hill.sizeOfHill,
-                                                                 showEditModal: true,
-                                                             })}}>
+                                                                     selectedHillName: hill.name,
+                                                                     selectedHillId: hill.id,
+                                                                     selectHillSize: hill.sizeOfHill,
+                                                                     showEditModal: true,
+                                                                 })
+                                                             }}>
                                                     Edit name
                                                 </TableButton>
                                                 <EditHillModal
