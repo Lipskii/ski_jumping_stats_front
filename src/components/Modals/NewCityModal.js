@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import {Button, Card, Modal} from "react-bootstrap";
 import SelectInputForm from "../CommonForms/SelectInputForm";
 import FormikSelectInputForm from "../CommonForms/FormikSelectInputForm";
-import {Header3, StyledDiv2Right1000} from "../StyledComponents";
+import {Header3, StyledDiv2Right1200} from "../StyledComponents";
 import FormikTextInputForm from "../CommonForms/FormikTextInputForm";
 
 class NewCityModal extends Component {
@@ -120,9 +120,9 @@ class NewCityModal extends Component {
                                     ))}
                                 </FormikSelectInputForm>
 
-                                <StyledDiv2Right1000>
+                                <StyledDiv2Right1200>
                                     <Button type={"submit"}>Submit</Button>
-                                </StyledDiv2Right1000>
+                                </StyledDiv2Right1200>
 
                             </Form>
                         </Modal.Body>

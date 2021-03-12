@@ -4,7 +4,7 @@ import {Button, Pagination, Table} from "react-bootstrap";
 import CompletedModal from "../../components/Modals/CompletedModal";
 import DeleteModal from "../../components/Modals/DeleteModal";
 import AddingModal from "../../components/Modals/AddingModal";
-import {Header3, StyledDiv2Right1000, StyledDivCentered1000, TableButton} from "../../components/StyledComponents";
+import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "../../components/StyledComponents";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import Loader from "react-loader-spinner";
 import SkiClubForm from "./SkiClubForm";
@@ -66,21 +66,19 @@ class SkiClubs extends Component {
         let successful = false
         this.setState({
             showAddingModal: true
-        },() => {
+        }, () => {
             axios.put('/api/skiClubs/' + this.state.clubToEdit.id, {
                 name: values.name,
                 city: this.state.clubToEdit.city
             })
                 .then(res => {
-                    if (res.status === 200) {
-                        successful = true
-                    }
+                    successful = true
                     this.updateToCountry()
                 })
                 .catch(error => console.log(error))
                 .finally(() => {
                     let modalText
-                    if(successful){
+                    if (successful) {
                         modalText = values.name + " edited."
                     } else {
                         modalText = "Ups, there was a problem. Try again."
@@ -117,20 +115,18 @@ class SkiClubs extends Component {
 
     postClub = (values) => {
         let successful = false
-        axios.post('/api/skiClubs',{
+        axios.post('/api/skiClubs', {
             name: values.name,
             city: this.state.citiesForForm.find(city => city.id === parseInt(values.cityId))
         }).then(res => {
-            if (res.status === 200) {
-                successful = true
-            }
+            successful = true
             console.log(res)
             this.updateToCountry()
         })
             .catch(error => console.log(error))
             .finally(() => {
                 let modalText
-                if(successful){
+                if (successful) {
                     modalText = values.name + " added."
                 } else {
                     modalText = "Ups, there was a problem. Try again."
@@ -261,7 +257,7 @@ class SkiClubs extends Component {
 
                 <Header3>Clubs</Header3>
 
-                <StyledDivCentered1000>
+                <StyledDivCentered1200>
 
                     {/*Select Country*/}
                     <strong>Filter</strong>
@@ -358,14 +354,14 @@ class SkiClubs extends Component {
                         </div>
                     }
 
-                    <StyledDiv2Right1000>
+                    <StyledDiv2Right1200>
                         <Button onClick={() => this.setState({
                             newClub: !this.state.newClub,
                             editClub: false,
                         })} variant={"success"}>New Club</Button>
-                    </StyledDiv2Right1000>
+                    </StyledDiv2Right1200>
 
-                </StyledDivCentered1000>
+                </StyledDivCentered1200>
 
                 {this.state.newClub ?
                     <SkiClubForm
@@ -381,7 +377,11 @@ class SkiClubs extends Component {
                         filterByCountry={this.filterFormCities}
                         updateCities={this.updateToCountry}
                         isEdit={false}
-                        onSubmit={this.postClub}
+                        onSubmit={() => {
+                            this.setState({
+                                showAddingModal: true
+                            }, () => this.postClub)
+                        }}
                     />
                     : null}
             </React.Fragment>

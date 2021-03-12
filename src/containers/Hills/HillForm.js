@@ -4,7 +4,7 @@ import {
     AccordionWithPadding,
     Header3,
     Header5,
-    StyledDiv2Right1000,
+    StyledDiv2Right1200,
     StyledForm
 } from "../../components/StyledComponents";
 import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
@@ -435,9 +435,9 @@ const HillForm = (props) => (
                 </AccordionWithPadding>
 
                 {/*Submit*/}
-                <StyledDiv2Right1000>
+                <StyledDiv2Right1200>
                     <Button type={"submit"}>Submit</Button>
-                </StyledDiv2Right1000>
+                </StyledDiv2Right1200>
 
             </StyledForm>
 

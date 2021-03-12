@@ -72,9 +72,9 @@ export const SmallTd = styled.td`
   max-width: 180px;
 `
 
-export const StyledDivCentered1000 = styled.div`
+export const StyledDivCentered1200 = styled.div`
   margin: auto;
-  max-width: 1000px;
+  max-width: 1200px;
 `
 
 export const StyledDiv1 = styled.div`
@@ -91,9 +91,9 @@ export const StyledDiv2Right = styled.div`
   padding-bottom: 10px;
 `
 
-export const StyledDiv2Right1000 = styled.div`
+export const StyledDiv2Right1200 = styled.div`
   margin: auto;
-  max-width: 1000px;
+  max-width: 1200px;
   text-align: right;
   padding-bottom: 10px;
 `

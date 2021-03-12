@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Header3, StyledDiv2Right1000, StyledDivCentered1000, TableButton} from "../../components/StyledComponents";
+import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "../../components/StyledComponents";
 import {Table, Pagination, Button, Form} from "react-bootstrap";
 import VenueForm from "./VenueForm";
 import Loader from "react-loader-spinner";
@@ -165,9 +165,7 @@ class Venues extends Component {
                 city: this.state.citiesForForm.find(city => city.id === parseInt(values.cityId))
             })
                 .then(res => {
-                    if (res.status === 200) {
-                        successful = true
-                    }
+                    successful = true
                     console.log(res)
                     this.updateToCountry()
                 })
@@ -203,9 +201,7 @@ class Venues extends Component {
                 city: this.state.citiesForForm.find(city => city.id === parseInt(values.cityId))
             })
                 .then(res => {
-                    if (res.status === 200) {
-                        successful = true
-                    }
+                    successful = true
                     this.updateToCountry()
                 })
                 .catch(error => console.log(error))
@@ -283,7 +279,7 @@ class Venues extends Component {
 
                 <Header3>Venues</Header3>
 
-                <StyledDivCentered1000>
+                <StyledDivCentered1200>
 
                     {/*Select Country*/}
                     <strong>Filter</strong>
@@ -389,15 +385,15 @@ class Venues extends Component {
                         </div>
                     }
 
-                    <StyledDiv2Right1000>
+                    <StyledDiv2Right1200>
                         <Button onClick={() => this.setState({
                             newVenue: !this.state.newVenue,
                             editVenue: false,
                         })} variant={"success"}>New Venue</Button>
-                    </StyledDiv2Right1000>
+                    </StyledDiv2Right1200>
 
 
-                </StyledDivCentered1000>
+                </StyledDivCentered1200>
 
                 {this.state.newVenue ?
                         <VenueForm
@@ -423,7 +419,12 @@ class Venues extends Component {
                     initialClubId={this.state.venueToEdit.skiClub.id}
                     initialCapacity={this.state.venueToEdit.capacity}
                     initialCityId={this.state.venueToEdit.city.id}
+                    cities={this.state.citiesForForm}
                     initialYearOfOpening={this.state.venueToEdit.yearOfOpening}
+                    countries={this.state.countries}
+                    currentCountry={this.state.currentCountry}
+                    filterByCountry={this.filterFormCities}
+                    updateCities={this.updateToCountry}
                     mainHeader={"Editing " + this.state.venueToEdit.name}
                     clubs={this.state.clubsForForm}
                     isEdit={true}

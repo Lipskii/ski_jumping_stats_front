@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Formik} from "formik";
 import NewCityModal from "../../components/Modals/NewCityModal";
-import {Header3, StyledDiv2Right1000, StyledForm} from "../../components/StyledComponents";
+import {Header3, StyledDiv2Right1200, StyledForm} from "../../components/StyledComponents";
 import {Button, Card} from "react-bootstrap";
 import {SkiClubsValidationSchema} from "./SkiClubsValidationSchema";
 import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
@@ -97,9 +97,9 @@ const SkiClubForm = (props) => {
                                 ))}
                             </FormikSelectInputForm>
 
-                            <StyledDiv2Right1000>
+                            <StyledDiv2Right1200>
                                 <Button type={"submit"}>Submit</Button>
-                            </StyledDiv2Right1000>
+                            </StyledDiv2Right1200>
                         </Card.Body>
                     </Card>
 

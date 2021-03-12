@@ -3,7 +3,7 @@ import {Formik} from "formik";
 import {VenuesValidationSchema} from "./VenuesValidationSchema";
 import {
     Header3,
-    StyledDiv2Right1000,
+    StyledDiv2Right1200,
     StyledForm
 } from "../../components/StyledComponents";
 import {Button, Card} from "react-bootstrap";
@@ -72,9 +72,10 @@ const VenueForm = (props) => {
                                 label="Name*:"
                             />
 
-                            {props.isEdit ? null :  <SelectInputForm
+                            <SelectInputForm
                                 title={"Country:"}
                                 defaultValue={currentCountry}
+                                disabled={props.isEdit}
                                 onChange={e => {
                                     props.filterByCountry(e)
                                     setCurrentCountry(e.target.value)
@@ -85,14 +86,14 @@ const VenueForm = (props) => {
                                     <option key={country.id} value={country.id}>
                                         {country.name}
                                     </option>)}
-                            </SelectInputForm>}
+                            </SelectInputForm>
 
 
-                            {props.isEdit  ? null : <FormikSelectInputForm
-                                key={cities}
+                           <FormikSelectInputForm
+                                key={props.cities}
                                 name="cityId"
                                 label="City*:"
-                                disabled={props.cities.length < 1}
+                                disabled={props.cities.length < 1 || props.isEdit}
                                 hintTextDown={
                                     <a href="javascript:void(0)" onClick={() => {
                                         setShowModal(true)
@@ -104,7 +105,7 @@ const VenueForm = (props) => {
                                 {props.cities.map(city => (
                                     <option key={city.id} value={city.id}>{city.name}</option>
                                 ))}
-                            </FormikSelectInputForm> }
+                            </FormikSelectInputForm>
 
 
                             <FormikSelectInputForm
@@ -118,19 +119,20 @@ const VenueForm = (props) => {
                                 ))}
                             </FormikSelectInputForm>
 
-                            {props.isEdit ? null : <FormikTextInputForm
+                            <FormikTextInputForm
                                 name="yearOfOpening"
                                 label="Opened in*:"
-                            />}
+                                disabled={props.isEdit}
+                            />
 
                             <FormikTextInputForm
                                 name="capacity"
                                 label="Capacity*:"
                             />
 
-                            <StyledDiv2Right1000>
+                            <StyledDiv2Right1200>
                                 <Button type={"submit"}>Submit</Button>
-                            </StyledDiv2Right1000>
+                            </StyledDiv2Right1200>
                         </Card.Body>
                     </Card>
                 </StyledForm>

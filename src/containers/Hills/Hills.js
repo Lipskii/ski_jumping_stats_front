@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {
     ErrorLabel,
-    Header3, HillNameTd, SmallTd, StyledDiv2Right1000, StyledDivCentered1000, TableButton
+    Header3, HillNameTd, SmallTd, StyledDiv2Right1200, StyledDivCentered1200, TableButton
 } from "../../components/StyledComponents";
 import {Button, Form, Table} from "react-bootstrap";
 import axios from "axios";
@@ -315,7 +315,7 @@ class Hills extends Component {
 
                 <Header3>Hills</Header3>
 
-                <StyledDivCentered1000>
+                <StyledDivCentered1200>
 
                     {/*Country*/}
                     <SelectInputForm
@@ -488,24 +488,24 @@ class Hills extends Component {
                     }
 
                     {/*Add Hill Button*/}
-                    {this.state.selectedVenueId !== "" ? <StyledDiv2Right1000>
+                    {this.state.selectedVenueId !== "" ? <StyledDiv2Right1200>
                         <Button onClick={() => this.setState({
                             selectedHillId: "",
                             selectedHillName: "",
                             showHillForm: !this.state.showHillForm,
                             formHeaderText: "Adding new hill"
                         })} variant={"success"}>New Hill</Button>
-                    </StyledDiv2Right1000> : null}
+                    </StyledDiv2Right1200> : null}
 
 
                     {/*New Version Form*/}
                     {this.state.showHillForm && this.state.selectedVenueId !== "" ?
                         <React.Fragment>
-                            <StyledDiv2Right1000>
+                            <StyledDiv2Right1200>
                                 <Button size={"sm"} onClick={() => this.setState({
                                     showHillForm: false
                                 })} variant={"secondary"}>Hide</Button>
-                            </StyledDiv2Right1000>
+                            </StyledDiv2Right1200>
                             <HillForm
                                 mainHeader={this.state.formHeaderText}
                                 showNameField={this.state.selectedHillId === ""}
@@ -515,7 +515,7 @@ class Hills extends Component {
                                 onSubmit={this.postData}
                             /> </React.Fragment> : null}
 
-                </StyledDivCentered1000>
+                </StyledDivCentered1200>
 
 
             </React.Fragment>
