@@ -5,17 +5,17 @@ import * as Yup from 'yup';
 import FormikTextInputForm from "../CommonForms/FormikTextInputForm";
 
 
-const EditHillModal = (props) => {
+const EditNameModal = (props) => {
 
     return (
         <Modal show={props.show} onHide={props.onHide} size={"lg"} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Edit name of {props.hillName}</Modal.Title>
+                <Modal.Title>Edit name of {props.name}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Formik
                     initialValues={{
-                        name: props.hillName
+                        name: props.name
                     }}
                     validationSchema={Yup.object({
                         name: Yup.string().required('Required')
@@ -52,4 +52,4 @@ const EditHillModal = (props) => {
 
 }
 
-export default EditHillModal
+export default EditNameModal

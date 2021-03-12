@@ -239,8 +239,8 @@ class Venues extends Component {
 
 
         let items = [];
-        let numberOfPages = this.state.venues.length / 7
-        if (this.state.venues.length % 7 !== 0) {
+        let numberOfPages = this.state.venues.length / 8
+        if (this.state.venues.length % 8 !== 0) {
             numberOfPages++
         }
 
@@ -335,7 +335,7 @@ class Venues extends Component {
                         />
                         :
                         <div>
-                            <Table bordered hover striped>
+                            <Table bordered hover striped size={"sm"}>
                                 <thead>
                                 <tr>
                                     <th>Venue</th>
@@ -348,7 +348,7 @@ class Venues extends Component {
                                 </thead>
                                 <tbody>
                                 {this.state.venues.map(venue => {
-                                    if (((this.state.activePage - 1) * 7 <= this.state.venues.indexOf(venue)) && (this.state.venues.indexOf(venue) < this.state.activePage * 7)) {
+                                    if (((this.state.activePage - 1) * 8 <= this.state.venues.indexOf(venue)) && (this.state.venues.indexOf(venue) < this.state.activePage * 8)) {
                                         return (
                                             <tr key={venue.id} id={venue.id}>
                                                 <td>{venue.name}</td>

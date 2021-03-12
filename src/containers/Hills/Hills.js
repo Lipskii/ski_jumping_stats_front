@@ -9,7 +9,7 @@ import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import HillForm from "./HillForm";
 import DeleteModal from "../../components/Modals/DeleteModal";
 import ReadMoreModal from "../../components/Modals/ReadMoreModal";
-import EditHillModal from "../../components/Modals/EditHillModal";
+import EditNameModal from "../../components/Modals/EditNameModal";
 import Loader from "react-loader-spinner";
 import AddingModal from "../../components/Modals/AddingModal";
 import CompletedModal from "../../components/Modals/CompletedModal";
@@ -453,8 +453,8 @@ class Hills extends Component {
                                                              }}>
                                                     Edit name
                                                 </TableButton>
-                                                <EditHillModal
-                                                    hillName={this.state.selectedHillName}
+                                                <EditNameModal
+                                                    name={this.state.selectedHillName}
                                                     show={this.state.showEditModal}
                                                     onHide={() => this.setState({
                                                         showEditModal: false

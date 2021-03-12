@@ -77,7 +77,7 @@ const HillForm = (props) => (
                 <AccordionWithPadding defaultActiveKey="0">
 
                     {/*Basic Parameters*/}
-                    <Card style={{borderRadius: '10px'}}>
+                    <Card style={{borderRadius: '10px', marginBottom:'30px'}}>
                         <Accordion.Toggle as={Card.Header} eventKey="0">
                             <Header5>Basic Parameters</Header5>
                             {

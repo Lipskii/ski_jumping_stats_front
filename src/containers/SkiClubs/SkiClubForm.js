@@ -1,19 +1,15 @@
 import React, {useState} from "react";
 import {Formik} from "formik";
-import {VenuesValidationSchema} from "./VenuesValidationSchema";
-import {
-    Header3,
-    StyledDiv2Right1000,
-    StyledForm
-} from "../../components/StyledComponents";
+import NewCityModal from "../../components/Modals/NewCityModal";
+import {Header3, StyledDiv2Right1000, StyledForm} from "../../components/StyledComponents";
 import {Button, Card} from "react-bootstrap";
+import {SkiClubsValidationSchema} from "./SkiClubsValidationSchema";
 import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
-import NewCityModal from "../../components/Modals/NewCityModal";
 
 
-const VenueForm = (props) => {
+const SkiClubForm = (props) => {
 
     const [showModal, setShowModal] = useState(false);
     const [currentCountry, setCurrentCountry] = useState("")
@@ -21,7 +17,6 @@ const VenueForm = (props) => {
 
     return (
         <React.Fragment>
-
             {/*to prevent premature component did mount in NewCityModal*/}
             {showModal ? <NewCityModal
                 show={showModal}
@@ -42,12 +37,9 @@ const VenueForm = (props) => {
                 isInitialValid={false}
                 initialValues={{
                     name: props.initialName,
-                    capacity: props.initialCapacity,
                     cityId: props.initialCityId,
-                    skiClubId: props.initialClubId,
-                    yearOfOpening: props.initialYearOfOpening,
                 }}
-                validationSchema={VenuesValidationSchema}
+                validationSchema={SkiClubsValidationSchema}
                 onSubmit={(values) => {
                     props.onSubmit(values)
                 }}
@@ -55,13 +47,13 @@ const VenueForm = (props) => {
                    handleSubmit
 
                }) => (
-                <StyledForm onSubmit={(e) => {
-                    e.preventDefault()
-                    handleSubmit()
-                }}>
-
-
-                    <Card style={{borderRadius: '10px', marginBottom:'30px'}}>
+                <StyledForm
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        handleSubmit()
+                    }}
+                >
+                    <Card style={{borderRadius: '10px', marginBottom: '30px'}}>
                         <Card.Header>
                             <Header3>{props.mainHeader}</Header3>
                             <small>Fields with (*) are mandatory</small>
@@ -72,7 +64,7 @@ const VenueForm = (props) => {
                                 label="Name*:"
                             />
 
-                            {props.isEdit ? null :  <SelectInputForm
+                            <SelectInputForm
                                 title={"Country:"}
                                 defaultValue={currentCountry}
                                 onChange={e => {
@@ -85,10 +77,9 @@ const VenueForm = (props) => {
                                     <option key={country.id} value={country.id}>
                                         {country.name}
                                     </option>)}
-                            </SelectInputForm>}
+                            </SelectInputForm>
 
-
-                            {props.isEdit  ? null : <FormikSelectInputForm
+                            <FormikSelectInputForm
                                 key={cities}
                                 name="cityId"
                                 label="City*:"
@@ -104,41 +95,19 @@ const VenueForm = (props) => {
                                 {props.cities.map(city => (
                                     <option key={city.id} value={city.id}>{city.name}</option>
                                 ))}
-                            </FormikSelectInputForm> }
-
-
-                            <FormikSelectInputForm
-                                name="skiClubId"
-                                label="Club*:"
-                                disabled={props.clubs.length < 1}
-                            >
-                                <option value={""} disabled>Choose...</option>
-                                {props.clubs.map(club => (
-                                    <option key={club.id} value={club.id}>{club.name}</option>
-                                ))}
                             </FormikSelectInputForm>
-
-                            {props.isEdit ? null : <FormikTextInputForm
-                                name="yearOfOpening"
-                                label="Opened in*:"
-                            />}
-
-                            <FormikTextInputForm
-                                name="capacity"
-                                label="Capacity*:"
-                            />
 
                             <StyledDiv2Right1000>
                                 <Button type={"submit"}>Submit</Button>
                             </StyledDiv2Right1000>
                         </Card.Body>
                     </Card>
+
                 </StyledForm>
             )}
-
             </Formik>
         </React.Fragment>
     )
 }
 
-export default VenueForm
+export default SkiClubForm

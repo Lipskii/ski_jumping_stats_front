@@ -2,8 +2,8 @@ import React, {Component} from "react";
 import Layout from "./hoc/Layout/Layout";
 import {withRouter, Switch, Route} from 'react-router-dom'
 import NotFound from "./containers/NotFound";
-import SkiClubs from "./containers/AddSkiClub/SkiClubs";
-import Athletes from "./containers/AddAthlete/Athletes"
+import SkiClubs from "./containers/SkiClubs/SkiClubs";
+import Athletes from "./containers/Athletes/Athletes"
 import Hills from "./containers/Hills/Hills";
 import Venues from "./containers/Venues/Venues";
 
