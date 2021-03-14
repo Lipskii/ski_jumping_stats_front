@@ -7,8 +7,9 @@ import Athletes from "./containers/Athletes/Athletes"
 import Hills from "./containers/Hills/Hills";
 import Venues from "./containers/Venues/Venues";
 
-//TODO sunday: finish athletes form, clean code, move duplicates into different files, implement dark mode, look at delete in api
-//TODO find and download flags miniatures, add photos to athletes form
+
+//TODO  look at delete in api
+//TODO find and download flags miniatures, add photos to athletes form; fix update to country (cities)
 
 class App extends Component {
 

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import NewCityModal from "../../components/Modals/NewCityModal";
 import {Formik, Field} from "formik";
 import {ErrorLabel, Header3, StyledDiv2Right1200, StyledForm} from "../../components/StyledComponents";
@@ -7,12 +7,16 @@ import FormikTextInputForm from "../../components/CommonForms/FormikTextInputFor
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
 import {AthletesValidationSchema} from "./AthletesValidationSchema";
 import {DatePickerField} from "../../components/CommonForms/FormikDatePicker";
+import bsCustomFileInput from 'bs-custom-file-input';
 
 const AthletesForm = (props) => {
 
     const [showModal, setShowModal] = useState(false);
     const [currentCountry, setCurrentCountry] = useState("")
     const [cities, setCities] = useState(props.cities)
+    useEffect(() => {
+        bsCustomFileInput.init()
+    })
 
     return (
         <React.Fragment>
@@ -36,15 +40,17 @@ const AthletesForm = (props) => {
                 isInitialValid={false}
                 initialValues={{
                     active: props.initialActive,
-                    birthdate: '',
+                    birthdate: props.initialBirthdate,
                     cityId: props.initialCityId,
                     clubId: props.initialClubId,
                     countryId: props.initialCountryId,
                     fisCode: props.initialFisCode,
-                    genderId: '',
+                    genderId: props.initialGenderId,
                     firstName: props.initialFirstName,
                     lastName: props.initialLastName,
                     skisId: props.initialSkisId,
+                    customFile: '',
+                    file: ''
                 }}
                 validationSchema={AthletesValidationSchema}
                 onSubmit={(values) => {
@@ -80,6 +86,7 @@ const AthletesForm = (props) => {
                                 key={props.genders}
                                 name="genderId"
                                 label="Gender*:"
+                                disabled={props.isEdit}
                             >
                                 <option value={""} disabled>Choose...</option>
                                 {props.genders.map(gender => (
@@ -90,6 +97,7 @@ const AthletesForm = (props) => {
                             <DatePickerField
                                 name="birthdate"
                                 label={"Birthdate*:"}
+                                disabled={props.isEdit}
                             />
 
                             <FormikSelectInputForm
@@ -110,7 +118,6 @@ const AthletesForm = (props) => {
 
 
                             <FormikSelectInputForm
-                                key={props.cities}
                                 name="cityId"
                                 label="City*:"
                                 disabled={props.cities.length < 1}
@@ -140,7 +147,6 @@ const AthletesForm = (props) => {
                             </FormikSelectInputForm>
 
                             <FormikSelectInputForm
-                                key={props.skis}
                                 name="skisId"
                                 label="Skis*:"
                             >
@@ -161,7 +167,19 @@ const AthletesForm = (props) => {
                             <FormikTextInputForm
                                 name="fisCode"
                                 label="FIS code*:"
+                                disabled={props.isEdit}
                                 />
+
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm={2}>Photo:</Form.Label>
+                                    <Col sm={10}>
+                                        <input id="file" name="file" type="file" onChange={(event) => {
+                                            setFieldValue("file", event.currentTarget.files[0]);
+                                        }} />
+                                    </Col>
+                                </Form.Group>
+
+
 
                             <StyledDiv2Right1200>
                                 <Button type={"submit"}>Submit</Button>

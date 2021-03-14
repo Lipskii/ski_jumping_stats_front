@@ -223,9 +223,34 @@ class Venues extends Component {
     }
 
     deleteVenue = () =>{
-        window.alert("Delete venue called " + this.state.venueToDelete.id)
+       // window.alert("Delete venue called " + this.state.venueToDelete.id)
+        let successful = true
         this.setState({
             showDeleteModal: false
+        },()=>{
+            axios.delete('/api/venues/' + this.state.venueToDelete.id)
+                .then(res => {
+                    console.log(res)
+                    this.updateToCountry()
+                })
+                .catch(error => {
+                    successful = false
+                    console.log(error)
+                })
+                .finally(() => {
+                    let modalText
+                    if(successful){
+                        modalText = this.state.venueToDelete.name + " deleted."
+                    } else {
+                        modalText = "Ups, there was a problem. Try again."
+                    }
+                    this.setState({
+                        showCompletedModal: true,
+                        completedModalText: modalText,
+                        completedModalStatus: successful,
+                        showDeleteModal: false
+                    })
+                })
         })
     }
 
@@ -369,7 +394,8 @@ class Venues extends Component {
                                                                  variant={"danger"}
                                                                  onClick={() => this.setState({
                                                                      showDeleteModal: true,
-                                                                     venueToDelete: venue
+                                                                     venueToDelete: venue,
+                                                                     editVenue: false
                                                                  })
                                                                  }>
                                                         Delete

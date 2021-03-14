@@ -7,9 +7,8 @@ import DeleteModal from "../../components/Modals/DeleteModal";
 import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "../../components/StyledComponents";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import Loader from "react-loader-spinner";
-import SkiClubForm from "../SkiClubs/SkiClubForm";
 import AthletesForm from "./AthletesForm";
-import VenueForm from "../Venues/VenueForm";
+import bsCustomFileInput from "bs-custom-file-input";
 
 
 class Athletes extends Component {
@@ -42,6 +41,7 @@ class Athletes extends Component {
 
 
     componentDidMount() {
+        bsCustomFileInput.init()
         axios.all([
             axios.get('/api/cities'),
             axios.get('/api/cities/skiJumpers'),
@@ -71,6 +71,54 @@ class Athletes extends Component {
                 })
             }))
             .catch(error => console.log(error))
+    }
+
+    editAthlete = (values) => {
+        console.log("EDIT ATHLETE")
+        console.log(values)
+        let successful = true
+        const person = {
+            firstName: values.firstName,
+            lastName: values.lastName,
+            gender: this.state.genders.find(gender => gender.id === parseInt(values.genderId)),
+            birthdate: values.birthdate,
+            country: this.state.countries.find(country => country.id === parseInt(values.countryId)),
+            city: this.state.cities.find(city => city.id === parseInt(values.cityId))
+        }
+        axios.put('api/people/' + this.state.athleteToEdit.idPerson, {...person})
+            .then(res => {
+                console.log(res)
+                axios.put('api/skiJumpers/' + this.state.athleteToEdit.id, {
+                    person: person,
+                    isActive: values.active,
+                    fisCode: values.fisCode,
+                    skis: this.state.skis.find(skis => skis.id === parseInt(values.skisId)),
+                    skiClub: this.state.clubsForForm.find(club => club.id === parseInt(values.clubId))
+                })
+                    .then(() => this.updateToCountry())
+                    .catch(error => {
+                        console.log(error)
+                        successful = false
+                    })
+            })
+            .catch(error => {
+                successful = false
+                console.log(error)
+            })
+            .finally(() => {
+                let modalText
+                if (successful) {
+                    modalText = values.firstName + " " + values.lastName + " updated."
+                } else {
+                    modalText = "Ups, there was a problem. Try again."
+                }
+                this.setState({
+                    showCompletedModal: true,
+                    completedModalText: modalText,
+                    completedModalStatus: successful,
+                    showAddingModal: false,
+                })
+            })
     }
 
     deleteAthlete = () => {
@@ -212,7 +260,7 @@ class Athletes extends Component {
                 .then(axios.spread((skiClubsData, citiesData, athletesData) => {
                     this.setState({
                         clubs: skiClubsData.data,
-                        citiesWithVenues: citiesData.data,
+                        citiesWithAthletes: citiesData.data,
                         athletesLoading: false,
                         athletes: athletesData.data
                     })
@@ -308,7 +356,7 @@ class Athletes extends Component {
                         ))}
                     </SelectInputForm>
 
-                    {/*Clubs*/}
+                    {/*athletes*/}
                     {this.state.athletesLoading ?
                         <Loader
                             type="ThreeDots"
@@ -352,8 +400,12 @@ class Athletes extends Component {
                                                                  onClick={() =>
                                                                      this.setState({
                                                                          athleteToEdit: athlete,
-                                                                         editAthlete: true,
+                                                                         editAthlete: false,
                                                                          newAthlete: false
+                                                                     },()=>{
+                                                                         this.setState({
+                                                                             editAthlete: true
+                                                                         })
                                                                      })}>
                                                         Edit
                                                     </TableButton>
@@ -388,15 +440,15 @@ class Athletes extends Component {
                 {this.state.newAthlete ?
                     <AthletesForm
                         initialActive={true}
+                        initialBirthdate={''}
                         initialClubId={''}
-                        initialCapacity={''}
                         initialCountryId={''}
                         initialCityId={''}
                         initialFisCode={''}
                         initialFirstName={''}
+                        initialGenderId={''}
                         initialLastName={''}
                         initialSkisId={''}
-                        initialYearOfOpening={''}
                         mainHeader={"Adding new athlete"}
                         cities={this.state.citiesForForm}
                         clubs={this.state.clubsForForm}
@@ -414,6 +466,36 @@ class Athletes extends Component {
                         }}
                     />
                     : null}
+
+
+                {this.state.editAthlete ?<AthletesForm
+                        initialActive={this.state.athleteToEdit.active}
+                        initialBirthdate={this.state.athleteToEdit.birthdate}
+                        initialClubId={this.state.athleteToEdit.skiClub.id}
+                        initialCountryId={this.state.athleteToEdit.country.id}
+                        initialCityId={this.state.athleteToEdit.city.id}
+                        initialGenderId={this.state.athleteToEdit.gender.id}
+                        initialFisCode={this.state.athleteToEdit.fisCode}
+                        initialFirstName={this.state.athleteToEdit.firstName}
+                        initialLastName={this.state.athleteToEdit.lastName}
+                        initialSkisId={this.state.athleteToEdit.skisId}
+                        mainHeader={"Editing " + this.state.athleteToEdit.firstName + " " + this.state.athleteToEdit.lastName}
+                        cities={this.state.citiesForForm}
+                        clubs={this.state.clubsForForm}
+                        countries={this.state.countries}
+                        currentCountry={this.state.currentCountry}
+                        filterByCountry={this.filterFormCities}
+                        genders={this.state.genders}
+                        skis={this.state.skis}
+                        updateCities={this.updateToCountry}
+                        isEdit={true}
+                        onSubmit={(values) => {
+                            this.setState({
+                                showAddingModal: true
+                            },()=>this.editAthlete(values))
+                        }}
+                    />
+                    : null }
 
             </React.Fragment>
         )
