@@ -16,7 +16,7 @@ class Athletes extends Component {
     state = {
         activePage: 1,
         athletes: [],
-        athletesLoading: false,
+        athletesLoading: true,
         athleteToEdit: '',
         athleteToDelete: '',
         clubs: [],
@@ -41,7 +41,6 @@ class Athletes extends Component {
 
 
     componentDidMount() {
-        bsCustomFileInput.init()
         axios.all([
             axios.get('/api/cities'),
             axios.get('/api/cities/skiJumpers'),
@@ -58,6 +57,7 @@ class Athletes extends Component {
                                 skisData) => {
                 this.setState({
                     athletes: athletesData.data,
+                    athletesLoading: false,
                     cities: citiesData.data,
                     citiesForForm: citiesData.data,
                     citiesWithAthletes: citiesWithAthletesData.data,
@@ -85,7 +85,7 @@ class Athletes extends Component {
             country: this.state.countries.find(country => country.id === parseInt(values.countryId)),
             city: this.state.cities.find(city => city.id === parseInt(values.cityId))
         }
-        axios.put('api/people/' + this.state.athleteToEdit.idPerson, {...person})
+        axios.put('api/people/' + this.state.athleteToEdit.person.id, {...person})
             .then(res => {
                 console.log(res)
                 axios.put('api/skiJumpers/' + this.state.athleteToEdit.id, {

@@ -6,6 +6,8 @@ import SkiClubs from "./containers/SkiClubs/SkiClubs";
 import Athletes from "./containers/Athletes/Athletes"
 import Hills from "./containers/Hills/Hills";
 import Venues from "./containers/Venues/Venues";
+import Jury from "./containers/Jury/Jury";
+import Results from "./containers/Results/Results";
 
 
 //TODO  look at delete in api
@@ -18,10 +20,12 @@ class App extends Component {
 
         const routes = (
             <Switch>
-                <Route path="/addVenue" component={Venues}/>
-                <Route path="/addSkiClub" component={SkiClubs}/>
-                <Route path="/addHill" component={Hills}/>
-                <Route path="/addAthlete" component={Athletes}/>
+                <Route path="/dbVenues" component={Venues}/>
+                <Route path="/dbResults" component={Results}/>
+                <Route path="/dbClubs" component={SkiClubs}/>
+                <Route path="/dbHills" component={Hills}/>
+                <Route path="/dbJury" component={Jury}/>
+                <Route path="/dbAthletes" component={Athletes}/>
                 <Route path="/" exact/>
                 <Route component={NotFound}/>
             </Switch>

@@ -29,18 +29,23 @@ const Toolbar = () => (
                 </Form>
             </Nav>
             <Nav className="mr-1">
-                <NavDropdown id="collasible-nav-dropdown_two" title="FIS Tools">
-                    <NavDropdown.Item>Add Competition</NavDropdown.Item>
-                    <LinkContainer to='/addAthlete'>
+                <NavDropdown id="collasible-nav-dropdown_two" title="DB Tools">
+                    <LinkContainer to='/dbResults'>
+                        <NavDropdown.Item>Results</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to='/dbAthletes'>
                         <NavDropdown.Item>Athletes</NavDropdown.Item>
                     </LinkContainer>
-                    <LinkContainer to='/addHill'>
+                    <LinkContainer to='/dbHills'>
                         <NavDropdown.Item>Hills</NavDropdown.Item>
                     </LinkContainer>
-                    <LinkContainer to='/addSkiClub'>
+                    <LinkContainer to='/dbJury'>
+                        <NavDropdown.Item>Jury</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to='/dbClubs'>
                         <NavDropdown.Item>Ski clubs</NavDropdown.Item>
                     </LinkContainer>
-                    <LinkContainer to='/addVenue'>
+                    <LinkContainer to='/dbVenues'>
                         <NavDropdown.Item>Venues</NavDropdown.Item>
                     </LinkContainer>
                 </NavDropdown>

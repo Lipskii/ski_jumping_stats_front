@@ -145,7 +145,7 @@ class Hills extends Component {
             sizeOfHill: this.state.sizesOfHill.find(size => size.id === parseInt(values.sizeOfHillId))
         }
 
-        axios.post("/api/hill", {...hill})
+        axios.post("/api/hills", {...hill})
             .then(response => {
                 id = response.data.id
             })
