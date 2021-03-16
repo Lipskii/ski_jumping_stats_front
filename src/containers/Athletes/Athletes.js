@@ -74,7 +74,6 @@ class Athletes extends Component {
     }
 
     editAthlete = (values) => {
-        console.log("EDIT ATHLETE")
         console.log(values)
         let successful = true
         const person = {
@@ -155,46 +154,42 @@ class Athletes extends Component {
             .catch(error => console.log(error))
     }
 
-
     postAthlete = (values) => {
-        console.log("POST ATHLETE")
         console.log(values)
         let successful = true
-        const person = {
-            firstName: values.firstName,
-            lastName: values.lastName,
-            gender: this.state.genders.find(gender => gender.id === parseInt(values.genderId)),
-            birthdate: values.birthdate,
-            country: this.state.countries.find(country => country.id === parseInt(values.countryId)),
-            city: this.state.cities.find(city => city.id === parseInt(values.cityId))
-        }
-        axios.post('api/people', {...person})
-            .then(res => {
-                console.log(res)
-                axios.post('api/skiJumpers', {
-                    person: person,
+        let modalText = values.firstName + " " + values.lastName + " added."
+        axios.post('api/skiJumpers', {
+                    person: {
+                        firstName: values.firstName,
+                        lastName: values.lastName,
+                        gender: this.state.genders.find(gender => gender.id === parseInt(values.genderId)),
+                        birthdate: values.birthdate,
+                        country: this.state.countries.find(country => country.id === parseInt(values.countryId)),
+                        city: this.state.cities.find(city => city.id === parseInt(values.cityId))
+                    },
                     isActive: values.active,
                     fisCode: values.fisCode,
                     skis: this.state.skis.find(skis => skis.id === parseInt(values.skisId)),
                     skiClub: this.state.clubsForForm.find(club => club.id === parseInt(values.clubId))
                 })
-                    .then(() => this.updateToCountry())
+                    .then(res =>{
+                        const formData = new FormData();
+                        formData.append('file',values.file)
+                        formData.append('personId', res.data.person.id)
+                        axios.post('/api/people/photo', formData)
+                            .then(() => this.updateToCountry())
+                            .catch(error => {
+                                console.log(error)
+                                successful = false
+                                modalText = "Athlete added, but there was a problem with photo."
+                            })
+                    } )
                     .catch(error => {
                         console.log(error)
                         successful = false
+                        modalText = "Ups, there was a problem. Try again."
                     })
-            })
-            .catch(error => {
-                successful = false
-                console.log(error)
-            })
             .finally(() => {
-                let modalText
-                if (successful) {
-                    modalText = values.firstName + " " + values.lastName + " added."
-                } else {
-                    modalText = "Ups, there was a problem. Try again."
-                }
                 this.setState({
                     showCompletedModal: true,
                     completedModalText: modalText,
@@ -203,7 +198,6 @@ class Athletes extends Component {
                 })
             })
     }
-
 
     updateToCity = (e) => {
         let urlStringAthletes

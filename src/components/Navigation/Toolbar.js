@@ -30,9 +30,6 @@ const Toolbar = () => (
             </Nav>
             <Nav className="mr-1">
                 <NavDropdown id="collasible-nav-dropdown_two" title="DB Tools">
-                    <LinkContainer to='/dbResults'>
-                        <NavDropdown.Item>Results</NavDropdown.Item>
-                    </LinkContainer>
                     <LinkContainer to='/dbAthletes'>
                         <NavDropdown.Item>Athletes</NavDropdown.Item>
                     </LinkContainer>
@@ -41,6 +38,9 @@ const Toolbar = () => (
                     </LinkContainer>
                     <LinkContainer to='/dbJury'>
                         <NavDropdown.Item>Jury</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to='/dbResults'>
+                        <NavDropdown.Item>Results</NavDropdown.Item>
                     </LinkContainer>
                     <LinkContainer to='/dbClubs'>
                         <NavDropdown.Item>Ski clubs</NavDropdown.Item>

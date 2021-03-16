@@ -24,7 +24,7 @@ class Venues extends Component {
         venueToDelete: '',
         venueToEdit: '',
         venues: [],
-        venuesLoading: false,
+        venuesLoading: true,
         currentCountry: '',
         newVenue: false,
         showAddingModal: false,
@@ -53,7 +53,8 @@ class Venues extends Component {
                     clubsForForm: skiClubsData.data,
                     citiesForForm: citiesData.data,
                     cities: citiesData.data,
-                    citiesWithVenues: citiesWithVenuesData.data
+                    citiesWithVenues: citiesWithVenuesData.data,
+                    venuesLoading: false,
                 })
             }))
             .catch(error => console.log(error))

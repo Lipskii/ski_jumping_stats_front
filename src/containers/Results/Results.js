@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import axios from "axios";
-import {Button, Pagination, Table} from "react-bootstrap";
+import {Button, Col, Pagination, Table} from "react-bootstrap";
 import AddingModal from "../../components/Modals/AddingModal";
 import CompletedModal from "../../components/Modals/CompletedModal";
 import DeleteModal from "../../components/Modals/DeleteModal";
@@ -15,6 +15,7 @@ class Results extends Component {
         equipmentControllers: [],
         hills: [],
         venues: [],
+        selectedFile: ''
     }
 
     componentDidMount() {
@@ -43,6 +44,20 @@ class Results extends Component {
             }))
             .catch(error => console.log(error))
     }
+
+
+   //FILE UPLOAD TO BE USED LATER
+    // onFileChangeHandler = (e) => {
+    //     e.preventDefault();
+    //     const formData = new FormData();
+    //     formData.append('file', e.target.files[0])
+    //     axios.post("/api/results/upload",formData)
+    //         .then(res => {
+    //             console.log(res.data);
+    //             alert("File uploaded successfully.")
+    //         })
+    //         .catch(error => console.log(error))
+    // };
 
 
     render() {
@@ -75,8 +90,16 @@ class Results extends Component {
 
                 <StyledDivCentered1200>
                     <Header5>Recent results</Header5>
-
-
+                    {/*<div className="container">*/}
+                    {/*    <div className="row">*/}
+                    {/*        <div className="col-md-6">*/}
+                    {/*            <div className="form-group files color">*/}
+                    {/*                <label>Upload Your File </label>*/}
+                    {/*                <input type="file" className="form-control" name="file" onChange={this.onFileChangeHandler}/>*/}
+                    {/*            </div>*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                 </StyledDivCentered1200>
 
 
