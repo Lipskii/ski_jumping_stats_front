@@ -58,7 +58,9 @@ const AthletesForm = (props) => {
                 }}
             >{({
                    handleSubmit,
-                   setFieldValue
+                   setFieldValue,
+                touched,
+                errors
                }) => (
                 <StyledForm
                     onSubmit={(e) => {
@@ -106,7 +108,7 @@ const AthletesForm = (props) => {
                                 label="Country*:"
                                 onChange={e => {
                                     props.filterByCountry(e)
-                                    setFieldValue("countryId",e.target.value)
+                                    setFieldValue("countryId", e.target.value)
                                     setCurrentCountry(e.target.value)
                                 }}
                             >
@@ -160,7 +162,7 @@ const AthletesForm = (props) => {
                             <Form.Group as={Row}>
                                 <Form.Label column sm={2}>Active*:</Form.Label>
                                 <Col sm={10}>
-                                    <Field style={{marginTop:"15px"}}type="checkbox" name="active"  />
+                                    <Field style={{marginTop: "15px"}} type="checkbox" name="active"/>
                                 </Col>
                             </Form.Group>
 
@@ -168,14 +170,18 @@ const AthletesForm = (props) => {
                                 name="fisCode"
                                 label="FIS code*:"
                                 disabled={props.isEdit}
-                                />
+                            />
+
 
                                 <Form.Group as={Row}>
                                     <Form.Label column sm={2}>Photo:</Form.Label>
                                     <Col sm={10}>
                                         <input id="file" name="file" type="file" onChange={(event) => {
                                             setFieldValue("file", event.currentTarget.files[0]);
-                                        }} />
+                                        }}/>
+                                        {touched.file && errors.file ? (
+                                            <ErrorLabel>{errors.file}</ErrorLabel>
+                                        ) : null}
                                     </Col>
                                 </Form.Group>
 

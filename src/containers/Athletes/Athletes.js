@@ -36,7 +36,7 @@ class Athletes extends Component {
         showDeleteModal: false,
         showCompletedModal: false,
         skis: [],
-
+        photo: ''
     }
 
 
@@ -49,12 +49,14 @@ class Athletes extends Component {
             axios.get('/api/genders'),
             axios.get('/api/skiClubs'),
             axios.get('/api/skiJumpers'),
-            axios.get('api/skis')
+            axios.get('api/skis'),
+            axios.get('/api/people/photo')
 
         ])
             .then(axios.spread((citiesData, citiesWithAthletesData, countriesData,
                                 countriesWithAthletesData, gendersData, clubsData, athletesData,
-                                skisData) => {
+                                skisData,photo) => {
+                console.log(photo)
                 this.setState({
                     athletes: athletesData.data,
                     athletesLoading: false,
@@ -66,8 +68,8 @@ class Athletes extends Component {
                     clubs: clubsData.data,
                     clubsForForm: clubsData.data,
                     genders: gendersData.data,
-                    skis: skisData.data
-
+                    skis: skisData.data,
+                    photo: photo.data
                 })
             }))
             .catch(error => console.log(error))
@@ -159,36 +161,37 @@ class Athletes extends Component {
         let successful = true
         let modalText = values.firstName + " " + values.lastName + " added."
         axios.post('api/skiJumpers', {
-                    person: {
-                        firstName: values.firstName,
-                        lastName: values.lastName,
-                        gender: this.state.genders.find(gender => gender.id === parseInt(values.genderId)),
-                        birthdate: values.birthdate,
-                        country: this.state.countries.find(country => country.id === parseInt(values.countryId)),
-                        city: this.state.cities.find(city => city.id === parseInt(values.cityId))
-                    },
-                    isActive: values.active,
-                    fisCode: values.fisCode,
-                    skis: this.state.skis.find(skis => skis.id === parseInt(values.skisId)),
-                    skiClub: this.state.clubsForForm.find(club => club.id === parseInt(values.clubId))
-                })
-                    .then(res =>{
-                        const formData = new FormData();
-                        formData.append('file',values.file)
-                        formData.append('personId', res.data.person.id)
-                        axios.post('/api/people/photo', formData)
-                            .then(() => this.updateToCountry())
-                            .catch(error => {
-                                console.log(error)
-                                successful = false
-                                modalText = "Athlete added, but there was a problem with photo."
-                            })
-                    } )
+            person: {
+                firstName: values.firstName,
+                lastName: values.lastName,
+                gender: this.state.genders.find(gender => gender.id === parseInt(values.genderId)),
+                birthdate: values.birthdate,
+                country: this.state.countries.find(country => country.id === parseInt(values.countryId)),
+                city: this.state.cities.find(city => city.id === parseInt(values.cityId))
+            },
+            isActive: values.active,
+            fisCode: values.fisCode,
+            skis: this.state.skis.find(skis => skis.id === parseInt(values.skisId)),
+            skiClub: this.state.clubsForForm.find(club => club.id === parseInt(values.clubId))
+        })
+            .then(res => {
+                const formData = new FormData();
+                formData.append('file', values.file)
+                axios.post('/api/people/photo/' + res.data.person.id, formData)
+                    .then((res) => {
+                        this.updateToCountry()
+                    })
                     .catch(error => {
                         console.log(error)
                         successful = false
-                        modalText = "Ups, there was a problem. Try again."
+                        modalText = "Athlete added, but there was a problem with photo."
                     })
+            })
+            .catch(error => {
+                console.log(error)
+                successful = false
+                modalText = "Ups, there was a problem. Try again."
+            })
             .finally(() => {
                 this.setState({
                     showCompletedModal: true,
@@ -396,7 +399,7 @@ class Athletes extends Component {
                                                                          athleteToEdit: athlete,
                                                                          editAthlete: false,
                                                                          newAthlete: false
-                                                                     },()=>{
+                                                                     }, () => {
                                                                          this.setState({
                                                                              editAthlete: true
                                                                          })
@@ -456,13 +459,13 @@ class Athletes extends Component {
                         onSubmit={(values) => {
                             this.setState({
                                 showAddingModal: true
-                            },()=>this.postAthlete(values))
+                            }, () => this.postAthlete(values))
                         }}
                     />
                     : null}
 
 
-                {this.state.editAthlete ?<AthletesForm
+                {this.state.editAthlete ? <AthletesForm
                         initialActive={this.state.athleteToEdit.active}
                         initialBirthdate={this.state.athleteToEdit.birthdate}
                         initialClubId={this.state.athleteToEdit.skiClub.id}
@@ -486,10 +489,10 @@ class Athletes extends Component {
                         onSubmit={(values) => {
                             this.setState({
                                 showAddingModal: true
-                            },()=>this.editAthlete(values))
+                            }, () => this.editAthlete(values))
                         }}
                     />
-                    : null }
+                    : null}
 
             </React.Fragment>
         )

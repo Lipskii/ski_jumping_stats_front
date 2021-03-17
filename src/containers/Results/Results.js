@@ -6,7 +6,6 @@ import CompletedModal from "../../components/Modals/CompletedModal";
 import DeleteModal from "../../components/Modals/DeleteModal";
 import {Header3, Header5, StyledDivCentered1200} from "../../components/StyledComponents";
 
-//TODO finish it tommorrow
 class Results extends Component {
 
     state = {
