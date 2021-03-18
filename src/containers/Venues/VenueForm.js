@@ -1,12 +1,11 @@
 import React, {useState} from "react";
-import {Formik} from "formik";
+import {Form, Formik} from "formik";
 import {VenuesValidationSchema} from "./VenuesValidationSchema";
 import {
     Header3,
-    StyledDiv2Right1200,
-    StyledForm
+    StyledDiv2Right1200, StyledForm,
 } from "../../components/StyledComponents";
-import {Button, Card} from "react-bootstrap";
+import {Button, Card, Modal} from "react-bootstrap";
 import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
@@ -55,18 +54,20 @@ const VenueForm = (props) => {
                    handleSubmit
 
                }) => (
-                <StyledForm onSubmit={(e) => {
-                    e.preventDefault()
-                    handleSubmit()
-                }}>
+                <Modal show={props.show} size={"xl"} scrollable={true} onHide={props.onHide}>
+                    <StyledForm onSubmit={(e) => {
+                        e.preventDefault()
+                        handleSubmit()
+                    }}>
 
 
-                    <Card style={{borderRadius: '10px', marginBottom:'30px'}}>
-                        <Card.Header>
+                        <Modal.Header>
                             <Header3>{props.mainHeader}</Header3>
+                        </Modal.Header>
+
+                        <Modal.Body>
                             <small>Fields with (*) are mandatory</small>
-                        </Card.Header>
-                        <Card.Body>
+
                             <FormikTextInputForm
                                 name="name"
                                 label="Name*:"
@@ -89,7 +90,7 @@ const VenueForm = (props) => {
                             </SelectInputForm>
 
 
-                           <FormikSelectInputForm
+                            <FormikSelectInputForm
                                 key={props.cities}
                                 name="cityId"
                                 label="City*:"
@@ -133,9 +134,9 @@ const VenueForm = (props) => {
                             <StyledDiv2Right1200>
                                 <Button type={"submit"}>Submit</Button>
                             </StyledDiv2Right1200>
-                        </Card.Body>
-                    </Card>
-                </StyledForm>
+                        </Modal.Body>
+                    </StyledForm>
+                </Modal>
             )}
 
             </Formik>

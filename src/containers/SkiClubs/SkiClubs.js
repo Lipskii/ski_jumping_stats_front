@@ -365,6 +365,10 @@ class SkiClubs extends Component {
 
                 {this.state.newClub ?
                     <SkiClubForm
+                        show={this.state.newClub}
+                        onHide={() => this.setState({
+                            newClub: false
+                        })}
                         initialName={''}
                         initialClubId={''}
                         initialCapacity={''}

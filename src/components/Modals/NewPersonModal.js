@@ -7,7 +7,7 @@ import FormikSelectInputForm from "../CommonForms/FormikSelectInputForm";
 import {Header3, StyledDiv2Right1200} from "../StyledComponents";
 import FormikTextInputForm from "../CommonForms/FormikTextInputForm";
 import NewCityModal from "./NewCityModal";
-import {DatePickerField} from "../CommonForms/FormikDatePicker";
+import {FormikDatePicker} from "../CommonForms/FormikDatePicker";
 import AddingModal from "./AddingModal";
 import CompletedModal from "./CompletedModal";
 
@@ -209,7 +209,7 @@ class NewPersonModal extends Component {
                                     ))}
                                 </FormikSelectInputForm>
 
-                                <DatePickerField
+                                <FormikDatePicker
                                     name="birthdate"
                                     label={"Birthdate*:"}
                                 />

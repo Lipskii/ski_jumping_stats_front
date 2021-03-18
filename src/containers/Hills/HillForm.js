@@ -8,13 +8,14 @@ import {
     StyledForm
 } from "../../components/StyledComponents";
 import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
-import {Accordion, Button, Card} from "react-bootstrap";
+import {Accordion, Button, Card, Modal} from "react-bootstrap";
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
-import {DatePickerField} from "../../components/CommonForms/FormikDatePicker";
+import {FormikDatePicker} from "../../components/CommonForms/FormikDatePicker";
 import {HillsValidationSchema} from "./HillsValidationSchema";
 
 
 const HillForm = (props) => (
+
 
     <Formik
         isInitialValid={false}
@@ -77,7 +78,7 @@ const HillForm = (props) => (
                 <AccordionWithPadding defaultActiveKey="0">
 
                     {/*Basic Parameters*/}
-                    <Card style={{borderRadius: '10px', marginBottom:'30px'}}>
+                    <Card style={{borderRadius: '10px'}}>
                         <Accordion.Toggle as={Card.Header} eventKey="0">
                             <Header5>Basic Parameters</Header5>
                             {
@@ -88,7 +89,6 @@ const HillForm = (props) => (
                                     <text style={{marginRight: "2px"}}>errors</text> : null
                             }
                         </Accordion.Toggle>
-
                         <Accordion.Collapse eventKey="0">
                             <Card.Body>
 
@@ -412,13 +412,13 @@ const HillForm = (props) => (
                             <Card.Body>
 
                                 {/*valid since*/}
-                                <DatePickerField
+                                <FormikDatePicker
                                     name="validSince"
                                     label={"Valid since*:"}
                                 />
 
                                 {/*valid until*/}
-                                <DatePickerField
+                                <FormikDatePicker
                                     name="validUntil"
                                     label={"Valid until*:"}
                                 />
@@ -444,8 +444,8 @@ const HillForm = (props) => (
 
         )}
 
-
     </Formik>
+
 )
 
 

@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import {Formik} from "formik";
+import {Form, Formik} from "formik";
 import NewCityModal from "../../components/Modals/NewCityModal";
 import {Header3, StyledDiv2Right1200, StyledForm} from "../../components/StyledComponents";
-import {Button, Card} from "react-bootstrap";
+import {Button, Card, Modal} from "react-bootstrap";
 import {SkiClubsValidationSchema} from "./SkiClubsValidationSchema";
 import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
@@ -47,18 +47,21 @@ const SkiClubForm = (props) => {
                    handleSubmit
 
                }) => (
-                <StyledForm
+                <Modal show={props.show} size={"xl"} scrollable={true} onHide={props.onHide}>
+                <Form
                     onSubmit={(e) => {
                         e.preventDefault()
                         handleSubmit()
                     }}
                 >
-                    <Card style={{borderRadius: '10px', marginBottom: '30px'}}>
-                        <Card.Header>
-                            <Header3>{props.mainHeader}</Header3>
+                    <Modal.Header>
+                        <Header3>{props.mainHeader}</Header3>
+                    </Modal.Header>
+                           <Modal.Body>
+
+
                             <small>Fields with (*) are mandatory</small>
-                        </Card.Header>
-                        <Card.Body>
+
                             <FormikTextInputForm
                                 name="name"
                                 label="Name*:"
@@ -96,14 +99,15 @@ const SkiClubForm = (props) => {
                                     <option key={city.id} value={city.id}>{city.name}</option>
                                 ))}
                             </FormikSelectInputForm>
+                               <StyledDiv2Right1200>
+                                   <Button type={"submit"}>Submit</Button>
+                               </StyledDiv2Right1200>
 
-                            <StyledDiv2Right1200>
-                                <Button type={"submit"}>Submit</Button>
-                            </StyledDiv2Right1200>
-                        </Card.Body>
-                    </Card>
+                           </Modal.Body>
 
-                </StyledForm>
+
+                </Form>
+                </Modal>
             )}
             </Formik>
         </React.Fragment>

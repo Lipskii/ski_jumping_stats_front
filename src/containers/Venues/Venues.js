@@ -157,7 +157,7 @@ class Venues extends Component {
         let successful = false
         this.setState({
             showAddingModal: true
-        },() => {
+        }, () => {
             axios.post('/api/venues', {
                 name: values.name,
                 yearOfOpening: values.yearOfOpening,
@@ -173,7 +173,7 @@ class Venues extends Component {
                 .catch(error => console.log(error))
                 .finally(() => {
                     let modalText
-                    if(successful){
+                    if (successful) {
                         modalText = values.name + " added."
                     } else {
                         modalText = "Ups, there was a problem. Try again."
@@ -193,7 +193,7 @@ class Venues extends Component {
         let successful = false
         this.setState({
             showAddingModal: true
-        },() => {
+        }, () => {
             axios.put('/api/venues/' + this.state.venueToEdit.id, {
                 name: values.name,
                 yearOfOpening: values.yearOfOpening,
@@ -208,12 +208,12 @@ class Venues extends Component {
                 .catch(error => console.log(error))
                 .finally(() => {
                     let modalText
-                        if(successful){
-                            modalText = values.name + " edited."
-                        } else {
-                            modalText = "Ups, there was a problem. Try again."
-                        }
-                        this.setState({
+                    if (successful) {
+                        modalText = values.name + " edited."
+                    } else {
+                        modalText = "Ups, there was a problem. Try again."
+                    }
+                    this.setState({
                         showCompletedModal: true,
                         completedModalText: modalText,
                         completedModalStatus: successful,
@@ -223,12 +223,12 @@ class Venues extends Component {
         })
     }
 
-    deleteVenue = () =>{
-       // window.alert("Delete venue called " + this.state.venueToDelete.id)
+    deleteVenue = () => {
+        // window.alert("Delete venue called " + this.state.venueToDelete.id)
         let successful = true
         this.setState({
             showDeleteModal: false
-        },()=>{
+        }, () => {
             axios.delete('/api/venues/' + this.state.venueToDelete.id)
                 .then(res => {
                     console.log(res)
@@ -240,7 +240,7 @@ class Venues extends Component {
                 })
                 .finally(() => {
                     let modalText
-                    if(successful){
+                    if (successful) {
                         modalText = this.state.venueToDelete.name + " deleted."
                     } else {
                         modalText = "Ups, there was a problem. Try again."
@@ -382,13 +382,10 @@ class Venues extends Component {
                                                     <TableButton id={venue.id} name={venue.name} size="sm"
                                                                  variant={"info"}
                                                                  onClick={() =>
-                                                                 this.setState({
-                                                                     editVenue: false,
-                                                                     newVenue: false,
-                                                                    venueToEdit: venue
-                                                                 },() => this.setState({
-                                                                     editVenue: true
-                                                                 }))}>
+                                                                     this.setState({
+                                                                         editVenue: true,
+                                                                         venueToEdit: venue
+                                                                     })}>
                                                         Edit
                                                     </TableButton>
                                                     <TableButton id={venue.id} name={venue.name} size="sm"
@@ -414,8 +411,7 @@ class Venues extends Component {
 
                     <StyledDiv2Right1200>
                         <Button onClick={() => this.setState({
-                            newVenue: !this.state.newVenue,
-                            editVenue: false,
+                            newVenue: true
                         })} variant={"success"}>New Venue</Button>
                     </StyledDiv2Right1200>
 
@@ -423,25 +419,33 @@ class Venues extends Component {
                 </StyledDivCentered1200>
 
                 {this.state.newVenue ?
-                        <VenueForm
-                            initialName={''}
-                            initialClubId={''}
-                            initialCapacity={''}
-                            initialCityId={''}
-                            initialYearOfOpening={''}
-                            mainHeader={"Adding new venue"}
-                            cities={this.state.citiesForForm}
-                            clubs={this.state.clubsForForm}
-                            countries={this.state.countries}
-                            currentCountry={this.state.currentCountry}
-                            filterByCountry={this.filterFormCities}
-                            updateCities={this.updateToCountry}
-                            isEdit={false}
-                            onSubmit={this.postVenue}
-                        />
+                    <VenueForm
+                        show={this.state.newVenue}
+                        onHide={() => this.setState({
+                            newVenue: false
+                        })}
+                        initialName={''}
+                        initialClubId={''}
+                        initialCapacity={''}
+                        initialCityId={''}
+                        initialYearOfOpening={''}
+                        mainHeader={"Adding new venue"}
+                        cities={this.state.citiesForForm}
+                        clubs={this.state.clubsForForm}
+                        countries={this.state.countries}
+                        currentCountry={this.state.currentCountry}
+                        filterByCountry={this.filterFormCities}
+                        updateCities={this.updateToCountry}
+                        isEdit={false}
+                        onSubmit={this.postVenue}
+                    />
                     : null}
 
                 {this.state.editVenue ? <VenueForm
+                    show={this.state.editVenue}
+                    onHide={() => this.setState({
+                        editVenue: false
+                    })}
                     initialName={this.state.venueToEdit.name}
                     initialClubId={this.state.venueToEdit.skiClub.id}
                     initialCapacity={this.state.venueToEdit.capacity}

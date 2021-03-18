@@ -1,10 +1,10 @@
 import React from "react";
 import { useField, useFormikContext } from "formik";
-import DatePicker from "react-datepicker";
+import DatePicker from "react-datepicker"
 import {Col, Form, Row} from "react-bootstrap";
 import {ErrorLabel} from "../StyledComponents";
 
-export const DatePickerField = ({ label, ...props }) => {
+export const FormikDatePicker = ({ label, ...props }) => {
     const { setFieldValue } = useFormikContext();
     const [field, meta] = useField(props);
     return (

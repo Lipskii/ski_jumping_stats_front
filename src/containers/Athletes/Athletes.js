@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import axios from "axios";
-import {Button, Pagination, Table} from "react-bootstrap";
+import {Button, Image, Pagination, Table} from "react-bootstrap";
 import AddingModal from "../../components/Modals/AddingModal";
 import CompletedModal from "../../components/Modals/CompletedModal";
 import DeleteModal from "../../components/Modals/DeleteModal";
@@ -36,7 +36,6 @@ class Athletes extends Component {
         showDeleteModal: false,
         showCompletedModal: false,
         skis: [],
-        photo: ''
     }
 
 
@@ -50,13 +49,11 @@ class Athletes extends Component {
             axios.get('/api/skiClubs'),
             axios.get('/api/skiJumpers'),
             axios.get('api/skis'),
-            axios.get('/api/people/photo')
 
         ])
             .then(axios.spread((citiesData, citiesWithAthletesData, countriesData,
                                 countriesWithAthletesData, gendersData, clubsData, athletesData,
-                                skisData,photo) => {
-                console.log(photo)
+                                skisData) => {
                 this.setState({
                     athletes: athletesData.data,
                     athletesLoading: false,
@@ -69,7 +66,6 @@ class Athletes extends Component {
                     clubsForForm: clubsData.data,
                     genders: gendersData.data,
                     skis: skisData.data,
-                    photo: photo.data
                 })
             }))
             .catch(error => console.log(error))
@@ -334,6 +330,7 @@ class Athletes extends Component {
                             </option>)}
                     </SelectInputForm>
 
+
                     {/*City*/}
                     <SelectInputForm
                         key={this.state.citiesWithAthletes}
@@ -397,12 +394,7 @@ class Athletes extends Component {
                                                                  onClick={() =>
                                                                      this.setState({
                                                                          athleteToEdit: athlete,
-                                                                         editAthlete: false,
-                                                                         newAthlete: false
-                                                                     }, () => {
-                                                                         this.setState({
-                                                                             editAthlete: true
-                                                                         })
+                                                                         editAthlete: true,
                                                                      })}>
                                                         Edit
                                                     </TableButton>
@@ -429,13 +421,16 @@ class Athletes extends Component {
 
                 <StyledDiv2Right1200>
                     <Button onClick={() => this.setState({
-                        newAthlete: !this.state.newAthlete,
-                        editAthlete: false,
+                        newAthlete: true,
                     })} variant={"success"}>New Athlete</Button>
                 </StyledDiv2Right1200>
 
                 {this.state.newAthlete ?
                     <AthletesForm
+                        show={this.state.newAthlete}
+                        onHide={() => this.setState({
+                            newAthlete: false
+                        })}
                         initialActive={true}
                         initialBirthdate={''}
                         initialClubId={''}
@@ -466,6 +461,10 @@ class Athletes extends Component {
 
 
                 {this.state.editAthlete ? <AthletesForm
+                        show={this.state.editAthlete}
+                        onHide={() => this.setState({
+                            editAthlete: false
+                        })}
                         initialActive={this.state.athleteToEdit.active}
                         initialBirthdate={this.state.athleteToEdit.birthdate}
                         initialClubId={this.state.athleteToEdit.skiClub.id}

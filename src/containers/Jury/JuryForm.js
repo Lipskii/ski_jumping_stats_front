@@ -1,13 +1,12 @@
-import React, { useState} from "react";
+import React, {useState} from "react";
 import {Formik} from "formik";
-import { Header3, StyledDiv2Right1200, StyledForm} from "../../components/StyledComponents";
-import {Button, Card, Col, Form, Row} from "react-bootstrap";
+import {Header3, StyledDiv2Right1200, StyledForm} from "../../components/StyledComponents";
+import {Button, Card, Col, Form, Modal, Row} from "react-bootstrap";
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
 
 import {JuryValidationSchema} from "./JuryValidationSchema";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import NewPersonModal from "../../components/Modals/NewPersonModal";
-
 
 
 const JuryForm = (props) => {
@@ -22,7 +21,7 @@ const JuryForm = (props) => {
                 show={showModal}
                 onHide={() => {
                     setShowModal(false)
-                  //  setPeople(props.cities)
+                    //  setPeople(props.cities)
                 }}
                 country={currentCountry}
                 countries={props.allCountries}
@@ -31,8 +30,6 @@ const JuryForm = (props) => {
                     setCurrentCountry("")
                 }}
             /> : null}
-
-
             <Formik
                 isInitialValid={false}
                 initialValues={{
@@ -46,18 +43,20 @@ const JuryForm = (props) => {
             >{({
                    handleSubmit,
                }) => (
-                <StyledForm
-                    onSubmit={(e) => {
-                        e.preventDefault()
-                        handleSubmit()
-                    }}
-                >
-                    <Card style={{borderRadius: '10px', marginBottom: '30px'}}>
-                        <Card.Header>
+                <Modal size={"m"} show={props.showModal} onHide={props.onHide}>
+                    <Form
+                        onSubmit={(e) => {
+                            e.preventDefault()
+                            handleSubmit()
+                        }}
+                    >
+                        <Modal.Header>
                             <Header3>Adding new jury</Header3>
+                        </Modal.Header>
+
+
+                        <Modal.Body>
                             <small>Fields with (*) are mandatory</small>
-                        </Card.Header>
-                        <Card.Body>
                             <SelectInputForm
                                 title={"Country:"}
                                 defaultValue={currentCountry}
@@ -85,7 +84,8 @@ const JuryForm = (props) => {
                             >
                                 <option value={""} disabled>Choose...</option>
                                 {props.people.map(person => (
-                                    <option key={person.id} value={person.id}>{person.firstName} {person.lastName}</option>
+                                    <option key={person.id}
+                                            value={person.id}>{person.firstName} {person.lastName}</option>
                                 ))}
                             </FormikSelectInputForm>
 
@@ -103,12 +103,13 @@ const JuryForm = (props) => {
                             <StyledDiv2Right1200>
                                 <Button type={"submit"}>Submit</Button>
                             </StyledDiv2Right1200>
-                        </Card.Body>
-                    </Card>
+                        </Modal.Body>
 
-                </StyledForm>
+                    </Form>
+                </Modal>
             )}
             </Formik>
+
         </React.Fragment>
     )
 }

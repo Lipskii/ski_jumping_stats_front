@@ -23,6 +23,7 @@ class Athletes extends Component {
         countriesWithPeople: [],
         currentCountry: '',
         jury: [],
+        juryFullList: [],
         juryLoading: true,
         juryToDelete: '',
         juryTypes: [],
@@ -59,6 +60,7 @@ class Athletes extends Component {
                     countriesWithJury: countriesWithJuryData.data,
                     countriesWithPeople: countriesWithPeopleData.data,
                     jury: juryData.data,
+                    juryFullList: juryData.data,
                     juryTypes: juryTypeData.data,
                     people: peopleData.data,
                     juryLoading: false
@@ -87,9 +89,9 @@ class Athletes extends Component {
             .catch(error => console.log(error))
     }
 
-    postJury = (values) =>{
+    postJury = (values) => {
         let successful = true
-        axios.post('/api/jury',{
+        axios.post('/api/jury', {
             juryType: this.state.juryTypes.find(juryType => juryType.id === parseInt(values.juryTypeId)),
             person: this.state.people.find(person => person.id === parseInt(values.personId))
         })
@@ -109,7 +111,12 @@ class Athletes extends Component {
                 completedModalText: modalText,
                 completedModalStatus: successful,
                 showAddingModal: false,
-            })
+            }, () => axios.get('/api/countries/jury')
+                .then(res => this.setState({
+                        countriesWithJury: res.data
+                    })
+                )
+                .catch(error => console.log(error)))
         })
     }
 
@@ -134,11 +141,25 @@ class Athletes extends Component {
                 .then(res => {
                     this.setState({
                         jury: res.data,
+                        juryFullList: res.data,
                         juryLoading: false
                     })
                 })
                 .catch(error => console.log(error))
         })
+    }
+
+    updateToRole = (e) => {
+        if (e.target.value !== "") {
+            let juryList = this.state.jury.filter(jury => jury.juryType.id === parseInt(e.target.value))
+            this.setState({
+                jury: juryList
+            })
+        } else {
+            this.setState({
+                jury: this.state.juryFullList
+            })
+        }
     }
 
 
@@ -182,7 +203,7 @@ class Athletes extends Component {
                         showDeleteModal: false,
                         juryToDelete: ''
                     })}
-                   title={"the jury"}
+                    title={"the jury"}
                     handleDelete={this.deleteAthlete}
                 />
 
@@ -192,7 +213,7 @@ class Athletes extends Component {
                     {/*Select Country*/}
                     <strong>Filter</strong>
                     <SelectInputForm
-                        title={"Country"}
+                        title={"Country:"}
                         defaultValue={""}
                         onChange={e => {
                             this.setState({
@@ -205,6 +226,20 @@ class Athletes extends Component {
                         {this.state.countriesWithJury.map(country =>
                             <option key={country.id} value={country.id}>
                                 {country.name}
+                            </option>)}
+                    </SelectInputForm>
+
+                    <SelectInputForm
+                        key={this.state.jury}
+                        title={"Role:"}
+                        defaultValue={""}
+                        onChange={e => this.updateToRole(e)
+                        }
+                    >
+                        <option value={""}>All roles</option>
+                        {this.state.juryTypes.map(juryType =>
+                            <option key={juryType.id} value={juryType.id}>
+                                {juryType.juryType}
                             </option>)}
                     </SelectInputForm>
 
@@ -235,8 +270,14 @@ class Athletes extends Component {
                                         return (
                                             <tr key={jury.id} id={jury.id}>
                                                 <td>{jury.person.firstName} {jury.person.lastName}</td>
-                                                <td style={{textAlign: "center",width: "10px"}}>{jury.gender.gender.charAt(0)}</td>
-                                                <td style={{textAlign: "center",width: "30px"}}>{jury.country.code}</td>
+                                                <td style={{
+                                                    textAlign: "center",
+                                                    width: "10px"
+                                                }}>{jury.gender.gender.charAt(0)}</td>
+                                                <td style={{
+                                                    textAlign: "center",
+                                                    width: "30px"
+                                                }}>{jury.country.code}</td>
                                                 <td>{jury.juryType.juryType}</td>
                                                 <td>
                                                     <TableButton id={jury.id} name={jury.name} size="sm"
@@ -268,6 +309,10 @@ class Athletes extends Component {
 
                 {this.state.newJury ?
                     <JuryForm
+                        showModal={this.state.newJury}
+                        onHide={() => this.setState({
+                            newJury: false
+                        })}
                         allCountries={this.state.countries}
                         cities={this.state.cities}
                         countries={this.state.countriesWithPeople}
@@ -275,9 +320,14 @@ class Athletes extends Component {
                         juryTypes={this.state.juryTypes}
                         people={this.state.people}
                         updateCities={this.updateToCountry}
-                        onSubmit={this.postJury}
+                        onSubmit={(values) => {
+                            this.setState({
+                                showAddingModal: true
+                            }, () => this.postJury(values))
+                        }}
                     >
-                    </JuryForm> : null}
+                    </JuryForm>
+                    : null}
 
             </React.Fragment>
         )

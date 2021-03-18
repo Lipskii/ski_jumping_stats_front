@@ -2,11 +2,11 @@ import React, {useEffect, useState} from "react";
 import NewCityModal from "../../components/Modals/NewCityModal";
 import {Formik, Field} from "formik";
 import {ErrorLabel, Header3, StyledDiv2Right1200, StyledForm} from "../../components/StyledComponents";
-import {Button, Card, Col, Form, Row} from "react-bootstrap";
+import {Button, Card, Col, Form, Modal, Row} from "react-bootstrap";
 import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
 import {AthletesValidationSchema} from "./AthletesValidationSchema";
-import {DatePickerField} from "../../components/CommonForms/FormikDatePicker";
+import {FormikDatePicker} from "../../components/CommonForms/FormikDatePicker";
 import bsCustomFileInput from 'bs-custom-file-input';
 
 const AthletesForm = (props) => {
@@ -20,21 +20,7 @@ const AthletesForm = (props) => {
 
     return (
         <React.Fragment>
-            {/*to prevent premature component did mount in NewCityModal*/}
-            {showModal ? <NewCityModal
-                show={showModal}
-                onHide={() => {
-                    setShowModal(false)
-                    setCities(props.cities)
-                }}
-                country={currentCountry}
-                countries={props.countries}
-                cities={cities}
-                afterAdding={() => {
-                    setCurrentCountry("")
-                    props.updateCities()   //TODO change it, so the citiesForForm would be updated
-                }}
-            /> : null}
+
 
             <Formik
                 isInitialValid={false}
@@ -59,21 +45,44 @@ const AthletesForm = (props) => {
             >{({
                    handleSubmit,
                    setFieldValue,
-                touched,
-                errors
+                   touched,
+                   errors
                }) => (
-                <StyledForm
-                    onSubmit={(e) => {
-                        e.preventDefault()
-                        handleSubmit()
-                    }}
-                >
-                    <Card style={{borderRadius: '10px', marginBottom: '30px'}}>
-                        <Card.Header>
-                            <Header3>{props.mainHeader}</Header3>
+                <Modal show={props.show} size={"xl"} scrollable={true} onHide={props.onHide}>
+                    {/*to prevent premature component did mount in NewCityModal*/}
+                    {showModal ? <NewCityModal
+                        show={showModal}
+                        onHide={() => {
+                            setShowModal(false)
+                            setCities(props.cities)
+                        }}
+                        country={currentCountry}
+                        countries={props.countries}
+                        cities={cities}
+                        afterAdding={() => {
+                            setCurrentCountry("")
+                            props.updateCities()   //TODO change it, so the citiesForForm would be updated
+                        }}
+                    /> : null}
+                    <Modal.Header closeButton>
+                        <Header3>{props.mainHeader}</Header3>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form
+                            style={{marginTop: "10px"}}
+                            onSubmit={(e) => {
+                                e.preventDefault()
+                                handleSubmit()
+                            }}
+                        >
+
+                            {/*<Card  style={{borderRadius: '10px', marginBottom: '0px', marginTop: '0px', width: '1000px'}}>*/}
+                            {/*    <Card.Header>*/}
+
+                            {/*</Card.Header>*/}
+                            {/*<Card.Body>*/}
+
                             <small>Fields with (*) are mandatory</small>
-                        </Card.Header>
-                        <Card.Body>
                             <FormikTextInputForm
                                 name="firstName"
                                 label="First name*:"
@@ -96,14 +105,13 @@ const AthletesForm = (props) => {
                                 ))}
                             </FormikSelectInputForm>
 
-                            <DatePickerField
+                            <FormikDatePicker
                                 name="birthdate"
                                 label={"Birthdate*:"}
                                 disabled={props.isEdit}
                             />
 
                             <FormikSelectInputForm
-                                key={props.countries}
                                 name="countryId"
                                 label="Country*:"
                                 onChange={e => {
@@ -173,29 +181,35 @@ const AthletesForm = (props) => {
                             />
 
 
-                                <Form.Group as={Row}>
-                                    <Form.Label column sm={2}>Photo:</Form.Label>
-                                    <Col sm={10}>
-                                        <input id="file" name="file" type="file" onChange={(event) => {
-                                            setFieldValue("file", event.currentTarget.files[0]);
-                                        }}/>
-                                        {touched.file && errors.file ? (
-                                            <ErrorLabel>{errors.file}</ErrorLabel>
-                                        ) : null}
-                                    </Col>
-                                </Form.Group>
-
-
+                            <Form.Group as={Row}>
+                                <Form.Label column sm={2}>Photo:</Form.Label>
+                                <Col sm={10}>
+                                    <input id="file" name="file" type="file" onChange={(event) => {
+                                        setFieldValue("file", event.currentTarget.files[0]);
+                                    }}/>
+                                    {touched.file && errors.file ? (
+                                        <ErrorLabel>{errors.file}</ErrorLabel>
+                                    ) : null}
+                                </Col>
+                            </Form.Group>
 
                             <StyledDiv2Right1200>
                                 <Button type={"submit"}>Submit</Button>
                             </StyledDiv2Right1200>
-                        </Card.Body>
-                    </Card>
 
-                </StyledForm>
+
+                            {/*<StyledDiv2Right1200>*/}
+
+                            {/*</StyledDiv2Right1200>*/}
+                            {/*    </Card.Body>*/}
+                            {/*</Card>*/}
+
+                        </Form>
+                    </Modal.Body>
+                </Modal>
             )}
             </Formik>
+
         </React.Fragment>
     )
 }
