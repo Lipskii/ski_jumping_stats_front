@@ -10,7 +10,6 @@ export const HillsValidationSchema = () => Yup.object(
         kPoint: Yup.number()
             .max(250, 'Too large. Value should be less than 250 m.')    //check this in FIS rules
             .min(0, 'Cannot be negative')
-            .round('floor')
             .required('Required'),
         hillSize: Yup.number()
             .max(250, 'Too large. Value should be less than 250 m.')

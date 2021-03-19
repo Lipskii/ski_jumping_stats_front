@@ -19,9 +19,12 @@ class Results extends Component {
         hills: [],
         judges: [],
         raceDirectors: [],
+        seasons: [],
         selectedFile: '',
+        series: [],
         venues: [],
         technicalDelegates: [],
+        weather: []
     }
 
     componentDidMount() {
@@ -37,7 +40,10 @@ class Results extends Component {
             axios.get('/api/jury/rd'),
             axios.get('/api/jury/td'),
             // axios.get('/api/results'),
-            axios.get('/api/venues/hills')
+            axios.get('/api/seasons'),
+            axios.get('/api/series'),
+            axios.get('/api/venues/hills'),
+            axios.get('/api/weather')
 
         ])
             .then(axios.spread((citiesData,
@@ -50,7 +56,10 @@ class Results extends Component {
                                 judgesData,
                                 raceDirectorsData,
                                 technicalDelegatesData,
-                                venuesData
+                                seasonsData,
+                                seriesData,
+                                venuesData,
+                                weatherData
             ) => {
                 this.setState({
                     assistantsRD: aRDsData.data,
@@ -62,8 +71,11 @@ class Results extends Component {
                     hills: hillsData.data,
                     judges: judgesData.data,
                     raceDirectors: raceDirectorsData.data,
+                    seasons: seasonsData.data,
+                    series: seriesData.data,
                     technicalDelegates: technicalDelegatesData.data,
-                    venues: venuesData.data
+                    venues: venuesData.data,
+                    weather: weatherData.data
                 })
             }))
             .catch(error => console.log(error))
@@ -102,8 +114,18 @@ class Results extends Component {
 
                     {this.state.venues.length > 0 ?
                         <ResultsForm
+                            aRDs={this.state.assistantsRD}
+                            aTDs={this.state.assistantsTD}
+                            chiefsOfCompetition={this.state.chiefsOfCompetition}
                             countries={this.state.countries}
+                            equipmentControllers={this.state.equipmentControllers}
+                            judges={this.state.judges}
+                            raceDirectors={this.state.raceDirectors}
+                            seasons={this.state.seasons}
+                            series={this.state.series}
+                            technicalDelegates={this.state.technicalDelegates}
                             venues={this.state.venues}
+                            weather={this.state.weather}
                         />
                         : <Loader
                             type="ThreeDots"

@@ -49,7 +49,6 @@ const Toolbar = () => (
                         <NavDropdown.Item>Venues</NavDropdown.Item>
                     </LinkContainer>
                 </NavDropdown>
-                <Nav.Link>Account</Nav.Link>
                 <Nav.Link>About</Nav.Link>
             </Nav>
         </Navbar.Collapse>

@@ -12,7 +12,7 @@ import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import {ResultsValidationSchema} from "./ResultsValidationSchema";
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
 import {FormikDatePicker} from "../../components/CommonForms/FormikDatePicker";
-
+import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
 
 
 const ResultsForm = (props) => {
@@ -21,7 +21,8 @@ const ResultsForm = (props) => {
     const [venues, setVenues] = useState(props.venues)
     const [hills, setHills] = useState([])
     const [hillVersions, setHillVersions] = useState([])
-    const [isTwoDayCompetition, setIsTwoDayCompetition] = useState()
+    const [isTwoDayCompetition, setIsTwoDayCompetition] = useState(0)
+    const [numOfRounds, setNumOfRounds] = useState()
 
 
     const updateToCountry = (e) => {
@@ -52,8 +53,74 @@ const ResultsForm = (props) => {
         <Formik
             isInitialValid={false}
             initialValues={{
+                assistantRDId: '',
+                assistantTDId: '',
+                chiefOfCompetitionId: '',
                 date1: '',
-                hillVersionId: ''
+                date2: '',
+                equipmentController1Id: '',
+                equipmentController2Id: '',
+                firstRoundAirTempStart: '',
+                firstRoundAirTempFinish: '',
+                firstRoundAvgWind: '',
+                firstRoundBaseGate: '',
+                firstRoundHumidityStart: '',
+                firstRoundHumidityFinish: '',
+                firstRoundMaxWind: '',
+                firstRoundMinWind: '',
+                firstRoundSnowTempStart: '',
+                firstRoundSnowTempFinish: '',
+                firstRoundWeatherId: '',
+                fourthRoundAirTempStart: '',
+                fourthRoundAirTempFinish: '',
+                fourthRoundAvgWind: '',
+                fourthRoundBaseGate: '',
+                fourthRoundHumidityStart: '',
+                fourthRoundHumidityFinish: '',
+                fourthRoundMaxWind: '',
+                fourthRoundMinWind: '',
+                fourthRoundSnowTempStart: '',
+                fourthRoundSnowTempFinish: '',
+                fourthRoundWeatherId: '',
+                gateFactor: '',
+                hillVersionId: '',
+                judgeAId: '',
+                judgeBId: '',
+                judgeCId: '',
+                judgeDId: '',
+                judgeEId: '',
+                judgeSCId: '',
+                meterValue: '',
+                raceDirectorId: '',
+                resultsFile: '',
+                seasonId: '',
+                secondRoundAirTempStart: '',
+                secondRoundAirTempFinish: '',
+                secondRoundAvgWind: '',
+                secondRoundBaseGate: '',
+                secondRoundHumidityStart: '',
+                secondRoundHumidityFinish: '',
+                secondRoundMaxWind: '',
+                secondRoundMinWind: '',
+                secondRoundSnowTempStart: '',
+                secondRoundSnowTempFinish: '',
+                secondRoundWeatherId: '',
+                seriesMajorId: '',
+                seriesMinorId: '',
+                technicalDelegateId: '',
+                thirdRoundAirTempStart: '',
+                thirdRoundAirTempFinish: '',
+                thirdRoundAvgWind: '',
+                thirdRoundBaseGate: '',
+                thirdRoundHumidityStart: '',
+                thirdRoundHumidityFinish: '',
+                thirdRoundMaxWind: '',
+                thirdRoundMinWind: '',
+                thirdRoundSnowTempStart: '',
+                thirdRoundSnowTempFinish: '',
+                thirdRoundWeatherId: '',
+                windFactorTail: '',
+                windFactorFront: '',
             }}
             validationSchema={ResultsValidationSchema}
             onSubmit={(values) => {
@@ -63,7 +130,8 @@ const ResultsForm = (props) => {
             {({
                   handleSubmit,
                   errors,
-                  touched
+                  touched,
+                  setFieldValue
 
               }) => (
                 <StyledForm onSubmit={(e) => {
@@ -80,15 +148,38 @@ const ResultsForm = (props) => {
                             <Accordion.Toggle as={Card.Header} eventKey="0">
                                 <Header5>Basic info</Header5>
                                 {
-                                    (errors['name'] !== undefined && touched['name']) ||
-                                    (errors['sizeOfHillId'] !== undefined && touched['sizeOfHillId']) ||
-                                    (errors['kPoint'] !== undefined && touched['kPoint']) ||
-                                    (errors['hs'] !== undefined && touched['hs']) ?
+                                    (errors['seriesMajorId'] !== undefined && touched['seriesMajorId']) ||
+                                    (errors['hillVersionId'] !== undefined && touched['hillVersionIdd']) ||
+                                    (errors['seasonId'] !== undefined && touched['seasonId']) ||
+                                    (errors['date1'] !== undefined && touched['date1']) ?
                                         <text style={{marginRight: "2px"}}>errors</text> : null
                                 }
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey="0">
                                 <Card.Body>
+
+                                    <FormikSelectInputForm
+                                        name="seriesMajorId"
+                                        label="Series major*:"
+                                    >
+                                        <option value={""} disabled>Choose...</option>
+                                        {props.series.map(series =>
+                                            <option key={series.id} value={series.id}>
+                                                {series.name}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                    <FormikSelectInputForm
+                                        name="seriesMinorId"
+                                        label="Series minor:"
+                                    >
+                                        <option value={""}>None...</option>
+                                        {props.series.map(series =>
+                                            <option key={series.id} value={series.id}>
+                                                {series.name}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
                                     <SelectInputForm
                                         title={"Country:"}
                                         defaultValue={""}
@@ -112,6 +203,7 @@ const ResultsForm = (props) => {
                                                 {venue.name}
                                             </option>)}
                                     </SelectInputForm>
+
 
                                     <SelectInputForm
                                         title={"Hill*:"}
@@ -140,6 +232,32 @@ const ResultsForm = (props) => {
 
                                     </FormikSelectInputForm>
 
+                                    <FormikSelectInputForm
+                                        name="seasonId"
+                                        label="Season*:"
+                                        style={{width: "100px"}}
+                                    >
+                                        <option value={""} disabled>Choose...</option>
+                                        {props.seasons.map(season =>
+                                            <option key={season.id} value={season.id}>
+                                                {season.season}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                    <SelectInputForm
+                                        title={"No. of Rounds*:"}
+                                        style={{width: "100px"}}
+                                        onChange={e => {
+                                            setNumOfRounds(parseInt(e.target.value))
+                                        }}
+                                    >
+                                        <option value={0}>0</option>
+                                        <option value={1}>1</option>
+                                        <option value={2}>2</option>
+                                        <option value={3}>3</option>
+                                        <option value={4}>4</option>
+                                    </SelectInputForm>
+
                                     <FormikDatePicker
                                         name="date1"
                                         label={"Date*:"}
@@ -147,25 +265,616 @@ const ResultsForm = (props) => {
 
                                     <SelectInputForm
                                         title={"Second day?*:"}
+                                        style={{width: "100px"}}
                                         onChange={e => {
-                                            console.log(e.target.value)
-                                            setIsTwoDayCompetition(e.target.value)
-                                            console.log(isTwoDayCompetition)
+                                            setIsTwoDayCompetition(parseInt(e.target.value))
                                         }}
                                     >
-                                        <option value={false}>No</option>
-                                        <option value={true}>Yes</option>
+                                        <option value={0}>No</option>
+                                        <option value={1}>Yes</option>
                                     </SelectInputForm>
 
-                                    {isTwoDayCompetition === true ? <FormikDatePicker
-                                        name="date1"
-                                        label={"2. day*:"}
-                                    />  :null}
+                                    {isTwoDayCompetition === 1 ?
+                                        <FormikDatePicker
+                                            name="date2"
+                                            label={"2. day:"}
+                                        />
+                                        : null}
 
+                                    <Form.Group as={Row}>
+                                        <Form.Label column sm={2}>Results (CSV)*:</Form.Label>
+                                        <Col sm={10}>
+                                            <input id="file" name="resultsFile" type="file" onChange={(event) => {
+                                                setFieldValue("resultsFile", event.currentTarget.files[0]);
+                                            }}/>
+                                            {touched.file && errors.file ? (
+                                                <ErrorLabel>{errors.file}</ErrorLabel>
+                                            ) : null}
+                                        </Col>
+                                    </Form.Group>
 
                                 </Card.Body>
                             </Accordion.Collapse>
                         </Card>
+
+                        {/*Jury*/}
+                        <Card style={{borderRadius: '10px'}}>
+                            <Accordion.Toggle as={Card.Header} eventKey="1">
+                                <Header5>Jury</Header5>
+                                {
+                                    (errors['seriesMajorId'] !== undefined && touched['seriesMajorId']) ||
+                                    (errors['hillVersionId'] !== undefined && touched['hillVersionIdd']) ||
+                                    (errors['seasonId'] !== undefined && touched['seasonId']) ||
+                                    (errors['date1'] !== undefined && touched['date1']) ?
+                                        <text style={{marginRight: "2px"}}>errors</text> : null
+                                }
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="1">
+                                <Card.Body>
+                                    <FormikSelectInputForm
+                                        name="raceDirectorId"
+                                        label="Race director:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.raceDirectors.map(raceDirector =>
+                                            <option key={raceDirector.id} value={raceDirector.id}>
+                                                {raceDirector.person.firstName} {raceDirector.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                    <FormikSelectInputForm
+                                        name="technicalDelegateId"
+                                        label="Technical delegate:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.technicalDelegates.map(technicalDelegate =>
+                                            <option key={technicalDelegate.id} value={technicalDelegate.id}>
+                                                {technicalDelegate.person.firstName} {technicalDelegate.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                    <FormikSelectInputForm
+                                        name="chiefOfCompetitionId"
+                                        label="Chief of competition:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.chiefsOfCompetition.map(chiefOfCompetition =>
+                                            <option key={chiefOfCompetition.id} value={chiefOfCompetition.id}>
+                                                {chiefOfCompetition.person.firstName} {chiefOfCompetition.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                    <FormikSelectInputForm
+                                        name="assistantRDId"
+                                        label="Assistant RD:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.aRDs.map(aRD =>
+                                            <option key={aRD.id} value={aRD.id}>
+                                                {aRD.person.firstName} {aRD.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                    <FormikSelectInputForm
+                                        name="assistantTDId"
+                                        label="Assistant TD:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.aTDs.map(aTD =>
+                                            <option key={aTD.id} value={aTD.id}>
+                                                {aTD.person.firstName} {aTD.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                    <FormikSelectInputForm
+                                        name="equipmentController1Id"
+                                        label="1. equipment controller:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.equipmentControllers.map(ec =>
+                                            <option key={ec.id} value={ec.id}>
+                                                {ec.person.firstName} {ec.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                    <FormikSelectInputForm
+                                        name="equipmentController2Id"
+                                        label="2. equipment controller:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.equipmentControllers.map(ec =>
+                                            <option key={ec.id} value={ec.id}>
+                                                {ec.person.firstName} {ec.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
+
+                        {/*Judges*/}
+                        <Card style={{borderRadius: '10px'}}>
+                            <Accordion.Toggle as={Card.Header} eventKey="2">
+                                <Header5>Judges</Header5>
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="2">
+                                <Card.Body>
+                                    <FormikSelectInputForm
+                                        name="judgeAId"
+                                        label="Judge A:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.judges.map(judge =>
+                                            <option key={judge.id} value={judge.id}>
+                                                {judge.person.firstName} {judge.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                    <FormikSelectInputForm
+                                        name="judgeBId"
+                                        label="Judge B:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.judges.map(judge =>
+                                            <option key={judge.id} value={judge.id}>
+                                                {judge.person.firstName} {judge.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+                                    <FormikSelectInputForm
+                                        name="judgeCId"
+                                        label="Judge C:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.judges.map(judge =>
+                                            <option key={judge.id} value={judge.id}>
+                                                {judge.person.firstName} {judge.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+                                    <FormikSelectInputForm
+                                        name="judgeDId"
+                                        label="Judge D:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.judges.map(judge =>
+                                            <option key={judge.id} value={judge.id}>
+                                                {judge.person.firstName} {judge.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+                                    <FormikSelectInputForm
+                                        name="judgeEId"
+                                        label="Judge E:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.judges.map(judge =>
+                                            <option key={judge.id} value={judge.id}>
+                                                {judge.person.firstName} {judge.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+                                    <FormikSelectInputForm
+                                        name="judgeSCId"
+                                        label="Judge SC:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.judges.map(judge =>
+                                            <option key={judge.id} value={judge.id}>
+                                                {judge.person.firstName} {judge.person.lastName}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
+
+                        {/*Point factors*/}
+                        <Card style={{borderRadius: '10px'}}>
+                            <Accordion.Toggle as={Card.Header} eventKey="3">
+                                <Header5>Point Factors</Header5>
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="3">
+                                <Card.Body>
+                                    <FormikSelectInputForm
+                                        name="meterValue"
+                                        label="Meter Value:"
+                                        style={{width: "100px"}}
+                                    >
+                                        <option value={""}>No info</option>
+                                        <option value={1.2}>1.2</option>
+                                        <option value={1.8}>1.8</option>
+                                        <option value={2.0}>2.0</option>
+                                        <option value={2.2}>2.2</option>
+                                        <option value={2.4}>2.4</option>
+                                        <option value={2.8}>2.8</option>
+                                        <option value={3.2}>3.2</option>
+                                        <option value={3.6}>3.6</option>
+                                        <option value={4.0}>4.0</option>
+                                        <option value={4.4}>4.4</option>
+                                        <option value={4.8}>4.8</option>
+                                    </FormikSelectInputForm>
+
+                                    <FormikTextInputForm
+                                        name="gateFactor"
+                                        label="Gate factor:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                    <FormikTextInputForm
+                                        name="windFactorTail"
+                                        label="Wind factor tail:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                    <FormikTextInputForm
+                                        name="windFactorFront"
+                                        label="Wind factor front:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
+
+                        {/*First round official stats*/}
+                        {numOfRounds > 0 ?
+                        <Card style={{borderRadius: '10px'}}>
+                            <Accordion.Toggle as={Card.Header} eventKey="4">
+                                <Header5>First Round official stats</Header5>
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="4">
+                                <Card.Body>
+                                    {/*<FormikTextInputForm*/}
+                                    {/*    name="firstRoundStartTime"*/}
+                                    {/*    label="Start time:"*/}
+                                    {/*    style={{width: "100px"}}*/}
+                                    {/*/>*/}
+
+                                    <FormikTextInputForm
+                                        name="firstRoundBaseGate"
+                                        label="Base gate:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                    <FormikSelectInputForm
+                                        name="firstRoundWeatherId"
+                                        label="Weather:"
+                                        >
+                                        <option value={""}>No info</option>
+                                        {props.weather.map(weather =>
+                                            <option key={weather.id} value={weather.id}>
+                                                {weather.weather}
+                                            </option>)}
+                                    </FormikSelectInputForm>
+
+                                    <FormikTextInputForm
+                                        name="firstRoundAirTempStart"
+                                        label="Air temperature start:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                    <FormikTextInputForm
+                                        name="firstRoundAirTempFinish"
+                                        label="Air temperature end:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                    <FormikTextInputForm
+                                        name="firstRoundSnowTempStart"
+                                        label="Snow temp. start:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                    <FormikTextInputForm
+                                        name="firstRoundSnowTempFinish"
+                                        label="Snow temp. end:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                    <FormikTextInputForm
+                                        name="firstRoundHumidityStart"
+                                        label="Humidity start:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                    <FormikTextInputForm
+                                        name="firstRoundHumidityFinish"
+                                        label="Humidity finish:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                    <FormikTextInputForm
+                                        name="firstRoundMinWind"
+                                        label="Minimal wind:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                    <FormikTextInputForm
+                                        name="firstRoundMaxWind"
+                                        label="Maximal wind:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                    <FormikTextInputForm
+                                        name="firstRoundAvgWind"
+                                        label="Average wind:"
+                                        style={{width: "100px"}}
+                                    />
+
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
+                            : null}
+
+                        {/*Second round official stats*/}
+                        {numOfRounds > 1 ?
+                            <Card style={{borderRadius: '10px'}}>
+                                <Accordion.Toggle as={Card.Header} eventKey="5">
+                                    <Header5>Second Round official stats</Header5>
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="5">
+                                    <Card.Body>
+                                        {/*<FormikTextInputForm*/}
+                                        {/*    name="secondRoundStartTime"*/}
+                                        {/*    label="Start time:"*/}
+                                        {/*    style={{width: "100px"}}*/}
+                                        {/*/>*/}
+
+                                        <FormikTextInputForm
+                                            name="secondRoundBaseGate"
+                                            label="Base gate:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikSelectInputForm
+                                            name="secondRoundWeatherId"
+                                            label="Weather:"
+                                        >
+                                            <option value={""}>No info</option>
+                                            {props.weather.map(weather =>
+                                                <option key={weather.id} value={weather.id}>
+                                                    {weather.weather}
+                                                </option>)}
+
+                                        </FormikSelectInputForm>
+
+                                        <FormikTextInputForm
+                                            name="secondRoundAirTempStart"
+                                            label="Air temperature start:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="secondRoundAirTempFinish"
+                                            label="Air temperature end:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="secondRoundSnowTempStart"
+                                            label="Snow temp. start:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="secondRoundSnowTempFinish"
+                                            label="Snow temp. end:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="secondRoundHumidityStart"
+                                            label="Humidity start:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="secondRoundHumidityFinish"
+                                            label="Humidity finish:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="secondRoundMinWind"
+                                            label="Minimal wind:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="secondRoundMaxWind"
+                                            label="Maximal wind:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="secondRoundAvgWind"
+                                            label="Average wind:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                    </Card.Body>
+                                </Accordion.Collapse>
+                            </Card>
+                            : null}
+
+                        {/*Third round official stats*/}
+                        {numOfRounds > 2 ?
+                            <Card style={{borderRadius: '10px'}}>
+                                <Accordion.Toggle as={Card.Header} eventKey="6">
+                                    <Header5>Third Round official stats</Header5>
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="6">
+                                    <Card.Body>
+                                        {/*<FormikTextInputForm*/}
+                                        {/*    name="thirdRoundStartTime"*/}
+                                        {/*    label="Start time:"*/}
+                                        {/*    style={{width: "100px"}}*/}
+                                        {/*/>*/}
+
+                                        <FormikTextInputForm
+                                            name="thirdRoundBaseGate"
+                                            label="Base gate:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikSelectInputForm
+                                            name="thirdRoundWeatherId"
+                                            label="Weather:"
+                                        >
+                                            <option value={""}>No info</option>
+                                            {props.weather.map(weather =>
+                                                <option key={weather.id} value={weather.id}>
+                                                    {weather.weather}
+                                                </option>)}
+
+                                        </FormikSelectInputForm>
+
+                                        <FormikTextInputForm
+                                            name="thirdRoundAirTempStart"
+                                            label="Air temperature start:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="thirdRoundAirTempFinish"
+                                            label="Air temperature end:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="thirdRoundSnowTempStart"
+                                            label="Snow temp. start:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="thirdRoundSnowTempFinish"
+                                            label="Snow temp. end:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="thirdRoundHumidityStart"
+                                            label="Humidity start:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="thirdRoundHumidityFinish"
+                                            label="Humidity finish:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="thirdRoundMinWind"
+                                            label="Minimal wind:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="thirdRoundMaxWind"
+                                            label="Maximal wind:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="thirdRoundAvgWind"
+                                            label="Average wind:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                    </Card.Body>
+                                </Accordion.Collapse>
+                            </Card>
+                            : null}
+
+                        {/*Fourth round official stats*/}
+                        {numOfRounds > 3 ?
+                            <Card style={{borderRadius: '10px'}}>
+                                <Accordion.Toggle as={Card.Header} eventKey="7">
+                                    <Header5>Fourth Round official stats</Header5>
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="7">
+                                    <Card.Body>
+                                        {/*<FormikTextInputForm*/}
+                                        {/*    name="fourthRoundStartTime"*/}
+                                        {/*    label="Start time:"*/}
+                                        {/*    style={{width: "100px"}}*/}
+                                        {/*/>*/}
+
+                                        <FormikTextInputForm
+                                            name="fourthRoundBaseGate"
+                                            label="Base gate:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikSelectInputForm
+                                            name="fourthRoundWeatherId"
+                                            label="Weather:"
+                                        >
+                                            <option value={""}>No info</option>
+                                            {props.weather.map(weather =>
+                                                <option key={weather.id} value={weather.id}>
+                                                    {weather.weather}
+                                                </option>)}
+
+                                        </FormikSelectInputForm>
+
+                                        <FormikTextInputForm
+                                            name="fourthRoundAirTempStart"
+                                            label="Air temperature start:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="fourthRoundAirTempFinish"
+                                            label="Air temperature end:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="fourthRoundSnowTempStart"
+                                            label="Snow temp. start:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="fourthRoundSnowTempFinish"
+                                            label="Snow temp. end:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="fourthRoundHumidityStart"
+                                            label="Humidity start:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="fourthRoundHumidityFinish"
+                                            label="Humidity finish:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="fourthRoundMinWind"
+                                            label="Minimal wind:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="fourthRoundMaxWind"
+                                            label="Maximal wind:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                        <FormikTextInputForm
+                                            name="fourthRoundAvgWind"
+                                            label="Average wind:"
+                                            style={{width: "100px"}}
+                                        />
+
+                                    </Card.Body>
+                                </Accordion.Collapse>
+                            </Card>
+                            : null}
 
 
                     </AccordionWithPadding>

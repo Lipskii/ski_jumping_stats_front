@@ -107,7 +107,7 @@ export const StyledDiv2Centered = styled.div`
 
 export const StyledForm = styled(Form)`
   margin: auto;
-  max-width: 1000px;
+  max-width: 1200px;
 `
 
 export const StyledFormSmall = styled(Form)`
