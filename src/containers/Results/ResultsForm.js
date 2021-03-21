@@ -83,6 +83,7 @@ const ResultsForm = (props) => {
                 fourthRoundSnowTempFinish: '',
                 fourthRoundWeatherId: '',
                 gateFactor: '',
+                hillId: '',
                 hillVersionId: '',
                 judgeAId: '',
                 judgeBId: '',
@@ -119,11 +120,13 @@ const ResultsForm = (props) => {
                 thirdRoundSnowTempStart: '',
                 thirdRoundSnowTempFinish: '',
                 thirdRoundWeatherId: '',
+                venueId: '',
                 windFactorTail: '',
                 windFactorFront: '',
             }}
             validationSchema={ResultsValidationSchema}
             onSubmit={(values) => {
+                console.log("ELO1")
                 props.onSubmit(values)
             }}
         >
@@ -131,10 +134,15 @@ const ResultsForm = (props) => {
                   handleSubmit,
                   errors,
                   touched,
-                  setFieldValue
+                  setFieldValue,
+                  isValid,
+                  values,
 
               }) => (
                 <StyledForm onSubmit={(e) => {
+                    console.log("ELO")
+                    console.log(isValid)
+                    console.log(values)
                     e.preventDefault()
                     handleSubmit()
                 }}>
@@ -149,8 +157,9 @@ const ResultsForm = (props) => {
                                 <Header5>Basic info</Header5>
                                 {
                                     (errors['seriesMajorId'] !== undefined && touched['seriesMajorId']) ||
-                                    (errors['hillVersionId'] !== undefined && touched['hillVersionIdd']) ||
+                                    (errors['hillVersionId'] !== undefined && touched['hillVersionId']) ||
                                     (errors['seasonId'] !== undefined && touched['seasonId']) ||
+                                    (errors['resultsFile'] !== undefined && touched['resultsFile']) ||
                                     (errors['date1'] !== undefined && touched['date1']) ?
                                         <text style={{marginRight: "2px"}}>errors</text> : null
                                 }
@@ -193,11 +202,11 @@ const ResultsForm = (props) => {
                                     </SelectInputForm>
 
                                     <SelectInputForm
-                                        title={"Venue*:"}
+                                        title={"Venue:"}
                                         defaultValue={""}
                                         onChange={e => updateToVenue(e)}
                                     >
-                                        <option value={""}>Choose...</option>
+                                        <option value={""} disabled>Choose...</option>
                                         {venues.map(venue =>
                                             <option key={venue.id} value={venue.id}>
                                                 {venue.name}
@@ -206,7 +215,7 @@ const ResultsForm = (props) => {
 
 
                                     <SelectInputForm
-                                        title={"Hill*:"}
+                                        title={"Hill:"}
                                         defaultValue={""}
                                         disabled={hills.length < 1}
                                         onChange={e => updateToHill(e)}
@@ -222,8 +231,9 @@ const ResultsForm = (props) => {
                                         name="hillVersionId"
                                         label="Hill version*:"
                                         disabled={hillVersions.length < 1}
+                                        hintTextDown={"Select venue and hill beforehand"}
                                     >
-                                        <option value={""}>Choose...</option>
+                                        <option value={""} disabled>Choose...</option>
                                         {hillVersions.map(hillVersion =>
                                             <option key={hillVersion.id} value={hillVersion.id}>
                                                 {hillVersion.validSince}/{hillVersion.validUntil} (K: {hillVersion.kPoint} m,
@@ -302,10 +312,13 @@ const ResultsForm = (props) => {
                             <Accordion.Toggle as={Card.Header} eventKey="1">
                                 <Header5>Jury</Header5>
                                 {
-                                    (errors['seriesMajorId'] !== undefined && touched['seriesMajorId']) ||
-                                    (errors['hillVersionId'] !== undefined && touched['hillVersionIdd']) ||
-                                    (errors['seasonId'] !== undefined && touched['seasonId']) ||
-                                    (errors['date1'] !== undefined && touched['date1']) ?
+                                    (errors['raceDirectorId'] !== undefined && touched['raceDirectorId\'']) ||
+                                    (errors['technicalDelegateId'] !== undefined && touched['technicalDelegateId']) ||
+                                    (errors['chiefOfCompetitionId'] !== undefined && touched['chiefOfCompetitionId\'']) ||
+                                    (errors['assistantTDId'] !== undefined && touched['assistantTDId']) ||
+                                    (errors['equipmentController1Id'] !== undefined && touched['equipmentController1Id']) ||
+                                    (errors['equipmentController2Id'] !== undefined && touched['equipmentController2Id']) ||
+                                    (errors['assistantRDId'] !== undefined && touched['assistantRDId']) ?
                                         <text style={{marginRight: "2px"}}>errors</text> : null
                                 }
                             </Accordion.Toggle>
@@ -396,6 +409,15 @@ const ResultsForm = (props) => {
                         <Card style={{borderRadius: '10px'}}>
                             <Accordion.Toggle as={Card.Header} eventKey="2">
                                 <Header5>Judges</Header5>
+                                {
+                                    (errors['judgeAId'] !== undefined && touched['judgeAId']) ||
+                                    (errors['judgeBId'] !== undefined && touched['judgeBId']) ||
+                                    (errors['judgeCId'] !== undefined && touched['judgeCId']) ||
+                                    (errors['judgeDId'] !== undefined && touched['judgeDId']) ||
+                                    (errors['judgeEId'] !== undefined && touched['judgeEId']) ||
+                                    (errors['judgeSCId'] !== undefined && touched['judgeSCId']) ?
+                                        <text style={{marginRight: "2px"}}>errors</text> : null
+                                }
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey="2">
                                 <Card.Body>
@@ -469,6 +491,14 @@ const ResultsForm = (props) => {
                         <Card style={{borderRadius: '10px'}}>
                             <Accordion.Toggle as={Card.Header} eventKey="3">
                                 <Header5>Point Factors</Header5>
+                                {
+                                    (errors['meterValue'] !== undefined && touched['meterValue']) ||
+                                    (errors['gateFactor'] !== undefined && touched['gateFactor']) ||
+                                    (errors['windFactorTail'] !== undefined && touched['windFactorTail']) ||
+                                    (errors['windFactorFront'] !== undefined && touched['windFactorFront'])
+                                        ?
+                                        <text style={{marginRight: "2px"}}>errors</text> : null
+                                }
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey="3">
                                 <Card.Body>
@@ -514,10 +544,23 @@ const ResultsForm = (props) => {
                         </Card>
 
                         {/*First round official stats*/}
-                        {numOfRounds > 0 ?
                         <Card style={{borderRadius: '10px'}}>
                             <Accordion.Toggle as={Card.Header} eventKey="4">
                                 <Header5>First Round official stats</Header5>
+                                {
+                                    (errors['firstRoundBaseGate'] !== undefined && touched['firstRoundBaseGate']) ||
+                                    (errors['firstRoundWeatherId'] !== undefined && touched['firstRoundWeatherId']) ||
+                                    (errors['firstRoundAirTempStart'] !== undefined && touched['firstRoundAirTempStart']) ||
+                                    (errors['firstRoundAirTempFinish'] !== undefined && touched['firstRoundAirTempFinish']) ||
+                                    (errors['firstRoundSnowTempStart'] !== undefined && touched['firstRoundSnowTempStart']) ||
+                                    (errors['firstRoundSnowTempFinish'] !== undefined && touched['firstRoundSnowTempFinish']) ||
+                                    (errors['firstRoundHumidityStart'] !== undefined && touched['firstRoundHumidityStart']) ||
+                                    (errors['firstRoundHumidityFinish'] !== undefined && touched['firstRoundHumidityFinish']) ||
+                                    (errors['firstRoundMinWind'] !== undefined && touched['firstRoundMinWind']) ||
+                                    (errors['firstRoundMaxWind'] !== undefined && touched['firstRoundMaxWind']) ||
+                                    (errors['firstRoundAvgWind'] !== undefined && touched['firstRoundAvgWind']) ?
+                                        <text style={{marginRight: "2px"}}>errors</text> : null
+                                }
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey="4">
                                 <Card.Body>
@@ -536,7 +579,7 @@ const ResultsForm = (props) => {
                                     <FormikSelectInputForm
                                         name="firstRoundWeatherId"
                                         label="Weather:"
-                                        >
+                                    >
                                         <option value={""}>No info</option>
                                         {props.weather.map(weather =>
                                             <option key={weather.id} value={weather.id}>
@@ -601,281 +644,315 @@ const ResultsForm = (props) => {
                                 </Card.Body>
                             </Accordion.Collapse>
                         </Card>
-                            : null}
 
                         {/*Second round official stats*/}
-                        {numOfRounds > 1 ?
-                            <Card style={{borderRadius: '10px'}}>
-                                <Accordion.Toggle as={Card.Header} eventKey="5">
-                                    <Header5>Second Round official stats</Header5>
-                                </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="5">
-                                    <Card.Body>
-                                        {/*<FormikTextInputForm*/}
-                                        {/*    name="secondRoundStartTime"*/}
-                                        {/*    label="Start time:"*/}
-                                        {/*    style={{width: "100px"}}*/}
-                                        {/*/>*/}
+                        <Card style={{borderRadius: '10px'}}>
+                            <Accordion.Toggle as={Card.Header} eventKey="5">
+                                <Header5>Second Round official stats</Header5>
+                                {
+                                    (errors['secondRoundBaseGate'] !== undefined && touched['secondRoundBaseGate']) ||
+                                    (errors['secondRoundWeatherId'] !== undefined && touched['secondRoundWeatherId']) ||
+                                    (errors['secondRoundAirTempStart'] !== undefined && touched['secondRoundAirTempStart']) ||
+                                    (errors['secondRoundAirTempFinish'] !== undefined && touched['secondRoundAirTempFinish']) ||
+                                    (errors['secondRoundSnowTempStart'] !== undefined && touched['secondRoundSnowTempStart']) ||
+                                    (errors['secondRoundSnowTempFinish'] !== undefined && touched['secondRoundSnowTempFinish']) ||
+                                    (errors['secondRoundHumidityStart'] !== undefined && touched['secondRoundHumidityStart']) ||
+                                    (errors['secondRoundHumidityFinish'] !== undefined && touched['secondRoundHumidityFinish']) ||
+                                    (errors['secondRoundMinWind'] !== undefined && touched['secondRoundMinWind']) ||
+                                    (errors['secondRoundMaxWind'] !== undefined && touched['secondRoundMaxWind']) ||
+                                    (errors['secondRoundAvgWind'] !== undefined && touched['secondRoundAvgWind']) ?
+                                        <text style={{marginRight: "2px"}}>errors</text> : null
+                                }
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="5">
+                                <Card.Body>
+                                    {/*<FormikTextInputForm*/}
+                                    {/*    name="secondRoundStartTime"*/}
+                                    {/*    label="Start time:"*/}
+                                    {/*    style={{width: "100px"}}*/}
+                                    {/*/>*/}
 
-                                        <FormikTextInputForm
-                                            name="secondRoundBaseGate"
-                                            label="Base gate:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="secondRoundBaseGate"
+                                        label="Base gate:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikSelectInputForm
-                                            name="secondRoundWeatherId"
-                                            label="Weather:"
-                                        >
-                                            <option value={""}>No info</option>
-                                            {props.weather.map(weather =>
-                                                <option key={weather.id} value={weather.id}>
-                                                    {weather.weather}
-                                                </option>)}
+                                    <FormikSelectInputForm
+                                        name="secondRoundWeatherId"
+                                        label="Weather:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.weather.map(weather =>
+                                            <option key={weather.id} value={weather.id}>
+                                                {weather.weather}
+                                            </option>)}
 
-                                        </FormikSelectInputForm>
+                                    </FormikSelectInputForm>
 
-                                        <FormikTextInputForm
-                                            name="secondRoundAirTempStart"
-                                            label="Air temperature start:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="secondRoundAirTempStart"
+                                        label="Air temperature start:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="secondRoundAirTempFinish"
-                                            label="Air temperature end:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="secondRoundAirTempFinish"
+                                        label="Air temperature end:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="secondRoundSnowTempStart"
-                                            label="Snow temp. start:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="secondRoundSnowTempStart"
+                                        label="Snow temp. start:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="secondRoundSnowTempFinish"
-                                            label="Snow temp. end:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="secondRoundSnowTempFinish"
+                                        label="Snow temp. end:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="secondRoundHumidityStart"
-                                            label="Humidity start:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="secondRoundHumidityStart"
+                                        label="Humidity start:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="secondRoundHumidityFinish"
-                                            label="Humidity finish:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="secondRoundHumidityFinish"
+                                        label="Humidity finish:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="secondRoundMinWind"
-                                            label="Minimal wind:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="secondRoundMinWind"
+                                        label="Minimal wind:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="secondRoundMaxWind"
-                                            label="Maximal wind:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="secondRoundMaxWind"
+                                        label="Maximal wind:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="secondRoundAvgWind"
-                                            label="Average wind:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="secondRoundAvgWind"
+                                        label="Average wind:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                    </Card.Body>
-                                </Accordion.Collapse>
-                            </Card>
-                            : null}
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
 
                         {/*Third round official stats*/}
-                        {numOfRounds > 2 ?
-                            <Card style={{borderRadius: '10px'}}>
-                                <Accordion.Toggle as={Card.Header} eventKey="6">
-                                    <Header5>Third Round official stats</Header5>
-                                </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="6">
-                                    <Card.Body>
-                                        {/*<FormikTextInputForm*/}
-                                        {/*    name="thirdRoundStartTime"*/}
-                                        {/*    label="Start time:"*/}
-                                        {/*    style={{width: "100px"}}*/}
-                                        {/*/>*/}
+                        <Card style={{borderRadius: '10px'}}>
+                            <Accordion.Toggle as={Card.Header} eventKey="6">
+                                <Header5>Third Round official stats</Header5>
+                                {
+                                    (errors['thirdRoundBaseGate'] !== undefined && touched['thirdRoundBaseGate']) ||
+                                    (errors['thirdRoundWeatherId'] !== undefined && touched['thirdRoundWeatherId']) ||
+                                    (errors['thirdRoundAirTempStart'] !== undefined && touched['thirdRoundAirTempStart']) ||
+                                    (errors['thirdRoundAirTempFinish'] !== undefined && touched['thirdRoundAirTempFinish']) ||
+                                    (errors['thirdRoundSnowTempStart'] !== undefined && touched['thirdRoundSnowTempStart']) ||
+                                    (errors['thirdRoundSnowTempFinish'] !== undefined && touched['thirdRoundSnowTempFinish']) ||
+                                    (errors['thirdRoundHumidityStart'] !== undefined && touched['thirdRoundHumidityStart']) ||
+                                    (errors['thirdRoundHumidityFinish'] !== undefined && touched['thirdRoundHumidityFinish']) ||
+                                    (errors['thirdRoundMinWind'] !== undefined && touched['thirdRoundMinWind']) ||
+                                    (errors['thirdRoundMaxWind'] !== undefined && touched['thirdRoundMaxWind']) ||
+                                    (errors['thirdRoundAvgWind'] !== undefined && touched['thirdRoundAvgWind']) ?
+                                        <text style={{marginRight: "2px"}}>errors</text> : null
+                                }
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="6">
+                                <Card.Body>
+                                    {/*<FormikTextInputForm*/}
+                                    {/*    name="thirdRoundStartTime"*/}
+                                    {/*    label="Start time:"*/}
+                                    {/*    style={{width: "100px"}}*/}
+                                    {/*/>*/}
 
-                                        <FormikTextInputForm
-                                            name="thirdRoundBaseGate"
-                                            label="Base gate:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="thirdRoundBaseGate"
+                                        label="Base gate:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikSelectInputForm
-                                            name="thirdRoundWeatherId"
-                                            label="Weather:"
-                                        >
-                                            <option value={""}>No info</option>
-                                            {props.weather.map(weather =>
-                                                <option key={weather.id} value={weather.id}>
-                                                    {weather.weather}
-                                                </option>)}
+                                    <FormikSelectInputForm
+                                        name="thirdRoundWeatherId"
+                                        label="Weather:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.weather.map(weather =>
+                                            <option key={weather.id} value={weather.id}>
+                                                {weather.weather}
+                                            </option>)}
 
-                                        </FormikSelectInputForm>
+                                    </FormikSelectInputForm>
 
-                                        <FormikTextInputForm
-                                            name="thirdRoundAirTempStart"
-                                            label="Air temperature start:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="thirdRoundAirTempStart"
+                                        label="Air temperature start:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="thirdRoundAirTempFinish"
-                                            label="Air temperature end:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="thirdRoundAirTempFinish"
+                                        label="Air temperature end:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="thirdRoundSnowTempStart"
-                                            label="Snow temp. start:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="thirdRoundSnowTempStart"
+                                        label="Snow temp. start:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="thirdRoundSnowTempFinish"
-                                            label="Snow temp. end:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="thirdRoundSnowTempFinish"
+                                        label="Snow temp. end:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="thirdRoundHumidityStart"
-                                            label="Humidity start:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="thirdRoundHumidityStart"
+                                        label="Humidity start:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="thirdRoundHumidityFinish"
-                                            label="Humidity finish:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="thirdRoundHumidityFinish"
+                                        label="Humidity finish:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="thirdRoundMinWind"
-                                            label="Minimal wind:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="thirdRoundMinWind"
+                                        label="Minimal wind:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="thirdRoundMaxWind"
-                                            label="Maximal wind:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="thirdRoundMaxWind"
+                                        label="Maximal wind:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="thirdRoundAvgWind"
-                                            label="Average wind:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="thirdRoundAvgWind"
+                                        label="Average wind:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                    </Card.Body>
-                                </Accordion.Collapse>
-                            </Card>
-                            : null}
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
 
                         {/*Fourth round official stats*/}
-                        {numOfRounds > 3 ?
-                            <Card style={{borderRadius: '10px'}}>
-                                <Accordion.Toggle as={Card.Header} eventKey="7">
-                                    <Header5>Fourth Round official stats</Header5>
-                                </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="7">
-                                    <Card.Body>
-                                        {/*<FormikTextInputForm*/}
-                                        {/*    name="fourthRoundStartTime"*/}
-                                        {/*    label="Start time:"*/}
-                                        {/*    style={{width: "100px"}}*/}
-                                        {/*/>*/}
+                        <Card style={{borderRadius: '10px'}}>
+                            <Accordion.Toggle as={Card.Header} eventKey="7">
+                                <Header5>Fourth Round official stats</Header5>
+                                {
+                                    (errors['fourthRoundBaseGate'] !== undefined && touched['fourthRoundBaseGate']) ||
+                                    (errors['fourthRoundWeatherId'] !== undefined && touched['fourthRoundWeatherId']) ||
+                                    (errors['fourthRoundAirTempStart'] !== undefined && touched['fourthRoundAirTempStart']) ||
+                                    (errors['fourthRoundAirTempFinish'] !== undefined && touched['fourthRoundAirTempFinish']) ||
+                                    (errors['fourthRoundSnowTempStart'] !== undefined && touched['fourthRoundSnowTempStart']) ||
+                                    (errors['fourthRoundSnowTempFinish'] !== undefined && touched['fourthRoundSnowTempFinish']) ||
+                                    (errors['fourthRoundHumidityStart'] !== undefined && touched['fourthRoundHumidityStart']) ||
+                                    (errors['fourthRoundHumidityFinish'] !== undefined && touched['fourthRoundHumidityFinish']) ||
+                                    (errors['fourthRoundMinWind'] !== undefined && touched['fourthRoundMinWind']) ||
+                                    (errors['fourthRoundMaxWind'] !== undefined && touched['fourthRoundMaxWind']) ||
+                                    (errors['fourthRoundAvgWind'] !== undefined && touched['fourthRoundAvgWind']) ?
+                                        <text style={{marginRight: "2px"}}>errors</text> : null
+                                }
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="7">
+                                <Card.Body>
+                                    {/*<FormikTextInputForm*/}
+                                    {/*    name="fourthRoundStartTime"*/}
+                                    {/*    label="Start time:"*/}
+                                    {/*    style={{width: "100px"}}*/}
+                                    {/*/>*/}
 
-                                        <FormikTextInputForm
-                                            name="fourthRoundBaseGate"
-                                            label="Base gate:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="fourthRoundBaseGate"
+                                        label="Base gate:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikSelectInputForm
-                                            name="fourthRoundWeatherId"
-                                            label="Weather:"
-                                        >
-                                            <option value={""}>No info</option>
-                                            {props.weather.map(weather =>
-                                                <option key={weather.id} value={weather.id}>
-                                                    {weather.weather}
-                                                </option>)}
+                                    <FormikSelectInputForm
+                                        name="fourthRoundWeatherId"
+                                        label="Weather:"
+                                    >
+                                        <option value={""}>No info</option>
+                                        {props.weather.map(weather =>
+                                            <option key={weather.id} value={weather.id}>
+                                                {weather.weather}
+                                            </option>)}
 
-                                        </FormikSelectInputForm>
+                                    </FormikSelectInputForm>
 
-                                        <FormikTextInputForm
-                                            name="fourthRoundAirTempStart"
-                                            label="Air temperature start:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="fourthRoundAirTempStart"
+                                        label="Air temperature start:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="fourthRoundAirTempFinish"
-                                            label="Air temperature end:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="fourthRoundAirTempFinish"
+                                        label="Air temperature end:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="fourthRoundSnowTempStart"
-                                            label="Snow temp. start:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="fourthRoundSnowTempStart"
+                                        label="Snow temp. start:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="fourthRoundSnowTempFinish"
-                                            label="Snow temp. end:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="fourthRoundSnowTempFinish"
+                                        label="Snow temp. end:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="fourthRoundHumidityStart"
-                                            label="Humidity start:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="fourthRoundHumidityStart"
+                                        label="Humidity start:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="fourthRoundHumidityFinish"
-                                            label="Humidity finish:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="fourthRoundHumidityFinish"
+                                        label="Humidity finish:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="fourthRoundMinWind"
-                                            label="Minimal wind:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="fourthRoundMinWind"
+                                        label="Minimal wind:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="fourthRoundMaxWind"
-                                            label="Maximal wind:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="fourthRoundMaxWind"
+                                        label="Maximal wind:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                        <FormikTextInputForm
-                                            name="fourthRoundAvgWind"
-                                            label="Average wind:"
-                                            style={{width: "100px"}}
-                                        />
+                                    <FormikTextInputForm
+                                        name="fourthRoundAvgWind"
+                                        label="Average wind:"
+                                        style={{width: "100px"}}
+                                    />
 
-                                    </Card.Body>
-                                </Accordion.Collapse>
-                            </Card>
-                            : null}
-
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
 
                     </AccordionWithPadding>
 

@@ -186,7 +186,7 @@ class Hills extends Component {
         }
         let successful = true
 
-        axios.post("/api/hillVersion", {
+        axios.post("/api/hillVersions", {
             hill: hillToVersion,
             kPoint: values.kPoint,
             hillSize: values.hillSize,
