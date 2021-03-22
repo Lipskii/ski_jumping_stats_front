@@ -8,7 +8,7 @@ import axios from "axios";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import HillForm from "./HillForm";
 import DeleteModal from "../../components/Modals/DeleteModal";
-import ReadMoreModal from "../../components/Modals/ReadMoreModal";
+import HillVersionReadMoreModal from "../../components/Modals/HillVersionReadMoreModal";
 import EditNameModal from "../../components/Modals/EditNameModal";
 import Loader from "react-loader-spinner";
 import AddingModal from "../../components/Modals/AddingModal";
@@ -427,14 +427,13 @@ class Hills extends Component {
                                                         showReadMoreModal: true
                                                     })}
                                                 >Read more</Button>
-                                                <ReadMoreModal
+                                                <HillVersionReadMoreModal
                                                     hill={hill}
                                                     version={maxValidUntil}
                                                     show={this.state.showReadMoreModal}
                                                     onHide={() => this.setState({
                                                         showReadMoreModal: false
                                                     })}
-                                                    handleDelete={this.deleteHill}
                                                 />
                                             </td>
                                             <SmallTd>

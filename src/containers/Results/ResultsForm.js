@@ -22,7 +22,6 @@ const ResultsForm = (props) => {
     const [hills, setHills] = useState([])
     const [hillVersions, setHillVersions] = useState([])
     const [isTwoDayCompetition, setIsTwoDayCompetition] = useState(0)
-    const [numOfRounds, setNumOfRounds] = useState()
 
 
     const updateToCountry = (e) => {
@@ -93,7 +92,8 @@ const ResultsForm = (props) => {
                 judgeSCId: '',
                 meterValue: '',
                 raceDirectorId: '',
-                resultsFile: '',
+                resultsCsv: '',
+                resultsPdf: '',
                 seasonId: '',
                 secondRoundAirTempStart: '',
                 secondRoundAirTempFinish: '',
@@ -126,7 +126,6 @@ const ResultsForm = (props) => {
             }}
             validationSchema={ResultsValidationSchema}
             onSubmit={(values) => {
-                console.log("ELO1")
                 props.onSubmit(values)
             }}
         >
@@ -135,18 +134,13 @@ const ResultsForm = (props) => {
                   errors,
                   touched,
                   setFieldValue,
-                  isValid,
-                  values,
 
               }) => (
                 <StyledForm onSubmit={(e) => {
-                    console.log("ELO")
-                    console.log(isValid)
-                    console.log(values)
                     e.preventDefault()
                     handleSubmit()
                 }}>
-                    <Header3>Add new results</Header3>
+                    <Header3>Add new competition</Header3>
 
                     <small>Fields with (*) are mandatory</small>
                     <AccordionWithPadding defaultActiveKey="0">
@@ -159,7 +153,8 @@ const ResultsForm = (props) => {
                                     (errors['seriesMajorId'] !== undefined && touched['seriesMajorId']) ||
                                     (errors['hillVersionId'] !== undefined && touched['hillVersionId']) ||
                                     (errors['seasonId'] !== undefined && touched['seasonId']) ||
-                                    (errors['resultsFile'] !== undefined && touched['resultsFile']) ||
+                                    (errors['resultsCsv'] !== undefined && touched['resultsCsv']) ||
+                                    (errors['resultsPdf'] !== undefined && touched['resultsPdf']) ||
                                     (errors['date1'] !== undefined && touched['date1']) ?
                                         <text style={{marginRight: "2px"}}>errors</text> : null
                                 }
@@ -254,20 +249,6 @@ const ResultsForm = (props) => {
                                             </option>)}
                                     </FormikSelectInputForm>
 
-                                    <SelectInputForm
-                                        title={"No. of Rounds*:"}
-                                        style={{width: "100px"}}
-                                        onChange={e => {
-                                            setNumOfRounds(parseInt(e.target.value))
-                                        }}
-                                    >
-                                        <option value={0}>0</option>
-                                        <option value={1}>1</option>
-                                        <option value={2}>2</option>
-                                        <option value={3}>3</option>
-                                        <option value={4}>4</option>
-                                    </SelectInputForm>
-
                                     <FormikDatePicker
                                         name="date1"
                                         label={"Date*:"}
@@ -294,8 +275,20 @@ const ResultsForm = (props) => {
                                     <Form.Group as={Row}>
                                         <Form.Label column sm={2}>Results (CSV)*:</Form.Label>
                                         <Col sm={10}>
-                                            <input id="file" name="resultsFile" type="file" onChange={(event) => {
-                                                setFieldValue("resultsFile", event.currentTarget.files[0]);
+                                            <input id="file" name="resultsCsv" type="file" onChange={(event) => {
+                                                setFieldValue("resultsCsv", event.currentTarget.files[0]);
+                                            }}/>
+                                            {touched.file && errors.file ? (
+                                                <ErrorLabel>{errors.file}</ErrorLabel>
+                                            ) : null}
+                                        </Col>
+                                    </Form.Group>
+
+                                    <Form.Group as={Row}>
+                                        <Form.Label column sm={2}>Results (PDF):</Form.Label>
+                                        <Col sm={10}>
+                                            <input id="file" name="resultsPdf" type="file" onChange={(event) => {
+                                                setFieldValue("resultsPdf", event.currentTarget.files[0]);
                                             }}/>
                                             {touched.file && errors.file ? (
                                                 <ErrorLabel>{errors.file}</ErrorLabel>
@@ -949,7 +942,6 @@ const ResultsForm = (props) => {
                                         label="Average wind:"
                                         style={{width: "100px"}}
                                     />
-
                                 </Card.Body>
                             </Accordion.Collapse>
                         </Card>

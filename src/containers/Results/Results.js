@@ -7,6 +7,8 @@ import {Header3, Header5, StyledDivCentered1200, TableButton} from "../../compon
 import ResultsForm from "./ResultsForm";
 import Loader from "react-loader-spinner";
 import {Pagination, Table} from "react-bootstrap";
+import CompetitionReadMoreModal from "../../components/Modals/CompetitionReadMoreModal";
+import HillVersionReadMoreModal from "../../components/Modals/HillVersionReadMoreModal";
 
 class Results extends Component {
 
@@ -17,6 +19,8 @@ class Results extends Component {
         chiefsOfCompetition: [],
         competitions: [],
         competitionsLoading: true,
+        competitionToDelete: '',
+        competitionToEdit: '',
         countries: [],
         equipmentControllers: [],
         hills: [],
@@ -26,6 +30,7 @@ class Results extends Component {
         seasons: [],
         selectedFile: '',
         series: [],
+        showReadMoreModal: false,
         venues: [],
         technicalDelegates: [],
         weather: []
@@ -146,15 +151,15 @@ class Results extends Component {
             secondRoundAvgWind: values.secondRoundAvgWind,
             thirdRoundBaseGate: values.thirdRoundBaseGate,
             thirdRoundWeather: this.state.weather.find(weather => weather.id === values.thirdRoundWeatherId),
-            thirdRoundAirTempStart: values.secondRoundAirTempStart,
-            thirdRoundAirTempFinish: values.secondRoundAirTempFinish,
-            thirdRoundSnowTempStart: values.secondRoundSnowTempStart,
-            thirdRoundSnowTempFinish: values.secondRoundSnowTempFinish,
-            thirdRoundHumidityStart: values.secondRoundHumidityStart,
-            thirdRoundHumidityFinish: values.secondRoundHumidityFinish,
-            thirdRoundMinWind: values.secondRoundMinWind,
-            thirdRoundMaxWind: values.secondRoundMaxWind,
-            thirdRoundAvgWind: values.secondRoundAvgWind,
+            thirdRoundAirTempStart: values.thirdRoundAirTempStart,
+            thirdRoundAirTempFinish: values.thirdRoundAirTempFinish,
+            thirdRoundSnowTempStart: values.thirdRoundSnowTempStart,
+            thirdRoundSnowTempFinish: values.thirdRoundSnowTempFinish,
+            thirdRoundHumidityStart: values.thirdRoundHumidityStart,
+            thirdRoundHumidityFinish: values.thirdRoundHumidityFinish,
+            thirdRoundMinWind: values.thirdRoundMinWind,
+            thirdRoundMaxWind: values.thirdRoundMaxWind,
+            thirdRoundAvgWind: values.thirdRoundAvgWind,
             fourthRoundBaseGate: values.fourthRoundBaseGate,
             fourthRoundWeather: this.state.weather.find(weather => weather.id === values.fourthRoundWeatherId),
             fourthRoundAirTempStart: values.fourthRoundAirTempStart,
@@ -165,16 +170,17 @@ class Results extends Component {
             fourthRoundHumidityFinish: values.fourthRoundHumidityFinish,
             fourthRoundMinWind: values.fourthRoundMinWind,
             fourthRoundMaxWind: values.fourthRoundMaxWind,
-            fourthRoundAvgWind: values.fourthRoundAvgWind,
+            fourthRoundAvgWind: values.fourthRoundAvgWind
         }
         axios.post("/api/competitions", {...dataValues})
             .then(res => {
                 const formData = new FormData();
-                formData.append('file', values.resultsFile)
-                axios.post('/api/results/' + res.data.id, formData)
-                    .then((res) => {
-                        console.log(res)
-                    })
+                formData.append('csv', values.resultsCsv)
+                const formDataPdf = new FormData()
+                formData.append('pdf', values.resultsPdf)
+                console.log(formDataPdf)
+                axios.post('/api/results/files/' + res.data.id, formData)
+                    .then(res => console.log(res))
                     .catch(error => {
                         console.log(error)
                         successful = false
@@ -190,9 +196,17 @@ class Results extends Component {
                     showCompletedModal: true,
                     completedModalStatus: successful,
                     showAddingModal: false,
-                })
+                }, () => this.updateCompetitions)
             })
 
+    }
+
+    updateCompetitions = () => {
+        axios.get("/api/competitions")
+            .then(res => this.setState({
+                competitions: res.data
+            }))
+            .catch(error => console.log(error))
     }
 
     render() {
@@ -232,16 +246,24 @@ class Results extends Component {
                     show={this.state.showDeleteModal}
                     onHide={() => this.setState({
                         showDeleteModal: false,
-                        juryToDelete: ''
+                        competitionToDelete: ''
                     })}
                     title={"the jury"}
                     handleDelete={this.deleteAthlete}
                 />
 
+                {this.state.showReadMoreModal ? <CompetitionReadMoreModal
+                    competition={this.state.comp}
+                    show={this.state.showReadMoreModal}
+                    onHide={() => this.setState({
+                        showReadMoreModal: false
+                    })}
+                />  : null}
+
                 <Header3>Results</Header3>
 
                 <StyledDivCentered1200>
-                    <Header5>Recent results</Header5>
+                    <Header5>Recent competitions</Header5>
 
                     {this.state.competitionsLoading ?
                         <Loader
@@ -258,20 +280,36 @@ class Results extends Component {
                                 <tr>
                                     <th>Date</th>
                                     <th>Series</th>
+                                    <th>Hill</th>
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {this.state.competitions.map(competition => {
-                                    if (((this.state.activePage - 1) * 8 <= this.state.competitions.indexOf(competition)) && (this.state.competitions.indexOf(competition) < this.state.activePage * 8)) {
+                                    if (((this.state.activePage - 1) * 10 <= this.state.competitions.indexOf(competition)) && (this.state.competitions.indexOf(competition) < this.state.activePage * 10)) {
                                         return (
                                             <tr key={competition.id} id={competition.id}>
                                                 <td>{competition.date1}</td>
                                                 <td>{competition.seriesMajor.name} {competition.seriesMinor !== null ?
                                                     <small>({competition.seriesMinor.name})</small> : null}
+
+                                                    <TableButton id={competition.id + "tbEdit"} name={competition.name}
+                                                                 size="sm"
+                                                                 variant={"outline-secondary"}
+                                                                 style={{marginLeft:"5px"}}
+                                                                 onClick={() =>
+                                                                     this.setState({
+                                                                         showReadMoreModal: true,
+                                                                         comp: competition
+                                                                     })}>
+                                                        details
+                                                    </TableButton>
+
                                                 </td>
-                                                <td>
-                                                    <TableButton id={competition.id} name={competition.name} size="sm"
+                                                <td>{competition.hillVersion.hill.name}</td>
+                                                <td style={{width: "250px"}}>
+                                                    <TableButton id={competition.id + "tbEdit"} name={competition.name}
+                                                                 size="sm"
                                                                  variant={"info"}
                                                                  onClick={() =>
                                                                      this.setState({
@@ -280,7 +318,18 @@ class Results extends Component {
                                                                      })}>
                                                         Edit
                                                     </TableButton>
-                                                    <TableButton id={competition.id} name={competition.name} size="sm"
+                                                    <TableButton id={competition.id + "tbResults"}
+                                                                 name={competition.name} size="sm"
+                                                                 variant={"info"}
+                                                                 onClick={() =>
+                                                                     this.setState({
+                                                                         competitionToEdit: competition,
+                                                                         editCompetition: true,
+                                                                     })}>
+                                                        Add Results
+                                                    </TableButton>
+                                                    <TableButton id={competition.id + "tbDelete"}
+                                                                 name={competition.name} size="sm"
                                                                  variant={"danger"}
                                                                  onClick={() => this.setState({
                                                                      showDeleteModal: true,

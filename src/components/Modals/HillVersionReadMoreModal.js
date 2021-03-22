@@ -2,7 +2,7 @@ import React from "react";
 import {Modal} from "react-bootstrap";
 
 
-const ReadMoreModal = (props) => {
+const HillVersionReadMoreModal = (props) => {
 
     return (
         <Modal show={props.show} onHide={props.onHide}>
@@ -66,4 +66,4 @@ const ReadMoreModal = (props) => {
 
 }
 
-export default ReadMoreModal
+export default HillVersionReadMoreModal
