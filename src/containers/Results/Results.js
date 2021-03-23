@@ -8,7 +8,7 @@ import ResultsForm from "./ResultsForm";
 import Loader from "react-loader-spinner";
 import {Pagination, Table} from "react-bootstrap";
 import CompetitionReadMoreModal from "../../components/Modals/CompetitionReadMoreModal";
-import HillVersionReadMoreModal from "../../components/Modals/HillVersionReadMoreModal";
+
 
 class Results extends Component {
 
@@ -174,6 +174,7 @@ class Results extends Component {
         }
         axios.post("/api/competitions", {...dataValues})
             .then(res => {
+                console.log(res)
                 const formData = new FormData();
                 formData.append('csv', values.resultsCsv)
                 const formDataPdf = new FormData()
@@ -185,7 +186,13 @@ class Results extends Component {
                         console.log(error)
                         successful = false
                     })
-                console.log(res)
+                    .finally(() => {
+                        this.setState({
+                            showCompletedModal: true,
+                            completedModalStatus: successful,
+                            showAddingModal: false,
+                        }, () => this.updateCompetitions)
+                    })
             })
             .catch(error => {
                 console.log(error)
@@ -253,11 +260,18 @@ class Results extends Component {
                 />
 
                 {this.state.showReadMoreModal ? <CompetitionReadMoreModal
+                    asistantsRD={this.state.assistantsRD}
+                    asistantsTD={this.state.assistantsTD}
+                    chiefsOfCompetition={this.state.chiefsOfCompetition}
                     competition={this.state.comp}
-                    show={this.state.showReadMoreModal}
+                    equipmentControllers={this.state.equipmentControllers}
+                    judges={this.state.judges}
                     onHide={() => this.setState({
                         showReadMoreModal: false
                     })}
+                    raceDirectors={this.state.raceDirectors}
+                    show={this.state.showReadMoreModal}
+                    technicalDelegates={this.state.technicalDelegates}
                 />  : null}
 
                 <Header3>Results</Header3>
@@ -285,6 +299,7 @@ class Results extends Component {
                                 </tr>
                                 </thead>
                                 <tbody>
+                                {/* eslint-disable-next-line array-callback-return */}
                                 {this.state.competitions.map(competition => {
                                     if (((this.state.activePage - 1) * 10 <= this.state.competitions.indexOf(competition)) && (this.state.competitions.indexOf(competition) < this.state.activePage * 10)) {
                                         return (
