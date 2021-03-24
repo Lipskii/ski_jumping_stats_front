@@ -69,7 +69,7 @@ class SkiClubs extends Component {
         }, () => {
             axios.put('/api/skiClubs/' + this.state.clubToEdit.id, {
                 name: values.name,
-                city: this.state.clubToEdit.city
+                city: this.state.citiesForForm.find(city => city.id === parseInt(values.cityId))
             })
                 .then(res => {
                     successful = true
@@ -203,8 +203,8 @@ class SkiClubs extends Component {
         console.log(this.state)
 
         let items = [];
-        let numberOfPages = this.state.clubs.length / 8
-        if (this.state.clubs.length % 8 !== 0) {
+        let numberOfPages = this.state.clubs.length / 15
+        if (this.state.clubs.length % 15 !== 0) {
             numberOfPages++
         }
 
@@ -245,14 +245,14 @@ class SkiClubs extends Component {
                     handleDelete={this.deleteClub}
                 />
 
-                <EditNameModal
-                    name={this.state.clubToEdit.name}
-                    show={this.state.editClub}
-                    onHide={() => this.setState({
-                        editClub: false
-                    })}
-                    onSubmit={this.editClub}
-                />
+                {/*<EditNameModal*/}
+                {/*    name={this.state.clubToEdit.name}*/}
+                {/*    show={this.state.editClub}*/}
+                {/*    onHide={() => this.setState({*/}
+                {/*        editClub: false*/}
+                {/*    })}*/}
+                {/*    onSubmit={this.editClub}*/}
+                {/*/>*/}
 
 
                 <Header3>Clubs</Header3>
@@ -318,7 +318,7 @@ class SkiClubs extends Component {
                                 </thead>
                                 <tbody>
                                 {this.state.clubs.map(club => {
-                                    if (((this.state.activePage - 1) * 8 <= this.state.clubs.indexOf(club)) && (this.state.clubs.indexOf(club) < this.state.activePage * 8)) {
+                                    if (((this.state.activePage - 1) * 15 <= this.state.clubs.indexOf(club)) && (this.state.clubs.indexOf(club) < this.state.activePage * 15)) {
                                         return (
                                             <tr key={club.id} id={club.id}>
                                                 <td>{club.name}</td>
@@ -332,7 +332,7 @@ class SkiClubs extends Component {
                                                                          editClub: true,
                                                                          newClub: false
                                                                      })}>
-                                                        Edit name
+                                                        Edit
                                                     </TableButton>
                                                     <TableButton id={club.id} name={club.name} size="sm"
                                                                  variant={"danger"}
@@ -370,8 +370,6 @@ class SkiClubs extends Component {
                             newClub: false
                         })}
                         initialName={''}
-                        initialClubId={''}
-                        initialCapacity={''}
                         initialCityId={''}
                         initialYearOfOpening={''}
                         mainHeader={"Adding new club"}
@@ -388,6 +386,28 @@ class SkiClubs extends Component {
                         }}
                     />
                     : null}
+
+                {this.state.editClub ? <SkiClubForm
+                    show={this.state.editClub}
+                    onHide={() => this.setState({
+                        editClub: false
+                    })}
+                    initialName={this.state.clubToEdit.name}
+                    initialCityId={this.state.clubToEdit.city.id}
+                    initialYearOfOpening={''}
+                    mainHeader={"Adding new club"}
+                    cities={this.state.citiesForForm}
+                    countries={this.state.countries}
+                    currentCountry={this.state.currentCountry}
+                    filterByCountry={this.filterFormCities}
+                    updateCities={this.updateToCountry}
+                    isEdit={false}
+                    onSubmit={(values) => {
+                        this.setState({
+                            showAddingModal: true
+                        }, () => this.editClub(values))
+                    }}
+                /> : null}
             </React.Fragment>
 
         )

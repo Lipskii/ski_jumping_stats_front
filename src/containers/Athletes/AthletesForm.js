@@ -97,7 +97,7 @@ const AthletesForm = (props) => {
                                 key={props.genders}
                                 name="genderId"
                                 label="Gender*:"
-                                disabled={props.isEdit}
+
                             >
                                 <option value={""} disabled>Choose...</option>
                                 {props.genders.map(gender => (
@@ -108,7 +108,6 @@ const AthletesForm = (props) => {
                             <FormikDatePicker
                                 name="birthdate"
                                 label={"Birthdate*:"}
-                                disabled={props.isEdit}
                             />
 
                             <FormikSelectInputForm
@@ -130,7 +129,6 @@ const AthletesForm = (props) => {
                             <FormikSelectInputForm
                                 name="cityId"
                                 label="City*:"
-                                disabled={props.cities.length < 1}
                                 hintTextDown={
                                     <a href="javascript:void(0)" onClick={() => {
                                         setShowModal(true)
@@ -148,7 +146,6 @@ const AthletesForm = (props) => {
                                 key={props.clubs}
                                 name="clubId"
                                 label="Club*:"
-                                disabled={props.clubs.length < 1}
                             >
                                 <option value={""} disabled>Choose...</option>
                                 {props.clubs.map(club => (
@@ -177,7 +174,6 @@ const AthletesForm = (props) => {
                             <FormikTextInputForm
                                 name="fisCode"
                                 label="FIS code*:"
-                                disabled={props.isEdit}
                             />
 
 

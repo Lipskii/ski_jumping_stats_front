@@ -3,7 +3,7 @@ import React from "react";
 import {useField} from "formik";
 import {ErrorLabel} from "../StyledComponents";
 
-const FormikTextInputForm = ({label, ...props}) => {
+const FormikTextInputForm = ({label,hintTextDown, ...props}) => {
 
     const [field, meta] = useField(props);
 
@@ -14,6 +14,9 @@ const FormikTextInputForm = ({label, ...props}) => {
             </Form.Label>
             <Col sm={10}>
                 <Form.Control {...field} {...props} type="text"/>
+                <Form.Text className="text-muted">
+                    {hintTextDown}
+                </Form.Text>
                 {meta.touched && meta.error ? (
                     <ErrorLabel>{meta.error}</ErrorLabel>
                 ) : null}

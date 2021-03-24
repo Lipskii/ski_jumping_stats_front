@@ -76,7 +76,6 @@ const VenueForm = (props) => {
                             <SelectInputForm
                                 title={"Country:"}
                                 defaultValue={currentCountry}
-                                disabled={props.isEdit}
                                 onChange={e => {
                                     props.filterByCountry(e)
                                     setCurrentCountry(e.target.value)
@@ -94,7 +93,6 @@ const VenueForm = (props) => {
                                 key={props.cities}
                                 name="cityId"
                                 label="City*:"
-                                disabled={props.cities.length < 1 || props.isEdit}
                                 hintTextDown={
                                     <a href="javascript:void(0)" onClick={() => {
                                         setShowModal(true)
@@ -112,7 +110,6 @@ const VenueForm = (props) => {
                             <FormikSelectInputForm
                                 name="skiClubId"
                                 label="Club*:"
-                                disabled={props.clubs.length < 1}
                             >
                                 <option value={""} disabled>Choose...</option>
                                 {props.clubs.map(club => (
@@ -123,7 +120,6 @@ const VenueForm = (props) => {
                             <FormikTextInputForm
                                 name="yearOfOpening"
                                 label="Opened in*:"
-                                disabled={props.isEdit}
                             />
 
                             <FormikTextInputForm

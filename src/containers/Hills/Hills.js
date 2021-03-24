@@ -8,7 +8,7 @@ import axios from "axios";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import HillForm from "./HillForm";
 import DeleteModal from "../../components/Modals/DeleteModal";
-import HillVersionReadMoreModal from "../../components/Modals/HillVersionReadMoreModal";
+import HillVersionReadMoreModal from "./HillVersionReadMoreModal";
 import EditNameModal from "../../components/Modals/EditNameModal";
 import Loader from "react-loader-spinner";
 import AddingModal from "../../components/Modals/AddingModal";
@@ -25,6 +25,8 @@ class Hills extends Component {
         venues: [],
         selectedVenueId: "",
         hills: [],
+        hillToReadMore: '',
+        hillVersionToReadMore: '',
         selectedHillName: "",
         selectedHillId: "",
         selectedHillSize: '',
@@ -288,6 +290,15 @@ class Hills extends Component {
         return (
             <React.Fragment>
 
+                <HillVersionReadMoreModal
+                    hill={this.state.hillToReadMore}
+                    version={this.state.hillVersionToReadMore}
+                    show={this.state.showReadMoreModal}
+                    onHide={() => this.setState({
+                        showReadMoreModal: false
+                    })}
+                />
+
                 <CompletedModal
                     show={this.state.showCompletedModal}
                     text={this.state.completedModalText}
@@ -424,17 +435,11 @@ class Hills extends Component {
                                                     size={"sm"}
                                                     variant={"outline-dark"}
                                                     onClick={() => this.setState({
-                                                        showReadMoreModal: true
+                                                        showReadMoreModal: true,
+                                                        hillToReadMore: hill,
+                                                        hillVersionToReadMore: maxValidUntil
                                                     })}
                                                 >Read more</Button>
-                                                <HillVersionReadMoreModal
-                                                    hill={hill}
-                                                    version={maxValidUntil}
-                                                    show={this.state.showReadMoreModal}
-                                                    onHide={() => this.setState({
-                                                        showReadMoreModal: false
-                                                    })}
-                                                />
                                             </td>
                                             <SmallTd>
                                                 <TableButton id={hill.id} name={hill.name} size="sm"

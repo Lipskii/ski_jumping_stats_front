@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Formik} from "formik";
 import {
     AccordionWithPadding, ErrorLabel,
@@ -23,6 +23,7 @@ const ResultsForm = (props) => {
     const [hillVersions, setHillVersions] = useState([])
     const [isTwoDayCompetition, setIsTwoDayCompetition] = useState(0)
 
+    useEffect(() => console.log(props.competition))
 
     const updateToCountry = (e) => {
         if (e.target.value !== "") {
@@ -46,14 +47,13 @@ const ResultsForm = (props) => {
         setHillVersions([])
     }
 
-
     return (
-
         <Formik
             isInitialValid={false}
             initialValues={{
                 assistantRDId: '',
                 assistantTDId: '',
+                cancelledAtRound: '',
                 chiefOfCompetitionId: '',
                 date1: '',
                 date2: '',
@@ -155,6 +155,7 @@ const ResultsForm = (props) => {
                                     (errors['seasonId'] !== undefined && touched['seasonId']) ||
                                     (errors['resultsCsv'] !== undefined && touched['resultsCsv']) ||
                                     (errors['resultsPdf'] !== undefined && touched['resultsPdf']) ||
+                                    (errors['cancelledAtRound'] !== undefined && touched['cancelledAtRound']) ||
                                     (errors['date1'] !== undefined && touched['date1']) ?
                                         <text style={{marginRight: "2px"}}>errors</text> : null
                                 }
@@ -272,10 +273,17 @@ const ResultsForm = (props) => {
                                         />
                                         : null}
 
+                                    <FormikTextInputForm
+                                        name="cancelledAtRound"
+                                        label="Cancelled at:"
+                                        hintTextDown="If there was no cancellation don't enter number here."
+                                        style={{width: "100px"}}
+                                    />
+
                                     <Form.Group as={Row}>
                                         <Form.Label column sm={2}>Results (CSV)*:</Form.Label>
                                         <Col sm={10}>
-                                            <input id="file" name="resultsCsv" type="file" onChange={(event) => {
+                                            <input id="fileCsv" name="resultsCsv" type="file" onChange={(event) => {
                                                 setFieldValue("resultsCsv", event.currentTarget.files[0]);
                                             }}/>
                                             {touched.file && errors.file ? (
@@ -287,7 +295,7 @@ const ResultsForm = (props) => {
                                     <Form.Group as={Row}>
                                         <Form.Label column sm={2}>Results (PDF):</Form.Label>
                                         <Col sm={10}>
-                                            <input id="file" name="resultsPdf" type="file" onChange={(event) => {
+                                            <input id="filePdf" name="resultsPdf" type="file" onChange={(event) => {
                                                 setFieldValue("resultsPdf", event.currentTarget.files[0]);
                                             }}/>
                                             {touched.file && errors.file ? (
@@ -354,7 +362,7 @@ const ResultsForm = (props) => {
                                         name="assistantRDId"
                                         label="Assistant RD:"
                                     >
-                                        <option value={""}>No info</option>
+                                        <option value={''}>No info</option>
                                         {props.aRDs.map(aRD =>
                                             <option key={aRD.id} value={aRD.id}>
                                                 {aRD.person.firstName} {aRD.person.lastName}

@@ -7,7 +7,9 @@ import {Header3, Header5, StyledDivCentered1200, TableButton} from "../../compon
 import ResultsForm from "./ResultsForm";
 import Loader from "react-loader-spinner";
 import {Pagination, Table} from "react-bootstrap";
-import CompetitionReadMoreModal from "../../components/Modals/CompetitionReadMoreModal";
+import CompetitionReadMoreModal from "./CompetitionReadMoreModal";
+import SelectInputForm from "../../components/CommonForms/SelectInputForm";
+import ResultsModal from "./ResultsModal";
 
 
 class Results extends Component {
@@ -20,17 +22,25 @@ class Results extends Component {
         competitions: [],
         competitionsLoading: true,
         competitionToDelete: '',
-        competitionToEdit: '',
+        competitionToEdit: {
+            assistantRD: {
+                id: ''
+            }
+        },
+        competitionToResults: '',
         countries: [],
         equipmentControllers: [],
         hills: [],
         hillVersions: [],
         judges: [],
         raceDirectors: [],
+        results: [],
         seasons: [],
         selectedFile: '',
         series: [],
+        seriesLoading: true,
         showReadMoreModal: false,
+        showResultsModal: false,
         venues: [],
         technicalDelegates: [],
         weather: []
@@ -95,10 +105,20 @@ class Results extends Component {
             }))
             .catch(error => console.log(error))
             .finally(() => this.setState({
-                competitionsLoading: false
+                competitionsLoading: false,
+                seriesLoading: false,
             }))
     }
 
+    handleResultsButton = (competition) => {
+        axios.get('/api/results/' + competition.id)
+            .then(res => this.setState({
+                results: res.data,
+                competitionToResults: competition,
+                showResultsModal: true
+            }))
+            .catch(error => console.log(error))
+    }
     postResults = (values) => {
         console.log(values)
         let successful = true
@@ -191,7 +211,7 @@ class Results extends Component {
                             showCompletedModal: true,
                             completedModalStatus: successful,
                             showAddingModal: false,
-                        }, () => this.updateCompetitions)
+                        })
                     })
             })
             .catch(error => {
@@ -203,16 +223,27 @@ class Results extends Component {
                     showCompletedModal: true,
                     completedModalStatus: successful,
                     showAddingModal: false,
-                }, () => this.updateCompetitions)
+                }, () => this.updateToSeries())
             })
 
     }
 
-    updateCompetitions = () => {
-        axios.get("/api/competitions")
-            .then(res => this.setState({
-                competitions: res.data
-            }))
+    updateToSeries = (e) => {
+        let urlString
+
+        if (e === undefined || e.target.value === "") {
+            urlString = '/api/competitions'
+        } else {
+            urlString = '/api/competitions/series/' + e.target.value
+        }
+
+        axios.get(urlString)
+            .then(res => {
+                this.setState({
+                    competitions: res.data,
+                    competitionsLoading: false
+                })
+            })
             .catch(error => console.log(error))
     }
 
@@ -272,11 +303,41 @@ class Results extends Component {
                     raceDirectors={this.state.raceDirectors}
                     show={this.state.showReadMoreModal}
                     technicalDelegates={this.state.technicalDelegates}
-                />  : null}
+                /> : null}
+
+                {this.state.showResultsModal ? <ResultsModal
+                    competition={this.state.competitionToResults}
+                    results={this.state.results}
+                    show={this.state.showResultsModal}
+                    onHide={() => this.setState({
+                        showResultsModal: false
+                    })}
+                    /> : null}
 
                 <Header3>Results</Header3>
 
                 <StyledDivCentered1200>
+
+                    {/*Select Country*/}
+                    <strong>Filter</strong>
+                    <SelectInputForm
+                        title={"Series"}
+                        defaultValue={""}
+                        disabled={this.state.seriesLoading}
+                        onChange={e => {
+                            this.setState({
+                                activePage: 1,
+                                competitionsLoading: true
+                            }, () => this.updateToSeries(e))
+                        }}
+                    >
+                        <option value={""}>All series</option>
+                        {this.state.series.map(series =>
+                            <option key={series.id} value={series.id}>
+                                {series.name}
+                            </option>)}
+                    </SelectInputForm>
+
                     <Header5>Recent competitions</Header5>
 
                     {this.state.competitionsLoading ?
@@ -289,78 +350,83 @@ class Results extends Component {
                         />
                         :
                         <div>
-                            <Table bordered hover striped size={"sm"}>
-                                <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Series</th>
-                                    <th>Hill</th>
-                                    <th>Actions</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {/* eslint-disable-next-line array-callback-return */}
-                                {this.state.competitions.map(competition => {
-                                    if (((this.state.activePage - 1) * 10 <= this.state.competitions.indexOf(competition)) && (this.state.competitions.indexOf(competition) < this.state.activePage * 10)) {
-                                        return (
-                                            <tr key={competition.id} id={competition.id}>
-                                                <td>{competition.date1}</td>
-                                                <td>{competition.seriesMajor.name} {competition.seriesMinor !== null ?
-                                                    <small>({competition.seriesMinor.name})</small> : null}
+                            {this.state.competitions.length > 0 ?
+                                <div>
+                                    <Table bordered hover striped size={"sm"}>
+                                        <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Series</th>
+                                            <th>Hill</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {/* eslint-disable-next-line array-callback-return */}
+                                        {this.state.competitions.map(competition => {
+                                            if (((this.state.activePage - 1) * 10 <= this.state.competitions.indexOf(competition)) && (this.state.competitions.indexOf(competition) < this.state.activePage * 10)) {
+                                                return (
+                                                    <tr key={competition.id} id={competition.id}>
+                                                        <td>{competition.date1}</td>
+                                                        <td>{competition.seriesMajor.name} {competition.seriesMinor !== null ?
+                                                            <small>({competition.seriesMinor.name})</small> : null}
+                                                            <TableButton id={competition.id + "tbEdit"}
+                                                                         name={competition.name}
+                                                                         size="sm"
+                                                                         variant={"outline-secondary"}
+                                                                         style={{marginLeft: "5px"}}
+                                                                         onClick={() =>
+                                                                             this.setState({
+                                                                                 showReadMoreModal: true,
+                                                                                 comp: competition
+                                                                             })}>
+                                                                details
+                                                            </TableButton>
+                                                            <TableButton id={competition.id + "tbEdit"}
+                                                                         name={competition.name}
+                                                                         size="sm"
+                                                                         variant={"outline-info"}
+                                                                         onClick={() => this.handleResultsButton(competition)}>
+                                                                results
+                                                            </TableButton>
 
-                                                    <TableButton id={competition.id + "tbEdit"} name={competition.name}
-                                                                 size="sm"
-                                                                 variant={"outline-secondary"}
-                                                                 style={{marginLeft:"5px"}}
-                                                                 onClick={() =>
-                                                                     this.setState({
-                                                                         showReadMoreModal: true,
-                                                                         comp: competition
-                                                                     })}>
-                                                        details
-                                                    </TableButton>
+                                                        </td>
+                                                        <td>{competition.hillVersion.hill.name}</td>
+                                                        <td style={{width: "250px"}}>
+                                                            <TableButton id={competition.id + "tbEdit"}
+                                                                         name={competition.name}
+                                                                         size="sm"
+                                                                         variant={"info"}
+                                                                         onClick={() => {
+                                                                             this.setState({
+                                                                                 competitionToEdit: competition,
+                                                                                 editCompetition: true,
+                                                                             })
+                                                                         }
+                                                                         }>
+                                                                Edit
+                                                            </TableButton>
+                                                            <TableButton id={competition.id + "tbDelete"}
+                                                                         name={competition.name} size="sm"
+                                                                         variant={"danger"}
+                                                                         onClick={() => this.setState({
+                                                                             showDeleteModal: true,
+                                                                             competitionToDelete: competition
+                                                                         })
+                                                                         }>
+                                                                Delete
+                                                            </TableButton>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            }
+                                        })}
+                                        </tbody>
+                                    </Table>
+                                    <Pagination>{items}</Pagination>
+                                </div>
+                                : <p style={{textAlign: "center"}}>No competitions found</p>}
 
-                                                </td>
-                                                <td>{competition.hillVersion.hill.name}</td>
-                                                <td style={{width: "250px"}}>
-                                                    <TableButton id={competition.id + "tbEdit"} name={competition.name}
-                                                                 size="sm"
-                                                                 variant={"info"}
-                                                                 onClick={() =>
-                                                                     this.setState({
-                                                                         competitionToEdit: competition,
-                                                                         editCompetition: true,
-                                                                     })}>
-                                                        Edit
-                                                    </TableButton>
-                                                    <TableButton id={competition.id + "tbResults"}
-                                                                 name={competition.name} size="sm"
-                                                                 variant={"info"}
-                                                                 onClick={() =>
-                                                                     this.setState({
-                                                                         competitionToEdit: competition,
-                                                                         editCompetition: true,
-                                                                     })}>
-                                                        Add Results
-                                                    </TableButton>
-                                                    <TableButton id={competition.id + "tbDelete"}
-                                                                 name={competition.name} size="sm"
-                                                                 variant={"danger"}
-                                                                 onClick={() => this.setState({
-                                                                     showDeleteModal: true,
-                                                                     competitionToDelete: competition
-                                                                 })
-                                                                 }>
-                                                        Delete
-                                                    </TableButton>
-                                                </td>
-                                            </tr>
-                                        )
-                                    }
-                                })}
-                                </tbody>
-                            </Table>
-                            <Pagination>{items}</Pagination>
                         </div>
                     }
 
@@ -389,7 +455,6 @@ class Results extends Component {
             </React.Fragment>
         )
     }
-
 }
 
 

@@ -5,7 +5,7 @@ import {Modal} from "react-bootstrap";
 const HillVersionReadMoreModal = (props) => {
 
     return (
-        <Modal show={props.show} onHide={props.onHide}>
+        <Modal show={props.show} onHide={props.onHide} scrollable={true}>
             <Modal.Header closeButton>
                 <Modal.Title>{props.hill.name} (latest version)</Modal.Title>
                 <br/>
