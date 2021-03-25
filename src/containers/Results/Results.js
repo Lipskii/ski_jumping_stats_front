@@ -12,6 +12,7 @@ import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import ResultsModal from "./ResultsModal";
 
 
+
 class Results extends Component {
 
     state = {
@@ -39,6 +40,10 @@ class Results extends Component {
         selectedFile: '',
         series: [],
         seriesLoading: true,
+        filterHillId: '',
+        filterSeasonId: '',
+        filterSeriesMajorId: '',
+        filterSeriesMinorId: '',
         showReadMoreModal: false,
         showResultsModal: false,
         venues: [],
@@ -119,6 +124,7 @@ class Results extends Component {
             }))
             .catch(error => console.log(error))
     }
+
     postResults = (values) => {
         console.log(values)
         let successful = true
@@ -223,21 +229,16 @@ class Results extends Component {
                     showCompletedModal: true,
                     completedModalStatus: successful,
                     showAddingModal: false,
-                }, () => this.updateToSeries())
+                }, () => this.filter())
             })
 
     }
 
-    updateToSeries = (e) => {
-        let urlString
-
-        if (e === undefined || e.target.value === "") {
-            urlString = '/api/competitions'
-        } else {
-            urlString = '/api/competitions/series/' + e.target.value
-        }
-
-        axios.get(urlString)
+    filter = () => {
+        axios.get('/api/competitions?seasonId=' + this.state.filterSeasonId
+            +'&seriesMajorId=' + this.state.filterSeriesMajorId
+            + '&hillId=' + this.state.filterHillId
+            + '&seriesMinorId=' + this.state.filterSeriesMinorId)
             .then(res => {
                 this.setState({
                     competitions: res.data,
@@ -321,20 +322,78 @@ class Results extends Component {
                     {/*Select Country*/}
                     <strong>Filter</strong>
                     <SelectInputForm
-                        title={"Series"}
+                        title={"Major series:"}
                         defaultValue={""}
                         disabled={this.state.seriesLoading}
                         onChange={e => {
                             this.setState({
                                 activePage: 1,
-                                competitionsLoading: true
-                            }, () => this.updateToSeries(e))
+                                competitionsLoading: true,
+                                filterSeriesMajorId: e.target.value
+                            }, () => this.filter())
                         }}
                     >
                         <option value={""}>All series</option>
                         {this.state.series.map(series =>
                             <option key={series.id} value={series.id}>
                                 {series.name}
+                            </option>)}
+                    </SelectInputForm>
+
+                    <SelectInputForm
+                        title={"Minor series:"}
+                        defaultValue={""}
+                        disabled={this.state.seriesLoading}
+                        onChange={e => {
+                            this.setState({
+                                activePage: 1,
+                                competitionsLoading: true,
+                                filterSeriesMinorId: e.target.value
+                            }, () => this.filter())
+                        }}
+                    >
+                        <option value={""}>No minor series</option>
+                        {this.state.series.map(series =>
+                            <option key={series.id} value={series.id}>
+                                {series.name}
+                            </option>)}
+                    </SelectInputForm>
+
+                    <SelectInputForm
+                        title={"Hill:"}
+                        defaultValue={""}
+                        disabled={this.state.seriesLoading}
+                        onChange={e => {
+                            this.setState({
+                                activePage: 1,
+                                competitionsLoading: true,
+                                filterHillId: e.target.value
+                            }, () => this.filter())
+                        }}
+                    >
+                        <option value={""}>All hills</option>
+                        {this.state.hills.map(hill =>
+                            <option key={hill.id} value={hill.id}>
+                                {hill.name} ({hill.sizeOfHill.designation})
+                            </option>)}
+                    </SelectInputForm>
+
+                    <SelectInputForm
+                        title={"Season:"}
+                        defaultValue={""}
+                        disabled={this.state.seriesLoading}
+                        onChange={e => {
+                            this.setState({
+                                activePage: 1,
+                                competitionsLoading: true,
+                                filterSeasonId: e.target.value
+                            }, () => this.filter())
+                        }}
+                    >
+                        <option value={""}>All seasons</option>
+                        {this.state.seasons.map(season =>
+                            <option key={season.id} value={season.id}>
+                                {season.season}
                             </option>)}
                     </SelectInputForm>
 

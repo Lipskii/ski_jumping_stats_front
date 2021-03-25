@@ -23,8 +23,22 @@ const ResultsModal = (props) => {
                             <th>Rank</th>
                             <th>Jumper</th>
                             <th>Country</th>
-                            <th>1. Round</th>
-                            <th>2. Round</th>
+                            {props.results[0].firstRoundDistance !== null || props.results[0].firstRoundTotal !== null ?
+                                <th>1. Round</th>
+                                : null
+                            }
+                            {props.results[0].secondRoundDistance !== null || props.results[0].secondRoundTotal !== null ?
+                                <th>2. Round</th>
+                                : null
+                            }
+                            {props.results[0].thirdRoundDistance !== null || props.results[0].thirdRoundTotal !== null ?
+                                <th>3. Round</th>
+                                : null
+                            }
+                            {props.results[0].fourthRoundDistance !== null || props.results[0].fourthRoundTotal !== null ?
+                                <th>4. Round</th>
+                                : null
+                            }
                             <th>Total points</th>
                         </tr>
                         </thead>
@@ -39,22 +53,47 @@ const ResultsModal = (props) => {
                                         width: "20px",
                                         textAlign: "center"
                                     }}>{result.skiJumper.person.country.code}</td>
-                                    <td>
-                                        <tr>
-                                            {result.firstRoundDistance}m
-                                        </tr>
-                                        <tr>
-                                            {result.firstRoundTotal} p.
-                                        </tr>
-                                    </td>
-                                    <td>
-                                        <tr>
-                                            {result.secondRoundDistance}m
-                                        </tr>
-                                        <tr>
-                                            {result.secondRoundTotal} p.
-                                        </tr>
-                                    </td>
+                                    {result.firstRoundDistance !== null && result.irstRoundTotal !== null ?
+                                        <td>
+                                            <tr>
+                                                {result.firstRoundDistance !== null ? <div>{result.firstRoundDistance} m</div> : null}
+                                            </tr>
+                                            <tr>
+                                                {result.firstRoundTotal !== null ? <div>{result.firstRoundTotal} p.</div> : null}
+                                            </tr>
+                                        </td>
+                                        : null}
+                                    {result.secondRoundDistance !== null && result.secondRoundTotal !== null ?
+                                        <td>
+                                            <tr>
+                                                {result.secondRoundDistance !== null ? <div>{result.secondRoundDistance} m</div> : null}
+                                            </tr>
+                                            <tr>
+                                                {result.secondRoundTotal !== null ? <div>{result.secondRoundTotal} p.</div> : null}
+                                            </tr>
+                                        </td>
+                                    : null}
+
+                                    {result.thirdRoundDistance !== null && result.thirdRoundTotal !== null ?
+                                        <td>
+                                            <tr>
+                                                {result.thirdRoundDistance !== null ? <div>{result.thirdRoundDistance} m</div> : null}
+                                            </tr>
+                                            <tr>
+                                                {result.thirdRoundTotal !== null ? <div>{result.thirdRoundTotal} p.</div> : null}
+                                            </tr>
+                                        </td>
+                                        : null}
+                                    {result.fourthRoundDistance !== null && result.fourthRoundTotal !== null ?
+                                        <td>
+                                            <tr>
+                                                {result.fourthRoundDistance !== null ? <div>{result.fourthRoundDistance} m</div> : null}
+                                            </tr>
+                                            <tr>
+                                                {result.fourthRoundTotal !== null ? <div>{result.fourthRoundTotal} p.</div> : null}
+                                            </tr>
+                                        </td>
+                                        : null}
                                     <td><b>{result.totalPoints} p.</b></td>
                                 </tr>
                             ))}

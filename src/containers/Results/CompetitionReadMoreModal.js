@@ -59,7 +59,7 @@ const CompetitionReadMoreModal = (props) => {
         judgeD = <li>Judge D: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let judgeE = null
-    if (props.competition.judgeA !== null) {
+    if (props.competition.judgeE !== null) {
         let jury = props.judges.find(jury => jury.id === props.competition.judgeE.id)
         judgeE = <li>Judge E: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }

@@ -254,7 +254,6 @@ const ResultsForm = (props) => {
                                         name="date1"
                                         label={"Date*:"}
                                     />
-
                                     <SelectInputForm
                                         title={"Second day?*:"}
                                         style={{width: "100px"}}

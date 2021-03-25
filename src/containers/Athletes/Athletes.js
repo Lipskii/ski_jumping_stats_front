@@ -30,6 +30,11 @@ class Athletes extends Component {
         countriesWithAthletes: [],
         currentCountry: '',
         editAthlete: false,
+        filterCityId: '',
+        filterCountryId: '',
+        filterIsActive: '',
+        filterSkisId: '',
+        filterSkiClubId: '',
         genders: [],
         newAthlete: false,
         showAddingModal: false,
@@ -42,7 +47,7 @@ class Athletes extends Component {
     componentDidMount() {
         axios.all([
             axios.get('/api/cities'),
-            axios.get('/api/cities/skiJumpers'),
+            axios.get('/api/cities?hasPeople=true'),
             axios.get('/api/countries'),
             axios.get('/api/countries/skiJumpers'),
             axios.get('/api/genders'),
@@ -82,6 +87,8 @@ class Athletes extends Component {
             country: this.state.countries.find(country => country.id === parseInt(values.countryId)),
             city: this.state.cities.find(city => city.id === parseInt(values.cityId))
         }
+        console.log("PERSON")
+        console.log(person)
         axios.put('api/people/' + this.state.athleteToEdit.person.id, {...person})
             .then(res => {
                 console.log(res)
@@ -125,6 +132,7 @@ class Athletes extends Component {
         })
     }
 
+    //TODO change it
     filterFormCities = (e) => {
 
         let urlStringCities
@@ -198,68 +206,23 @@ class Athletes extends Component {
             })
     }
 
-    updateToCity = (e) => {
-        let urlStringAthletes
-
-
-        if (e === undefined || e.target.value === "") {
-            urlStringAthletes = '/api/skiJumpers/country/' + this.state.currentCountry
-        } else {
-            urlStringAthletes = '/api/skiJumpers/city/' + e.target.value
-        }
-
-        this.setState({
-            athletesLoading: true
-        }, () => {
-            axios.get(urlStringAthletes)
-                .then(res => {
-                    this.setState({
-                        athletes: res.data,
-                        athletesLoading: false
-                    })
+    filter = () => {
+        axios.all([axios.get('/api/skiJumpers?skisId=' + this.state.filterSkisId
+            +'&skiClubId=' + this.state.filterSkiClubId
+            + '&countryId=' + this.state.filterCountryId
+            + '&cityId=' + this.state.filterCityId
+            + '&isActive=' + this.state.filterIsActive),
+            axios.get('/api/cities?&countryId=' + this.state.filterCountryId
+                + '&hasPeople=true'
+            )])
+            .then(axios.spread((athletesData, citiesData) => {
+                this.setState({
+                    athletes: athletesData.data,
+                    citiesWithAthletes: citiesData.data,
+                    athletesLoading: false
                 })
-                .catch(error => console.log(error))
-        })
-    }
-
-    updateToCountry = (e) => {
-        let eTargetValue
-        let urlStringCities
-        let urlStringClubs
-        let urlStringAthletes
-
-        if (e === undefined || e.target.value === "") {
-            eTargetValue = this.state.currentCountry
-            urlStringCities = '/api/cities'
-            urlStringClubs = '/api/skiClubs'
-            urlStringAthletes = '/api/skiJumpers'
-        } else {
-            eTargetValue = e.target.value
-            urlStringCities = '/api/cities/country/' + e.target.value
-            urlStringClubs = '/api/skiClubs/country/' + e.target.value
-            urlStringAthletes = '/api/skiJumpers/country/' + e.target.value
-        }
-
-        this.setState({
-            currentCountry: eTargetValue,
-            athletesLoading: true
-        }, () => {
-            axios.all([
-                axios.get(urlStringClubs),
-                axios.get(urlStringCities),
-                axios.get(urlStringAthletes)
-
-            ])
-                .then(axios.spread((skiClubsData, citiesData, athletesData) => {
-                    this.setState({
-                        clubs: skiClubsData.data,
-                        citiesWithAthletes: citiesData.data,
-                        athletesLoading: false,
-                        athletes: athletesData.data
-                    })
-                }))
-                .catch(error => console.log(error))
-        })
+            }))
+            .catch(error => console.log(error))
     }
 
 
@@ -319,8 +282,10 @@ class Athletes extends Component {
                         onChange={e => {
                             this.setState({
                                 activePage: 1,
-                                athletesLoading: true
-                            }, () => this.updateToCountry(e))
+                                athletesLoading: true,
+                                filterCityId: '',
+                                filterCountryId: e.target.value
+                            }, () => this.filter())
                         }}
                     >
                         <option value={""}>All countries</option>
@@ -340,8 +305,8 @@ class Athletes extends Component {
                         onChange={e => {
                             this.setState({
                                 activePage: 1,
-                                //clubsLoading: true
-                            }, () => this.updateToCity(e))
+                                filterCityId: e.target.value
+                            }, () => this.filter())
                         }}
                     >
                         <option value={""}>All cities</option>
@@ -380,11 +345,11 @@ class Athletes extends Component {
                                     if (((this.state.activePage - 1) * 8 <= this.state.athletes.indexOf(athlete)) && (this.state.athletes.indexOf(athlete) < this.state.activePage * 8)) {
                                         return (
                                             <tr key={athlete.id} id={athlete.id}>
-                                                <td>{athlete.firstName} {athlete.lastName}</td>
-                                                <td style={{textAlign: "center"}}>{athlete.gender.gender.charAt(0)}</td>
-                                                <td>{athlete.birthdate}</td>
-                                                <td>{athlete.city.name}</td>
-                                                <td>{athlete.country.code}</td>
+                                                <td>{athlete.person.firstName} {athlete.person.lastName}</td>
+                                                <td style={{textAlign: "center"}}>{athlete.person.gender.gender.charAt(0)}</td>
+                                                <td>{athlete.person.birthdate}</td>
+                                                <td>{athlete.person.city.name}</td>
+                                                <td>{athlete.person.country.code}</td>
                                                 <td>{athlete.skiClub.name}</td>
                                                 <td>{athlete.skis.brand}</td>
                                                 <td>{athlete.active ? "Yes" : "No"}</td>
@@ -465,17 +430,17 @@ class Athletes extends Component {
                         onHide={() => this.setState({
                             editAthlete: false
                         })}
-                        initialActive={this.state.athleteToEdit.active}
-                        initialBirthdate={this.state.athleteToEdit.birthdate}
+                        initialActive={this.state.athleteToEdit.isActive}
+                        //initialBirthdate={this.state.athleteToEdit.person.birthdate}
                         initialClubId={this.state.athleteToEdit.skiClub.id}
-                        initialCountryId={this.state.athleteToEdit.country.id}
-                        initialCityId={this.state.athleteToEdit.city.id}
-                        initialGenderId={this.state.athleteToEdit.gender.id}
+                        initialCountryId={this.state.athleteToEdit.person.country.id}
+                        initialCityId={this.state.athleteToEdit.person.city.id}
+                        initialGenderId={this.state.athleteToEdit.person.gender.id}
                         initialFisCode={this.state.athleteToEdit.fisCode}
-                        initialFirstName={this.state.athleteToEdit.firstName}
-                        initialLastName={this.state.athleteToEdit.lastName}
-                        initialSkisId={this.state.athleteToEdit.skisId}
-                        mainHeader={"Editing " + this.state.athleteToEdit.firstName + " " + this.state.athleteToEdit.lastName}
+                        initialFirstName={this.state.athleteToEdit.person.firstName}
+                        initialLastName={this.state.athleteToEdit.person.lastName}
+                        initialSkisId={this.state.athleteToEdit.skis.id}
+                        mainHeader={"Editing " + this.state.athleteToEdit.person.firstName + " " + this.state.athleteToEdit.person.lastName}
                         cities={this.state.citiesForForm}
                         clubs={this.state.clubsForForm}
                         countries={this.state.countries}

@@ -40,6 +40,7 @@ const AthletesForm = (props) => {
                 }}
                 validationSchema={AthletesValidationSchema}
                 onSubmit={(values) => {
+                    console.log("formik on submit")
                     props.onSubmit(values)
                 }}
             >{({
@@ -173,7 +174,7 @@ const AthletesForm = (props) => {
 
                             <FormikTextInputForm
                                 name="fisCode"
-                                label="FIS code*:"
+                                label="FIS code:"
                             />
 
 

@@ -323,7 +323,7 @@ class SkiClubs extends Component {
                                             <tr key={club.id} id={club.id}>
                                                 <td>{club.name}</td>
                                                 <td>{club.city.name}</td>
-                                                <td style={{width: "250px"}}>
+                                                <td style={{width: "150px"}}>
                                                     <TableButton id={club.id} name={club.name} size="sm"
                                                                  variant={"info"}
                                                                  onClick={() =>

@@ -24,8 +24,7 @@ export const AthletesValidationSchema = () => Yup.object(
             .required('Required'),
         firstName: Yup.string()
             .required('Required'),
-        fisCode: Yup.number()
-            .required('Required'),
+        fisCode: Yup.number(),
         genderId: Yup.number()
             .required('Required'),
         skisId: Yup.number()
