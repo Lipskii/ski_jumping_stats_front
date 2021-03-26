@@ -17,10 +17,12 @@ class Venues extends Component {
         countries: [],
         cities: [],
         citiesForForm: [],
-        citiesWithVenues: [],
         clubs: [],
         clubsForForm: [],
         editVenue: false,
+        filterCityId: '',
+        filterCountryId: '',
+        filterSkiClubId: '',
         venueToDelete: '',
         venueToEdit: '',
         venues: [],
@@ -40,11 +42,10 @@ class Venues extends Component {
             axios.get('/api/countries/venues'),
             axios.get('/api/venues'),
             axios.get('/api/skiClubs'),
-            axios.get('/api/cities'),
-            axios.get('/api/cities/venues')
+            axios.get('/api/cities')
 
         ])
-            .then(axios.spread((countriesData, countriesWithVenuesData, venuesData, skiClubsData, citiesData, citiesWithVenuesData) => {
+            .then(axios.spread((countriesData, countriesWithVenuesData, venuesData, skiClubsData, citiesData) => {
                 this.setState({
                     countries: countriesData.data,
                     countriesWithVenues: countriesWithVenuesData.data,
@@ -53,96 +54,16 @@ class Venues extends Component {
                     clubsForForm: skiClubsData.data,
                     citiesForForm: citiesData.data,
                     cities: citiesData.data,
-                    citiesWithVenues: citiesWithVenuesData.data,
                     venuesLoading: false,
                 })
             }))
             .catch(error => console.log(error))
     }
 
-    updateToCountry = (e) => {
-        let eTargetValue
-        let urlStringVenues
-        let urlStringCities
-        let urlStringClubs
-
-        if (e === undefined || e.target.value === "") {
-            eTargetValue = this.state.currentCountry
-            urlStringVenues = '/api/venues'
-            urlStringCities = '/api/cities'
-            urlStringClubs = '/api/skiClubs'
-        } else {
-            eTargetValue = e.target.value
-            urlStringVenues = '/api/venues/country/' + e.target.value
-            urlStringCities = '/api/cities/country/' + e.target.value
-            urlStringClubs = '/api/skiClubs/country/' + e.target.value
-        }
-
-        this.setState({
-            currentCountry: eTargetValue,
-            venuesLoading: true
-        }, () => {
-            axios.all([
-                axios.get(urlStringVenues),
-                axios.get(urlStringClubs),
-                axios.get(urlStringCities)
-
-            ])
-                .then(axios.spread((venuesData, skiClubsData, citiesData) => {
-                    this.setState({
-                        venues: venuesData.data,
-                        clubs: skiClubsData.data,
-                        citiesWithVenues: citiesData.data,
-                        venuesLoading: false
-                    })
-                }))
-                .catch(error => console.log(error))
-        })
-    }
-
-    updateToCity = (e) => {
-        let urlStringVenues
-
-
-        if (e === undefined || e.target.value === "") {
-            urlStringVenues = '/api/venues/country/' + this.state.currentCountry
-        } else {
-            urlStringVenues = '/api/venues/city/' + e.target.value
-        }
-
-        this.setState({
-            venuesLoading: true
-        }, () => {
-
-
-            axios.get(urlStringVenues)
-                .then(res => {
-                    this.setState({
-                        venues: res.data,
-                        venuesLoading: false
-                    })
-                })
-                .catch(error => console.log(error))
-        })
-    }
-
     filterFormCities = (e) => {
-
-        let urlStringCities
-        let urlStringClubs
-
-        if (e === undefined || e.target.value === "") {
-            urlStringCities = '/api/cities'
-            urlStringClubs = '/api/skiClubs'
-        } else {
-            urlStringCities = '/api/cities/country/' + e.target.value
-            urlStringClubs = '/api/skiClubs/country/' + e.target.value
-        }
-
-
         axios.all([
-            axios.get(urlStringCities),
-            axios.get(urlStringClubs)
+            axios.get('/api/cities?countryId=' + e.target.value),
+            axios.get('/api/skiClubs?countryId=' + e.target.value)
         ])
             .then(axios.spread((citiesData, skiClubsData) => {
                 this.setState({
@@ -152,6 +73,27 @@ class Venues extends Component {
             }))
             .catch(error => console.log(error))
     }
+
+    filter = () => {
+        axios.all([
+            axios.get('/api/venues?skiClubId=' + this.state.filterSkiClubId
+                + '&countryId=' + this.state.filterCountryId
+                + '&cityId=' + this.state.filterCityId
+                ),
+            axios.get('/api/cities?&countryId=' + this.state.filterCountryId),
+            axios.get('/api/skiClubs?&countryId=' + this.state.filterCountryId),
+        ])
+            .then(axios.spread((venuesData, citiesData, skiClubsData) => {
+                this.setState({
+                    venues: venuesData.data,
+                    clubs: skiClubsData.data,
+                    cities: citiesData.data,
+                    venuesLoading: false
+                })
+            }))
+            .catch(error => console.log(error))
+    }
+
 
     postVenue = (values) => {
         let successful = false
@@ -315,8 +257,9 @@ class Venues extends Component {
                         onChange={e => {
                             this.setState({
                                 activePage: 1,
-                                venuesLoading: true
-                            }, () => this.updateToCountry(e))
+                                venuesLoading: true,
+                                filterCountryId: e.target.value
+                            }, () => this.filter())
                         }}
                     >
                         <option value={""}>All countries</option>
@@ -328,19 +271,20 @@ class Venues extends Component {
 
                     {/*City*/}
                     <SelectInputForm
-                        key={this.state.citiesWithVenues}
+                        key={this.state.cities}
                         title={"City:"}
-                        disabled={this.state.citiesWithVenues.length < 1}
+                        disabled={this.state.cities.length < 1}
                         defaultValue={""}
                         onChange={e => {
                             this.setState({
                                 activePage: 1,
                                 //venuesLoading: true
-                            }, () => this.updateToCity(e))
+                                filterCityId: e.target.value
+                            }, () => this.filter())
                         }}
                     >
                         <option value={""}>All cities</option>
-                        {this.state.citiesWithVenues.map(city => (
+                        {this.state.cities.map(city => (
                             <option key={city.id} value={city.id} name={city.name}>{city.name}</option>
                         ))}
                     </SelectInputForm>
@@ -433,9 +377,8 @@ class Venues extends Component {
                         cities={this.state.citiesForForm}
                         clubs={this.state.clubsForForm}
                         countries={this.state.countries}
-                        currentCountry={this.state.currentCountry}
+                        initialCountry={''}
                         filterByCountry={this.filterFormCities}
-                        updateCities={this.updateToCountry}
                         isEdit={false}
                         onSubmit={this.postVenue}
                     />
@@ -450,12 +393,11 @@ class Venues extends Component {
                     initialClubId={this.state.venueToEdit.skiClub.id}
                     initialCapacity={this.state.venueToEdit.capacity}
                     initialCityId={this.state.venueToEdit.city.id}
+                    initialCountry={this.state.venueToEdit.city.region.country.id}
                     cities={this.state.citiesForForm}
                     initialYearOfOpening={this.state.venueToEdit.yearOfOpening}
                     countries={this.state.countries}
-                    currentCountry={this.state.currentCountry}
                     filterByCountry={this.filterFormCities}
-                    updateCities={this.updateToCountry}
                     mainHeader={"Editing " + this.state.venueToEdit.name}
                     clubs={this.state.clubsForForm}
                     isEdit={true}

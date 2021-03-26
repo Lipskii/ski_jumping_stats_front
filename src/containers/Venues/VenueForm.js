@@ -5,7 +5,7 @@ import {
     Header3,
     StyledDiv2Right1200, StyledForm,
 } from "../../components/StyledComponents";
-import {Button, Card, Modal} from "react-bootstrap";
+import {Button,  Modal} from "react-bootstrap";
 import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
@@ -54,7 +54,7 @@ const VenueForm = (props) => {
                    handleSubmit
 
                }) => (
-                <Modal show={props.show} size={"xl"} scrollable={true} onHide={props.onHide}>
+                <Modal show={props.show} size={"m"} scrollable={true} onHide={props.onHide}>
                     <StyledForm onSubmit={(e) => {
                         e.preventDefault()
                         handleSubmit()
@@ -75,7 +75,7 @@ const VenueForm = (props) => {
 
                             <SelectInputForm
                                 title={"Country:"}
-                                defaultValue={currentCountry}
+                                defaultValue={props.initialCountry}
                                 onChange={e => {
                                     props.filterByCountry(e)
                                     setCurrentCountry(e.target.value)

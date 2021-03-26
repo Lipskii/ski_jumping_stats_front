@@ -22,6 +22,9 @@ class Athletes extends Component {
         countriesWithJury: [],
         countriesWithPeople: [],
         currentCountry: '',
+        filterCountryId: '',
+        filterGenderId: '',
+        genders: [],
         jury: [],
         juryFullList: [],
         juryLoading: true,
@@ -40,10 +43,11 @@ class Athletes extends Component {
             axios.get('/api/cities'),
             axios.get('/api/countries'),
             axios.get('/api/countries/jury'),
-            axios.get('/api/countries/people'),
+            axios.get('/api/countries?hasPeople=true'),
             axios.get('/api/jury'),
             axios.get('/api/juryTypes'),
-            axios.get('/api/people')
+            axios.get('/api/people'),
+            axios.get('/api/genders')
 
         ])
             .then(axios.spread((citiesData,
@@ -52,7 +56,8 @@ class Athletes extends Component {
                                 countriesWithPeopleData,
                                 juryData,
                                 juryTypeData,
-                                peopleData
+                                peopleData,
+                                gendersData
             ) => {
                 this.setState({
                     cities: citiesData.data,
@@ -63,24 +68,15 @@ class Athletes extends Component {
                     juryFullList: juryData.data,
                     juryTypes: juryTypeData.data,
                     people: peopleData.data,
-                    juryLoading: false
+                    juryLoading: false,
+                    genders: gendersData.data
                 })
             }))
             .catch(error => console.log(error))
     }
 
-    filterFormCities = (e) => {
-
-        let urlStringPeople
-
-        if (e === undefined || e.target.value === "") {
-            urlStringPeople = '/api/people'
-
-        } else {
-            urlStringPeople = '/api/people/country/' + e.target.value
-
-        }
-        axios.get(urlStringPeople)
+    filterFormPeople = (e) => {
+        axios.get('/api/people?countryId=' + e.target.value)
             .then(res => {
                 this.setState({
                     people: res.data
@@ -95,7 +91,7 @@ class Athletes extends Component {
             juryType: this.state.juryTypes.find(juryType => juryType.id === parseInt(values.juryTypeId)),
             person: this.state.people.find(person => person.id === parseInt(values.personId))
         })
-            .then(() => this.updateToCountry())
+            .then(() => this.filter())
             .catch(error => {
                 console.log(error)
                 successful = false
@@ -120,36 +116,19 @@ class Athletes extends Component {
         })
     }
 
-    updateToCountry = (e) => {
-        let eTargetValue
-        let urlStringJury
-
-        if (e === undefined || e.target.value === "") {
-            eTargetValue = this.state.currentCountry
-            urlStringJury = '/api/jury'
-        } else {
-            eTargetValue = e.target.value
-            urlStringJury = '/api/jury/country/' + e.target.value
-        }
-
-        this.setState({
-            currentCountry: eTargetValue,
-            juryLoading: true
-        }, () => {
-
-            axios.get(urlStringJury)
-                .then(res => {
-                    this.setState({
-                        jury: res.data,
-                        juryFullList: res.data,
-                        juryLoading: false
-                    })
+    filter = () => {
+        axios.get('/api/jury?countryId=' + this.state.filterCountryId
+        + '&genderId=' + this.state.filterGenderId)
+            .then(res => {
+                this.setState({
+                    jury: res.data,
+                    juryFullList: res.data,
+                    juryLoading: false
                 })
-                .catch(error => console.log(error))
-        })
+            }).catch(error => console.log(error))
     }
 
-    updateToRole = (e) => {
+    filterToRole = (e) => {
         if (e.target.value !== "") {
             let juryList = this.state.jury.filter(jury => jury.juryType.id === parseInt(e.target.value))
             this.setState({
@@ -210,6 +189,7 @@ class Athletes extends Component {
                 <Header3>Jury</Header3>
 
                 <StyledDivCentered1200>
+
                     {/*Select Country*/}
                     <strong>Filter</strong>
                     <SelectInputForm
@@ -218,8 +198,9 @@ class Athletes extends Component {
                         onChange={e => {
                             this.setState({
                                 activePage: 1,
+                                filterCountryId: e.target.value,
                                 juryLoading: true
-                            }, () => this.updateToCountry(e))
+                            }, () => this.filter())
                         }}
                     >
                         <option value={""}>All countries</option>
@@ -229,11 +210,29 @@ class Athletes extends Component {
                             </option>)}
                     </SelectInputForm>
 
+                    {/*gender*/}
+                    <SelectInputForm
+                        title={"Gender:"}
+                        disabled={this.state.genders.length < 1}
+                        defaultValue={""}
+                        onChange={e => {
+                            this.setState({
+                                activePage: 1,
+                                filterGenderId: e.target.value
+                            }, () => this.filter())
+                        }}
+                    >
+                        <option value={""}>All genders</option>
+                        {this.state.genders.map(gender => (
+                            <option key={gender.id} value={gender.id}>{gender.gender}</option>
+                        ))}
+                    </SelectInputForm>
+
                     <SelectInputForm
                         key={this.state.jury}
                         title={"Role:"}
                         defaultValue={""}
-                        onChange={e => this.updateToRole(e)
+                        onChange={e => this.filterToRole(e)
                         }
                     >
                         <option value={""}>All roles</option>
@@ -273,11 +272,11 @@ class Athletes extends Component {
                                                 <td style={{
                                                     textAlign: "center",
                                                     width: "10px"
-                                                }}>{jury.gender.gender.charAt(0)}</td>
+                                                }}>{jury.person.gender.gender.charAt(0)}</td>
                                                 <td style={{
                                                     textAlign: "center",
                                                     width: "30px"
-                                                }}>{jury.country.code}</td>
+                                                }}>{jury.person.country.code}</td>
                                                 <td>{jury.juryType.juryType}</td>
                                                 <td>
                                                     <TableButton id={jury.id} name={jury.name} size="sm"
@@ -316,7 +315,7 @@ class Athletes extends Component {
                         allCountries={this.state.countries}
                         cities={this.state.cities}
                         countries={this.state.countriesWithPeople}
-                        filterByCountry={this.filterFormCities}
+                        filterByCountry={this.filterFormPeople}
                         juryTypes={this.state.juryTypes}
                         people={this.state.people}
                         updateCities={this.updateToCountry}

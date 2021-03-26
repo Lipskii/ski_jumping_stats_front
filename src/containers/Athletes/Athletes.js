@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import axios from "axios";
-import {Button, Image, Pagination, Table} from "react-bootstrap";
+import {Button, Pagination, Table} from "react-bootstrap";
 import AddingModal from "../../components/Modals/AddingModal";
 import CompletedModal from "../../components/Modals/CompletedModal";
 import DeleteModal from "../../components/Modals/DeleteModal";
@@ -8,7 +8,7 @@ import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "
 import SelectInputForm from "../../components/CommonForms/SelectInputForm";
 import Loader from "react-loader-spinner";
 import AthletesForm from "./AthletesForm";
-import bsCustomFileInput from "bs-custom-file-input";
+
 
 
 class Athletes extends Component {
@@ -30,8 +30,10 @@ class Athletes extends Component {
         countriesWithAthletes: [],
         currentCountry: '',
         editAthlete: false,
+        filterClubId: '',
         filterCityId: '',
         filterCountryId: '',
+        filterGenderId: '',
         filterIsActive: '',
         filterSkisId: '',
         filterSkiClubId: '',
@@ -43,13 +45,12 @@ class Athletes extends Component {
         skis: [],
     }
 
-
     componentDidMount() {
         axios.all([
             axios.get('/api/cities'),
             axios.get('/api/cities?hasPeople=true'),
             axios.get('/api/countries'),
-            axios.get('/api/countries/skiJumpers'),
+            axios.get('/api/countries?hasPeople=true'),
             axios.get('/api/genders'),
             axios.get('/api/skiClubs'),
             axios.get('/api/skiJumpers'),
@@ -87,8 +88,6 @@ class Athletes extends Component {
             country: this.state.countries.find(country => country.id === parseInt(values.countryId)),
             city: this.state.cities.find(city => city.id === parseInt(values.cityId))
         }
-        console.log("PERSON")
-        console.log(person)
         axios.put('api/people/' + this.state.athleteToEdit.person.id, {...person})
             .then(res => {
                 console.log(res)
@@ -99,7 +98,7 @@ class Athletes extends Component {
                     skis: this.state.skis.find(skis => skis.id === parseInt(values.skisId)),
                     skiClub: this.state.clubsForForm.find(club => club.id === parseInt(values.clubId))
                 })
-                    .then(() => this.updateToCountry())
+                    .then(() => this.filter())
                     .catch(error => {
                         console.log(error)
                         successful = false
@@ -130,34 +129,6 @@ class Athletes extends Component {
         this.setState({
             showDeleteModal: false
         })
-    }
-
-    //TODO change it
-    filterFormCities = (e) => {
-
-        let urlStringCities
-        let urlStringClubs
-
-        if (e === undefined || e.target.value === "") {
-            urlStringCities = '/api/cities'
-            urlStringClubs = '/api/skiClubs'
-        } else {
-            urlStringCities = '/api/cities/country/' + e.target.value
-            urlStringClubs = '/api/skiClubs/country/' + e.target.value
-        }
-
-
-        axios.all([
-            axios.get(urlStringCities),
-            axios.get(urlStringClubs)
-        ])
-            .then(axios.spread((citiesData, skiClubsData) => {
-                this.setState({
-                    clubsForForm: skiClubsData.data,
-                    citiesForForm: citiesData.data,
-                })
-            }))
-            .catch(error => console.log(error))
     }
 
     postAthlete = (values) => {
@@ -207,24 +178,30 @@ class Athletes extends Component {
     }
 
     filter = () => {
-        axios.all([axios.get('/api/skiJumpers?skisId=' + this.state.filterSkisId
-            +'&skiClubId=' + this.state.filterSkiClubId
-            + '&countryId=' + this.state.filterCountryId
-            + '&cityId=' + this.state.filterCityId
-            + '&isActive=' + this.state.filterIsActive),
+        axios.all([
+            axios.get('/api/skiJumpers?skisId=' + this.state.filterSkisId
+                + '&skiClubId=' + this.state.filterSkiClubId
+                + '&countryId=' + this.state.filterCountryId
+                + '&cityId=' + this.state.filterCityId
+                + '&skiClubId=' + this.state.filterClubId
+                + '&genderId=' + this.state.filterGenderId
+                + '&isActive=' + this.state.filterIsActive),
             axios.get('/api/cities?&countryId=' + this.state.filterCountryId
                 + '&hasPeople=true'
-            )])
-            .then(axios.spread((athletesData, citiesData) => {
+            ),
+            axios.get('/api/skiClubs?&countryId=' + this.state.filterCountryId
+            ),
+        ])
+            .then(axios.spread((athletesData, citiesData, skiClubsData) => {
                 this.setState({
                     athletes: athletesData.data,
                     citiesWithAthletes: citiesData.data,
+                    clubs: skiClubsData.data,
                     athletesLoading: false
                 })
             }))
             .catch(error => console.log(error))
     }
-
 
     render() {
         console.log(this.state)
@@ -284,6 +261,7 @@ class Athletes extends Component {
                                 activePage: 1,
                                 athletesLoading: true,
                                 filterCityId: '',
+                                filterClubId: '',
                                 filterCountryId: e.target.value
                             }, () => this.filter())
                         }}
@@ -295,6 +273,23 @@ class Athletes extends Component {
                             </option>)}
                     </SelectInputForm>
 
+                    {/*gender*/}
+                    <SelectInputForm
+                        title={"Gender:"}
+                        disabled={this.state.genders.length < 1}
+                        defaultValue={""}
+                        onChange={e => {
+                            this.setState({
+                                activePage: 1,
+                                filterGenderId: e.target.value
+                            }, () => this.filter())
+                        }}
+                    >
+                        <option value={""}>All genders</option>
+                        {this.state.genders.map(gender => (
+                            <option key={gender.id} value={gender.id}>{gender.gender}</option>
+                        ))}
+                    </SelectInputForm>
 
                     {/*City*/}
                     <SelectInputForm
@@ -312,6 +307,42 @@ class Athletes extends Component {
                         <option value={""}>All cities</option>
                         {this.state.citiesWithAthletes.map(city => (
                             <option key={city.id} value={city.id} name={city.name}>{city.name}</option>
+                        ))}
+                    </SelectInputForm>
+
+                    {/*Clubs*/}
+                    <SelectInputForm
+                        title={"Club:"}
+                        disabled={this.state.clubs.length < 1}
+                        defaultValue={""}
+                        onChange={e => {
+                            this.setState({
+                                activePage: 1,
+                                filterClubId: e.target.value
+                            }, () => this.filter())
+                        }}
+                    >
+                        <option value={""}>All clubs</option>
+                        {this.state.clubs.map(club => (
+                            <option key={club.id} value={club.id} name={club.name}>{club.name}</option>
+                        ))}
+                    </SelectInputForm>
+
+                    {/*skis*/}
+                    <SelectInputForm
+                        title={"Skis:"}
+                        disabled={this.state.skis.length < 1}
+                        defaultValue={""}
+                        onChange={e => {
+                            this.setState({
+                                activePage: 1,
+                                filterSkisId: e.target.value
+                            }, () => this.filter())
+                        }}
+                    >
+                        <option value={""}>All skis brands</option>
+                        {this.state.skis.map(skis => (
+                            <option key={skis.id} value={skis.id} name={skis.brand}>{skis.brand}</option>
                         ))}
                     </SelectInputForm>
 
@@ -348,19 +379,31 @@ class Athletes extends Component {
                                                 <td>{athlete.person.firstName} {athlete.person.lastName}</td>
                                                 <td style={{textAlign: "center"}}>{athlete.person.gender.gender.charAt(0)}</td>
                                                 <td>{athlete.person.birthdate}</td>
-                                                <td>{athlete.person.city.name}</td>
+                                                <td>{athlete.person.city !== null ?
+                                                    <div>{athlete.person.city.name}</div> : <div>no info</div>}</td>
                                                 <td>{athlete.person.country.code}</td>
-                                                <td>{athlete.skiClub.name}</td>
-                                                <td>{athlete.skis.brand}</td>
+                                                <td>{athlete.skiClub !== null ? <div>{athlete.skiClub.name}</div> :
+                                                    <div>no info</div>}</td>
+                                                <td>{athlete.skis !== null ? <div>{athlete.skis.brand}</div> :
+                                                    <div>no info</div>}</td>
                                                 <td>{athlete.active ? "Yes" : "No"}</td>
                                                 <td>
                                                     <TableButton id={athlete.id} name={athlete.name} size="sm"
                                                                  variant={"info"}
-                                                                 onClick={() =>
+                                                                 onClick={() => {
+                                                                     let o = {...athlete}
+                                                                     Object.keys(o)
+                                                                         .forEach(key => {
+                                                                             if (o[key] === null) {
+                                                                                 o[key] = ''
+                                                                             }
+                                                                         })
+                                                                     console.log(o)
                                                                      this.setState({
-                                                                         athleteToEdit: athlete,
+                                                                         athleteToEdit: o,
                                                                          editAthlete: true,
-                                                                     })}>
+                                                                     })
+                                                                 }}>
                                                         Edit
                                                     </TableButton>
                                                     <TableButton id={athlete.id} name={athlete.name} size="sm"
@@ -411,7 +454,6 @@ class Athletes extends Component {
                         clubs={this.state.clubsForForm}
                         countries={this.state.countries}
                         currentCountry={this.state.currentCountry}
-                        filterByCountry={this.filterFormCities}
                         genders={this.state.genders}
                         skis={this.state.skis}
                         updateCities={this.updateToCountry}
@@ -431,7 +473,7 @@ class Athletes extends Component {
                             editAthlete: false
                         })}
                         initialActive={this.state.athleteToEdit.isActive}
-                        //initialBirthdate={this.state.athleteToEdit.person.birthdate}
+                        //initialBirthdate={this.state.athleteToEdit.person.birthdate} //TODO
                         initialClubId={this.state.athleteToEdit.skiClub.id}
                         initialCountryId={this.state.athleteToEdit.person.country.id}
                         initialCityId={this.state.athleteToEdit.person.city.id}
@@ -445,7 +487,6 @@ class Athletes extends Component {
                         clubs={this.state.clubsForForm}
                         countries={this.state.countries}
                         currentCountry={this.state.currentCountry}
-                        filterByCountry={this.filterFormCities}
                         genders={this.state.genders}
                         skis={this.state.skis}
                         updateCities={this.updateToCountry}

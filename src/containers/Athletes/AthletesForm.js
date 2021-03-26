@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import NewCityModal from "../../components/Modals/NewCityModal";
 import {Formik, Field} from "formik";
-import {ErrorLabel, Header3, StyledDiv2Right1200, StyledForm} from "../../components/StyledComponents";
+import {ErrorLabel, Header3, StyledDiv2Right1200} from "../../components/StyledComponents";
 import {Button, Card, Col, Form, Modal, Row} from "react-bootstrap";
 import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
 import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
@@ -77,12 +77,6 @@ const AthletesForm = (props) => {
                             }}
                         >
 
-                            {/*<Card  style={{borderRadius: '10px', marginBottom: '0px', marginTop: '0px', width: '1000px'}}>*/}
-                            {/*    <Card.Header>*/}
-
-                            {/*</Card.Header>*/}
-                            {/*<Card.Body>*/}
-
                             <small>Fields with (*) are mandatory</small>
                             <FormikTextInputForm
                                 name="firstName"
@@ -115,7 +109,6 @@ const AthletesForm = (props) => {
                                 name="countryId"
                                 label="Country*:"
                                 onChange={e => {
-                                    props.filterByCountry(e)
                                     setFieldValue("countryId", e.target.value)
                                     setCurrentCountry(e.target.value)
                                 }}
@@ -129,7 +122,7 @@ const AthletesForm = (props) => {
 
                             <FormikSelectInputForm
                                 name="cityId"
-                                label="City*:"
+                                label="City:"
                                 hintTextDown={
                                     <a href="javascript:void(0)" onClick={() => {
                                         setShowModal(true)
@@ -137,18 +130,18 @@ const AthletesForm = (props) => {
                                     }>Create new city</a>
                                 }
                             >
-                                <option value={""} disabled>Choose...</option>
+                                <option value={""}>No info</option>
                                 {props.cities.map(city => (
-                                    <option key={city.id} value={city.id}>{city.name}</option>
+                                    <option key={city.id} value={city.id}>{city.name}, {city.region.country.code}</option>
                                 ))}
                             </FormikSelectInputForm>
 
                             <FormikSelectInputForm
                                 key={props.clubs}
                                 name="clubId"
-                                label="Club*:"
+                                label="Club:"
                             >
-                                <option value={""} disabled>Choose...</option>
+                                <option value={""}>No info</option>
                                 {props.clubs.map(club => (
                                     <option key={club.id} value={club.id}>{club.name}</option>
                                 ))}
@@ -156,9 +149,9 @@ const AthletesForm = (props) => {
 
                             <FormikSelectInputForm
                                 name="skisId"
-                                label="Skis*:"
+                                label="Skis:"
                             >
-                                <option value={""} disabled>Choose...</option>
+                                <option value={""}>No info</option>
                                 {props.skis.map(skis => (
                                     <option key={skis.id} value={skis.id}>{skis.brand}</option>
                                 ))}
@@ -166,7 +159,7 @@ const AthletesForm = (props) => {
 
 
                             <Form.Group as={Row}>
-                                <Form.Label column sm={2}>Active*:</Form.Label>
+                                <Form.Label column sm={2}>Active:</Form.Label>
                                 <Col sm={10}>
                                     <Field style={{marginTop: "15px"}} type="checkbox" name="active"/>
                                 </Col>
@@ -193,13 +186,6 @@ const AthletesForm = (props) => {
                             <StyledDiv2Right1200>
                                 <Button type={"submit"}>Submit</Button>
                             </StyledDiv2Right1200>
-
-
-                            {/*<StyledDiv2Right1200>*/}
-
-                            {/*</StyledDiv2Right1200>*/}
-                            {/*    </Card.Body>*/}
-                            {/*</Card>*/}
 
                         </Form>
                     </Modal.Body>

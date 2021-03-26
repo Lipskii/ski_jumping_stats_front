@@ -9,10 +9,6 @@ import Venues from "./containers/Venues/Venues";
 import Jury from "./containers/Jury/Jury";
 import Results from "./containers/Results/Results";
 
-
-//TODO  look at delete in api
-//TODO find and download flags miniatures, add photos to athletes form; fix update to country (cities)
-
 class App extends Component {
 
 

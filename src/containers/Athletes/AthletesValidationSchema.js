@@ -10,14 +10,11 @@ const SUPPORTED_FORMATS = [
 
 export const AthletesValidationSchema = () => Yup.object(
     {
-        active: Yup.bool()
-            .required('Required'),
+        active: Yup.bool(),
         birthdate: Yup.date()
             .required('Required'),
-        cityId: Yup.number()
-            .required('Required'),
-        clubId: Yup.number()
-            .required('Required'),
+        cityId: Yup.number(),
+        clubId: Yup.number(),
         countryId: Yup.number()
             .required('Required'),
         lastName: Yup.string()
