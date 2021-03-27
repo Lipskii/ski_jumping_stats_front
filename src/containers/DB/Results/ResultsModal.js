@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Modal, Table} from "react-bootstrap";
-import {TableButton} from "../../components/StyledComponents";
+import {TableButton} from "../../../components/StyledComponents";
 
 
 const ResultsModal = (props) => {

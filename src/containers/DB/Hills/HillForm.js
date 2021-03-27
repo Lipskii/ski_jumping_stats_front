@@ -6,11 +6,11 @@ import {
     Header5,
     StyledDiv2Right1200,
     StyledForm
-} from "../../components/StyledComponents";
-import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
+} from "../../../components/StyledComponents";
+import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";
 import {Accordion, Button, Card, Modal} from "react-bootstrap";
-import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
-import {FormikDatePicker} from "../../components/CommonForms/FormikDatePicker";
+import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
+import {FormikDatePicker} from "../../../components/CommonForms/FormikDatePicker";
 import {HillsValidationSchema} from "./HillsValidationSchema";
 
 

@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import {Formik} from "formik";
-import {Header3, StyledDiv2Right1200, StyledForm} from "../../components/StyledComponents";
+import {Header3, StyledDiv2Right1200, StyledForm} from "../../../components/StyledComponents";
 import {Button, Card, Col, Form, Modal, Row} from "react-bootstrap";
-import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
+import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
 
 import {JuryValidationSchema} from "./JuryValidationSchema";
-import SelectInputForm from "../../components/CommonForms/SelectInputForm";
-import NewPersonModal from "../../components/Modals/NewPersonModal";
+import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
+import NewPersonModal from "../../../components/Modals/NewPersonModal";
 
 
 const JuryForm = (props) => {

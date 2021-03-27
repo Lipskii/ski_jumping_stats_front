@@ -2,19 +2,19 @@ import React, {Component} from "react";
 import {
     ErrorLabel,
     Header3, HillNameTd, SmallTd, StyledDiv2Right1200, StyledDivCentered1200, TableButton
-} from "../../components/StyledComponents";
+} from "../../../components/StyledComponents";
 import {Button, Form, Table} from "react-bootstrap";
 import axios from "axios";
-import SelectInputForm from "../../components/CommonForms/SelectInputForm";
+import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
 import HillForm from "./HillForm";
-import DeleteModal from "../../components/Modals/DeleteModal";
+import DeleteModal from "../../../components/Modals/DeleteModal";
 import HillVersionReadMoreModal from "./HillVersionReadMoreModal";
-import EditNameModal from "../../components/Modals/EditNameModal";
+import EditNameModal from "../../../components/Modals/EditNameModal";
 import Loader from "react-loader-spinner";
-import AddingModal from "../../components/Modals/AddingModal";
-import CompletedModal from "../../components/Modals/CompletedModal";
+import AddingModal from "../../../components/Modals/AddingModal";
+import CompletedModal from "../../../components/Modals/CompletedModal";
 
-class Hills extends Component {
+class DBHills extends Component {
 
     state = {
         addedHillId: -1,
@@ -22,6 +22,7 @@ class Hills extends Component {
         countries: [],
         currentCountry: "",
         formHeaderText: "",
+        filterCountryId: '',
         venues: [],
         selectedVenueId: "",
         hills: [],
@@ -30,8 +31,8 @@ class Hills extends Component {
         selectedHillName: "",
         selectedHillId: "",
         selectedHillSize: '',
-        setHillsLoading: false,
-        setVenuesLoading: false,
+        hillsLoading: false,
+        venuesLoading: true,
         sizesOfHill: [],
         showHillForm: false,
         toggleNameField: false,
@@ -55,40 +56,30 @@ class Hills extends Component {
                 this.setState({
                     countries: countriesData.data,
                     sizesOfHill: sizesData.data,
-                    venues: venuesData.data
+                    venues: venuesData.data,
+                    venuesLoading: false
                 })
             }))
             .catch(error => console.log(error))
     }
 
-    updateVenues = (e) => {
-        let eTargetValue
-        let urlString
 
-        if (e === undefined || e.target.value === "") {
-            eTargetValue = this.state.currentCountry
-            urlString = '/api/venues'
-        } else {
-            eTargetValue = e.target.value
-            urlString = '/api/venues/country/' + e.target.value
-        }
-
-        this.setState({
-            currentCountry: eTargetValue,
-            setVenuesLoading: true
-        }, () => {
-
-            axios.get(urlString)
-                .then(res => {
-                    this.setState({
-                        venues: res.data,
-                        setVenuesLoading: false
-                    }, () => this.updateHillsList())
-                }).catch(error => {
-                console.log(error)
-            })
-        })
-
+    filter = () => {
+        axios.all([
+            axios.get('/api/venues?countryId=' + this.state.filterCountryId
+            ),
+            axios.get('/api/cities?&countryId=' + this.state.filterCountryId),
+            axios.get('/api/skiClubs?&countryId=' + this.state.filterCountryId),
+        ])
+            .then(axios.spread((venuesData, citiesData, skiClubsData) => {
+                this.setState({
+                    venues: venuesData.data,
+                    clubs: skiClubsData.data,
+                    cities: citiesData.data,
+                    venuesLoading: false
+                })
+            }))
+            .catch(error => console.log(error))
     }
 
     updateHillsList = () => {
@@ -243,7 +234,7 @@ class Hills extends Component {
                     completedModalText: modalText,
                     completedModalStatus: successful,
                     showAddingModal: false
-                }, () => this.updateVenues())
+                }, () => this.filter())
             })
     }
 
@@ -334,12 +325,11 @@ class Hills extends Component {
                         defaultValue={""}
                         onChange={e => {
                             this.setState({
-                                    selectedVenueId: "",
-                                    selectedHillName: "",
-                                    selectedHillId: "",
+                                    filterCountryId: e.target.value,
+                                    venuesLoading: true,
                                     hills: [],
                                     hillVersions: []
-                                }, () => this.updateVenues(e)
+                                }, () => this.filter()
                             )
                         }}
                     >
@@ -350,7 +340,7 @@ class Hills extends Component {
                             </option>)}
                     </SelectInputForm>
 
-                    {this.state.setVenuesLoading ?
+                    {this.state.venuesLoading ?
                         <Loader
                             type="ThreeDots"
                             color="#00BFFF"
@@ -358,13 +348,11 @@ class Hills extends Component {
                             width={80}
                             style={{textAlign: 'center'}}
                         />
-                        : null}
-
-                    {this.state.venues.length > 0 ?
+                        :
                         <SelectInputForm
                             key={this.state.currentCountry}
                             title={"Venue"}
-                            disabled={this.state.setVenuesLoading}
+                            disabled={this.state.venuesLoading}
                             hintTextDown={!(this.state.selectedVenueId !== "") ?
                                 <small>Select a venue to continue</small> : null}
                             defaultValue={""}
@@ -381,11 +369,10 @@ class Hills extends Component {
                                     {venue.name}
                                 </option>
                             )}
-                        </SelectInputForm> : null
-                    }
+                        </SelectInputForm>}
 
 
-                    {this.state.setHillsLoading ?
+                    {this.state.hillsLoading ?
                         <Loader
                             type="ThreeDots"
                             color="#00BFFF"
@@ -396,7 +383,7 @@ class Hills extends Component {
                         : null}
 
                     {/*Table*/}
-                    {this.state.hills.length > 0 && !this.state.setHillsLoading ? <Table bordered hover striped>
+                    {this.state.hills.length > 0 && !this.state.hillsLoading ? <Table bordered hover striped>
                             <thead>
                             <tr>
                                 <th>Name</th>
@@ -406,82 +393,69 @@ class Hills extends Component {
                             </thead>
                             <tbody>
                             {this.state.hills.map(
-                                hill => {
-
-                                    const maxValidUntil = hill.hillVersions.reduce((r, a) => {
-                                        return r.date > a.data ? a : r
-                                    })
-
-
-                                    if (hill.hillVersions.length > 0) {
-                                        const validUntil = new Date(maxValidUntil.validUntil)
-
-                                        let validityError = null
-                                        if (validUntil < new Date()) {
-                                            validityError = <ErrorLabel>Certificate expired!</ErrorLabel>
-                                        }
-
-                                        return (<tr key={hill.id} id={hill.id}>
-                                            <HillNameTd>{hill.name}</HillNameTd>
-                                            <td>
-                                                <ul>
-                                                    <li>K: {maxValidUntil.kPoint} m</li>
-                                                    <li>HS: {maxValidUntil.hillSize} m</li>
-                                                    <li>Valid since: {maxValidUntil.validSince}</li>
-                                                    <li>Valid until: {maxValidUntil.validUntil}</li>
-                                                    {validityError}
-                                                </ul>
-                                                <Button
-                                                    size={"sm"}
-                                                    variant={"outline-dark"}
-                                                    onClick={() => this.setState({
-                                                        showReadMoreModal: true,
-                                                        hillToReadMore: hill,
-                                                        hillVersionToReadMore: maxValidUntil
-                                                    })}
-                                                >Read more</Button>
-                                            </td>
-                                            <SmallTd>
-                                                <TableButton id={hill.id} name={hill.name} size="sm"
-                                                             onClick={e => this.handleAddVersionButton(e)}>
-                                                    Add version
-                                                </TableButton>
-                                                <TableButton id={hill.id} size="sm" variant={"info"}
-                                                             onClick={() => {
-                                                                 this.setState({
-                                                                     selectedHillName: hill.name,
-                                                                     selectedHillId: hill.id,
-                                                                     selectHillSize: hill.sizeOfHill,
-                                                                     showEditModal: true,
-                                                                 })
-                                                             }}>
-                                                    Edit name
-                                                </TableButton>
-                                                <EditNameModal
-                                                    name={this.state.selectedHillName}
-                                                    show={this.state.showEditModal}
-                                                    onHide={() => this.setState({
-                                                        showEditModal: false
-                                                    })}
-                                                    onSubmit={this.editHill}
-                                                />
-                                                <TableButton id={hill.id} name={hill.name} variant={"danger"} size="sm"
-                                                             onClick={e => this.handleDeleteButton(e)}>
-                                                    Delete
-                                                </TableButton></SmallTd>
-                                        </tr>)
-                                    } else {
-                                        return (
-                                            <tr>
-                                                <HillNameTd>{hill.name}</HillNameTd>
-                                                <td/>
-                                                <SmallTd/>
-                                            </tr>
-                                        )
-                                    }
-
-                                }
-                            )}
+                                hill => (
+                                    <tr key={hill.id} id={hill.id}>
+                                        <HillNameTd>{hill.name}</HillNameTd>
+                                        <td>
+                                            <ul>
+                                                {hill.hillVersions.map(hillVersion => (
+                                                    <li key={hill.id + '_' + hillVersion.id}
+                                                        style={{textDecoration: "underline"}}>
+                                                        <Button variant={"link"} onClick={() => {
+                                                            this.setState({
+                                                                showReadMoreModal: true,
+                                                                hillToReadMore: hill,
+                                                                hillVersionToReadMore: hillVersion
+                                                            })
+                                                        }}>
+                                                            {hillVersion.validSince} / {hillVersion.validUntil} (K: {hillVersion.kPoint} m,
+                                                            HS: {hillVersion.hillSize} m)
+                                                        </Button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            <small>Click on version to read more about it</small>
+                                            {/*<Button*/}
+                                            {/*    size={"sm"}*/}
+                                            {/*    variant={"outline-dark"}*/}
+                                            {/*    onClick={() => this.setState({*/}
+                                            {/*        showReadMoreModal: true,*/}
+                                            {/*        hillToReadMore: hill,*/}
+                                            {/*        hillVersionToReadMore: ''*/}
+                                            {/*    })}*/}
+                                            {/*>Read more</Button>*/}
+                                        </td>
+                                        <SmallTd>
+                                            <TableButton id={hill.id} name={hill.name} size="sm"
+                                                         onClick={e => this.handleAddVersionButton(e)}>
+                                                Add version
+                                            </TableButton>
+                                            <TableButton id={hill.id} size="sm" variant={"info"}
+                                                         onClick={() => {
+                                                             this.setState({
+                                                                 selectedHillName: hill.name,
+                                                                 selectedHillId: hill.id,
+                                                                 selectHillSize: hill.sizeOfHill,
+                                                                 showEditModal: true,
+                                                             })
+                                                         }}>
+                                                Edit hill
+                                            </TableButton>
+                                            <EditNameModal
+                                                name={this.state.selectedHillName}
+                                                show={this.state.showEditModal}
+                                                onHide={() => this.setState({
+                                                    showEditModal: false
+                                                })}
+                                                onSubmit={this.editHill}
+                                            />
+                                            <TableButton id={hill.id} name={hill.name} variant={"danger"} size="sm"
+                                                         onClick={e => this.handleDeleteButton(e)}>
+                                                Delete
+                                            </TableButton></SmallTd>
+                                    </tr>
+                                ))
+                            }
                             </tbody>
                         </Table>
                         :
@@ -527,4 +501,4 @@ class Hills extends Component {
     }
 }
 
-export default Hills;
+export default DBHills;

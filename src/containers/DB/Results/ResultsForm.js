@@ -6,13 +6,13 @@ import {
     Header5,
     StyledDiv2Right1200,
     StyledForm
-} from "../../components/StyledComponents";
+} from "../../../components/StyledComponents";
 import {Accordion, Button, Card, Col, Form, Row} from "react-bootstrap";
-import SelectInputForm from "../../components/CommonForms/SelectInputForm";
+import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
 import {ResultsValidationSchema} from "./ResultsValidationSchema";
-import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
-import {FormikDatePicker} from "../../components/CommonForms/FormikDatePicker";
-import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
+import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
+import {FormikDatePicker} from "../../../components/CommonForms/FormikDatePicker";
+import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";
 
 
 const ResultsForm = (props) => {
@@ -27,7 +27,7 @@ const ResultsForm = (props) => {
 
     const updateToCountry = (e) => {
         if (e.target.value !== "") {
-            const filteredVenues = props.venues.filter(venue => venue.country.id === parseInt(e.target.value))
+            const filteredVenues = props.venues.filter(venue => venue.city.region.country.id === parseInt(e.target.value))
             setVenues(filteredVenues)
         } else {
             setVenues(props.venues)
@@ -280,7 +280,7 @@ const ResultsForm = (props) => {
                                     />
 
                                     <Form.Group as={Row}>
-                                        <Form.Label column sm={2}>Results (CSV)*:</Form.Label>
+                                        <Form.Label column sm={2}>Results (CSV):</Form.Label>
                                         <Col sm={10}>
                                             <input id="fileCsv" name="resultsCsv" type="file" onChange={(event) => {
                                                 setFieldValue("resultsCsv", event.currentTarget.files[0]);

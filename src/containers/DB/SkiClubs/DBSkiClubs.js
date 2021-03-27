@@ -1,17 +1,17 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {Button, Pagination, Table} from "react-bootstrap";
-import CompletedModal from "../../components/Modals/CompletedModal";
-import DeleteModal from "../../components/Modals/DeleteModal";
-import AddingModal from "../../components/Modals/AddingModal";
-import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "../../components/StyledComponents";
-import SelectInputForm from "../../components/CommonForms/SelectInputForm";
+import CompletedModal from "../../../components/Modals/CompletedModal";
+import DeleteModal from "../../../components/Modals/DeleteModal";
+import AddingModal from "../../../components/Modals/AddingModal";
+import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "../../../components/StyledComponents";
+import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
 import Loader from "react-loader-spinner";
 import SkiClubForm from "./SkiClubForm";
 
 
 
-class SkiClubs extends Component {
+class DBSkiClubs extends Component {
 
     state = {
         activePage: 1,
@@ -355,4 +355,4 @@ class SkiClubs extends Component {
 
 }
 
-export default SkiClubs
+export default DBSkiClubs

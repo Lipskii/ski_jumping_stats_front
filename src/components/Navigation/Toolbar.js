@@ -9,7 +9,9 @@ const Toolbar = () => (
         <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
         <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto" >
-                <Nav.Link>Results</Nav.Link>
+                <LinkContainer to="/results">
+                    <Nav.Link>Results</Nav.Link>
+                </LinkContainer>
                 <Nav.Link>Ski Jumpers</Nav.Link>
                 <Nav.Link>Hills</Nav.Link>
                 <NavDropdown title="Competitions" id="collasible-nav-dropdown">

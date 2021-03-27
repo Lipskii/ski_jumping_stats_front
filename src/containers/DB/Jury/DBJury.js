@@ -2,11 +2,11 @@ import React, {Component} from 'react'
 import axios from "axios";
 import {Button, Pagination, Table} from "react-bootstrap";
 import bsCustomFileInput from "bs-custom-file-input";
-import AddingModal from "../../components/Modals/AddingModal";
-import CompletedModal from "../../components/Modals/CompletedModal";
-import DeleteModal from "../../components/Modals/DeleteModal";
-import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "../../components/StyledComponents";
-import SelectInputForm from "../../components/CommonForms/SelectInputForm";
+import AddingModal from "../../../components/Modals/AddingModal";
+import CompletedModal from "../../../components/Modals/CompletedModal";
+import DeleteModal from "../../../components/Modals/DeleteModal";
+import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "../../../components/StyledComponents";
+import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
 import Loader from "react-loader-spinner";
 import JuryForm from "./JuryForm";
 

@@ -1,15 +1,18 @@
 import React, {useState} from "react";
 import {Form, Formik} from "formik";
-import NewCityModal from "../../components/Modals/NewCityModal";
-import {Header3, StyledDiv2Right1200, StyledForm} from "../../components/StyledComponents";
-import {Button, Card, Modal} from "react-bootstrap";
-import {SkiClubsValidationSchema} from "./SkiClubsValidationSchema";
-import FormikTextInputForm from "../../components/CommonForms/FormikTextInputForm";
-import FormikSelectInputForm from "../../components/CommonForms/FormikSelectInputForm";
-import SelectInputForm from "../../components/CommonForms/SelectInputForm";
+import {VenuesValidationSchema} from "./VenuesValidationSchema";
+import {
+    Header3,
+    StyledDiv2Right1200, StyledForm,
+} from "../../../components/StyledComponents";
+import {Button,  Modal} from "react-bootstrap";
+import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";
+import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
+import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
+import NewCityModal from "../../../components/Modals/NewCityModal";
 
 
-const SkiClubForm = (props) => {
+const VenueForm = (props) => {
 
     const [showModal, setShowModal] = useState(false);
     const [currentCountry, setCurrentCountry] = useState("")
@@ -17,6 +20,7 @@ const SkiClubForm = (props) => {
 
     return (
         <React.Fragment>
+
             {/*to prevent premature component did mount in NewCityModal*/}
             {showModal ? <NewCityModal
                 show={showModal}
@@ -37,9 +41,12 @@ const SkiClubForm = (props) => {
                 isInitialValid={false}
                 initialValues={{
                     name: props.initialName,
+                    capacity: props.initialCapacity,
                     cityId: props.initialCityId,
+                    skiClubId: props.initialClubId,
+                    yearOfOpening: props.initialYearOfOpening,
                 }}
-                validationSchema={SkiClubsValidationSchema}
+                validationSchema={VenuesValidationSchema}
                 onSubmit={(values) => {
                     props.onSubmit(values)
                 }}
@@ -47,19 +54,18 @@ const SkiClubForm = (props) => {
                    handleSubmit
 
                }) => (
-                <Modal show={props.show} size={"xl"} scrollable={true} onHide={props.onHide}>
-                <Form
-                    onSubmit={(e) => {
+                <Modal show={props.show} size={"m"} scrollable={true} onHide={props.onHide}>
+                    <StyledForm onSubmit={(e) => {
                         e.preventDefault()
                         handleSubmit()
-                    }}
-                >
-                    <Modal.Header>
-                        <Header3>{props.mainHeader}</Header3>
-                    </Modal.Header>
-                           <Modal.Body>
+                    }}>
 
 
+                        <Modal.Header>
+                            <Header3>{props.mainHeader}</Header3>
+                        </Modal.Header>
+
+                        <Modal.Body>
                             <small>Fields with (*) are mandatory</small>
 
                             <FormikTextInputForm
@@ -69,7 +75,7 @@ const SkiClubForm = (props) => {
 
                             <SelectInputForm
                                 title={"Country:"}
-                                defaultValue={currentCountry}
+                                defaultValue={props.initialCountry}
                                 onChange={e => {
                                     props.filterByCountry(e)
                                     setCurrentCountry(e.target.value)
@@ -82,11 +88,11 @@ const SkiClubForm = (props) => {
                                     </option>)}
                             </SelectInputForm>
 
+
                             <FormikSelectInputForm
-                                key={cities}
+                                key={props.cities}
                                 name="cityId"
                                 label="City*:"
-                                disabled={props.cities.length < 1}
                                 hintTextDown={
                                     <a href="javascript:void(0)" onClick={() => {
                                         setShowModal(true)
@@ -99,19 +105,39 @@ const SkiClubForm = (props) => {
                                     <option key={city.id} value={city.id}>{city.name}</option>
                                 ))}
                             </FormikSelectInputForm>
-                               <StyledDiv2Right1200>
-                                   <Button type={"submit"}>Submit</Button>
-                               </StyledDiv2Right1200>
-
-                           </Modal.Body>
 
 
-                </Form>
+                            <FormikSelectInputForm
+                                name="skiClubId"
+                                label="Club*:"
+                            >
+                                <option value={""} disabled>Choose...</option>
+                                {props.clubs.map(club => (
+                                    <option key={club.id} value={club.id}>{club.name}</option>
+                                ))}
+                            </FormikSelectInputForm>
+
+                            <FormikTextInputForm
+                                name="yearOfOpening"
+                                label="Opened in*:"
+                            />
+
+                            <FormikTextInputForm
+                                name="capacity"
+                                label="Capacity*:"
+                            />
+
+                            <StyledDiv2Right1200>
+                                <Button type={"submit"}>Submit</Button>
+                            </StyledDiv2Right1200>
+                        </Modal.Body>
+                    </StyledForm>
                 </Modal>
             )}
+
             </Formik>
         </React.Fragment>
     )
 }
 
-export default SkiClubForm
+export default VenueForm

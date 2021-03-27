@@ -1,16 +1,16 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "../../components/StyledComponents";
+import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "../../../components/StyledComponents";
 import {Table, Pagination, Button, Form} from "react-bootstrap";
 import VenueForm from "./VenueForm";
 import Loader from "react-loader-spinner";
-import SelectInputForm from "../../components/CommonForms/SelectInputForm";
-import AddingModal from "../../components/Modals/AddingModal";
-import DeleteModal from "../../components/Modals/DeleteModal";
-import CompletedModal from "../../components/Modals/CompletedModal";
+import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
+import AddingModal from "../../../components/Modals/AddingModal";
+import DeleteModal from "../../../components/Modals/DeleteModal";
+import CompletedModal from "../../../components/Modals/CompletedModal";
 
 
-class Venues extends Component {
+class DBVenues extends Component {
     state = {
         activePage: 1,
         countriesWithVenues: [],
@@ -290,7 +290,7 @@ class Venues extends Component {
                     </SelectInputForm>
 
 
-                    {/*Venues*/}
+                    {/*DBVenues*/}
                     {this.state.venuesLoading ?
                         <Loader
                             type="ThreeDots"
@@ -412,4 +412,4 @@ class Venues extends Component {
 }
 
 
-export default Venues
+export default DBVenues
