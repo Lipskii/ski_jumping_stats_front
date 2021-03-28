@@ -128,7 +128,7 @@ class DBResults extends Component {
             .catch(error => console.log(error))
     }
 
-    postResults = (values) => {
+    postCompetition = (values) => {
         console.log(values)
         let successful = true
 
@@ -206,7 +206,7 @@ class DBResults extends Component {
                 if (values.resultsCsv !== '') {
                     console.log(res)
                     const formData = new FormData();
-                    formData.append('csv', values.resultsCsv)
+                    formData.append('csv', values.file)
                     // const formDataPdf = new FormData()
                     // formData.append('pdf', values.resultsPdf)
                     // console.log(formDataPdf)
@@ -238,6 +238,27 @@ class DBResults extends Component {
             })
 
     }
+
+    postResults = (values) => {
+        let successful = true
+        const formData = new FormData();
+        formData.append('csv', values.file)
+        axios.post('/api/results/files/csv/' + this.state.addResultsCompetition.id, formData)
+            .then(res => console.log(res))
+            .catch(error => {
+                console.log(error)
+                successful = false
+            })
+            .finally(() => {
+                this.setState({
+                    showCompletedModal: true,
+                    completedModalStatus: successful,
+                    showAddingModal: false,
+                    showAddResultsModal: false
+                },() => this.filter())
+            })
+    }
+
 
     filter = () => {
         axios.get('/api/competitions?seasonId=' + this.state.filterSeasonId
@@ -277,15 +298,22 @@ class DBResults extends Component {
         return (
             <React.Fragment>
                 <AddingModal show={this.state.showAddingModal}/>
-                {this.state.showAddResultsModal ?  <AddResultsModal
-                    mainHeader={"Adding results for " + this.state.addResultsCompetition.seriesMajor.name
-                    + "( " + this.state.addResultsCompetition.date1 + " " + this.state.addResultsCompetition.hillVersion.hill.name
-                    + " )"}
-                    show={this.state.showAddResultsModal}
-                    onHide={() => this.setState({
-                        showAddResultsModal: false
-                    })}
-                /> : null}
+
+                {this.state.showAddResultsModal ?
+                    <AddResultsModal
+                        mainHeader={"Adding results for " + this.state.addResultsCompetition.seriesMajor.name
+                        + "( " + this.state.addResultsCompetition.date1 + " " + this.state.addResultsCompetition.hillVersion.hill.name
+                        + " )"}
+                        show={this.state.showAddResultsModal}
+                        onSubmit={(values) => {
+                            this.setState({
+                                showAddingModal: true
+                            }, () => this.postResults(values))
+                        }}
+                        onHide={() => this.setState({
+                            showAddResultsModal: false
+                        })}
+                    /> : null}
 
                 <CompletedModal
                     show={this.state.showCompletedModal}
@@ -548,7 +576,7 @@ class DBResults extends Component {
                             countries={this.state.countries}
                             equipmentControllers={this.state.equipmentControllers}
                             judges={this.state.judges}
-                            onSubmit={this.postResults}
+                            onSubmit={this.postCompetition}
                             raceDirectors={this.state.raceDirectors}
                             seasons={this.state.seasons}
                             series={this.state.series}

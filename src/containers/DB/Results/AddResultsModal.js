@@ -24,7 +24,6 @@ const AddResultsModal = (props) => {
                         .required("A file is required")
                 })}
                 onSubmit={(values) => {
-                    console.log("formik on submit")
                     props.onSubmit(values)
                 }}
             >{({
