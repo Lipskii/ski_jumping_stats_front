@@ -10,8 +10,6 @@ class NewCityForm extends Component {
         regions: [],
     }
 
-
-
     componentDidMount() {
         axios.get('/api/regions/' + this.props.currentCountry)
             .then(res => {
@@ -25,7 +23,7 @@ class NewCityForm extends Component {
 
         let postSuccessful = true
 
-        axios.post('/api/city', {name: this.state.newCityName, region: this.state.newCityRegion})
+        axios.post('/api/cities', {name: this.state.newCityName, region: this.state.newCityRegion})
             .then(function (response) {
                 console.log(response.data);
 
@@ -37,7 +35,7 @@ class NewCityForm extends Component {
 
             if (postSuccessful) {
                 window.alert(this.state.newCityName + " added!")
-                this.props.updateLists()
+             //   this.props.updateLists()
             } else {
                 window.alert("Ups, something went wrong")
             }
@@ -81,4 +79,3 @@ class NewCityForm extends Component {
 }
 
 
-export default NewCityForm

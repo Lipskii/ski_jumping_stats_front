@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {
-    ErrorLabel,
-    Header3, HillNameTd, SmallTd, StyledDiv2Right1200, StyledDivCentered1200, TableButton
+    Header3, HillNameTd, StyledDiv2Right1200, StyledDivCentered1200, TableButton
 } from "../../../components/StyledComponents";
 import {Button, Form, Table} from "react-bootstrap";
 import axios from "axios";
@@ -14,6 +13,7 @@ import Loader from "react-loader-spinner";
 import AddingModal from "../../../components/Modals/AddingModal";
 import CompletedModal from "../../../components/Modals/CompletedModal";
 
+//TODO refactor this class
 class DBHills extends Component {
 
     state = {
@@ -26,6 +26,7 @@ class DBHills extends Component {
         venues: [],
         selectedVenueId: "",
         hills: [],
+        hillToDelete: '',
         hillToReadMore: '',
         hillVersionToReadMore: '',
         selectedHillName: "",
@@ -106,14 +107,6 @@ class DBHills extends Component {
             selectedHillName: e.target.name,
             selectedHillId: e.target.id,
             showEditModal: true,
-        })
-    }
-
-    handleDeleteButton = (e) => {
-        this.setState({
-            selectedHillName: e.target.name,
-            selectedHillId: e.target.id,
-            showDeleteModal: true
         })
     }
 
@@ -269,10 +262,14 @@ class DBHills extends Component {
     }
 
     deleteHill = () => {
-        window.alert("Delete Hill called")
-        this.setState({
-            showDeleteModal: false
-        })
+        axios.delete("/api/hills/" + this.state.hillToDelete.id)
+            .then(res => console.log(res))
+            .catch(error => console.log(error))
+            .finally(() => {
+                this.setState({
+                    showDeleteModal: false,
+                }, () => this.filter())
+            })
     }
 
 
@@ -306,14 +303,16 @@ class DBHills extends Component {
                     })}
                 />
 
-                <DeleteModal
-                    title={this.state.selectedHillName}
-                    show={this.state.showDeleteModal}
-                    onHide={() => this.setState({
-                        showDeleteModal: false
-                    })}
-                    handleDelete={this.deleteHill}
-                />
+                {this.state.showDeleteModal ?
+                    <DeleteModal
+                        title={this.state.hillToDelete.name}
+                        show={this.state.showDeleteModal}
+                        onHide={() => this.setState({
+                            showDeleteModal: false
+                        })}
+                        handleDelete={this.deleteHill}
+                    /> : null}
+
 
                 <Header3>Hills</Header3>
 
@@ -425,7 +424,7 @@ class DBHills extends Component {
                                             {/*    })}*/}
                                             {/*>Read more</Button>*/}
                                         </td>
-                                        <SmallTd>
+                                        <td>
                                             <TableButton id={hill.id} name={hill.name} size="sm"
                                                          onClick={e => this.handleAddVersionButton(e)}>
                                                 Add version
@@ -450,9 +449,18 @@ class DBHills extends Component {
                                                 onSubmit={this.editHill}
                                             />
                                             <TableButton id={hill.id} name={hill.name} variant={"danger"} size="sm"
-                                                         onClick={e => this.handleDeleteButton(e)}>
+                                                         onClick={e => {
+                                                             this.setState({
+                                                                 selectedHillName: e.target.name,
+                                                                 selectedHillId: e.target.id,
+                                                                 showDeleteModal: true,
+                                                                 hillToDelete: hill
+                                                             })
+                                                         }}
+                                            >
                                                 Delete
-                                            </TableButton></SmallTd>
+                                            </TableButton>
+                                        </td>
                                     </tr>
                                 ))
                             }

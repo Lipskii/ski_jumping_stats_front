@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import NewCityModal from "../../../components/Modals/NewCityModal";
 import {Formik, Field} from "formik";
 import {ErrorLabel, Header3, StyledDiv2Right1200} from "../../../components/StyledComponents";
-import {Button, Card, Col, Form, Modal, Row} from "react-bootstrap";
+import {Button, Col, Form, Modal, Row} from "react-bootstrap";
 import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";
 import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
 import {AthletesValidationSchema} from "./AthletesValidationSchema";

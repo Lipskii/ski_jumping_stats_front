@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "../../../components/StyledComponents";
-import {Table, Pagination, Button, Form} from "react-bootstrap";
+import {Table, Pagination, Button} from "react-bootstrap";
 import VenueForm from "./VenueForm";
 import Loader from "react-loader-spinner";
 import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
@@ -110,7 +110,7 @@ class DBVenues extends Component {
                 .then(res => {
                     successful = true
                     console.log(res)
-                    this.updateToCountry()
+                    this.filter()
                 })
                 .catch(error => console.log(error))
                 .finally(() => {
@@ -145,7 +145,7 @@ class DBVenues extends Component {
             })
                 .then(res => {
                     successful = true
-                    this.updateToCountry()
+                    this.filter()
                 })
                 .catch(error => console.log(error))
                 .finally(() => {
@@ -174,7 +174,7 @@ class DBVenues extends Component {
             axios.delete('/api/venues/' + this.state.venueToDelete.id)
                 .then(res => {
                     console.log(res)
-                    this.updateToCountry()
+                    this.filter()
                 })
                 .catch(error => {
                     successful = false
@@ -306,6 +306,7 @@ class DBVenues extends Component {
                                 <tr>
                                     <th>Venue</th>
                                     <th>City</th>
+                                    <th>Country</th>
                                     <th>Opened in</th>
                                     <th>Capacity</th>
                                     <th>Club</th>
@@ -319,6 +320,7 @@ class DBVenues extends Component {
                                             <tr key={venue.id} id={venue.id}>
                                                 <td>{venue.name}</td>
                                                 <td>{venue.city.name}</td>
+                                                <td>{venue.city.region.country.code}</td>
                                                 <td>{venue.yearOfOpening}</td>
                                                 <td>{venue.capacity}</td>
                                                 <td>{venue.skiClub.name}</td>

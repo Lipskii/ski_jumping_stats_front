@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
 import {Modal, Table} from "react-bootstrap";
-import {TableButton} from "../../../components/StyledComponents";
 
 
 const ResultsModal = (props) => {
@@ -53,23 +52,23 @@ const ResultsModal = (props) => {
                                         width: "20px",
                                         textAlign: "center"
                                     }}>{result.skiJumper.person.country.code}</td>
-                                    {result.firstRoundDistance !== null && result.irstRoundTotal !== null ?
+                                    {result.firstRoundDistance !== null && result.firstRoundTotal !== null ?
                                         <td>
                                             <tr>
-                                                {result.firstRoundDistance !== null ? <div>{result.firstRoundDistance} m</div> : null}
+                                                {<div>{result.firstRoundDistance} m</div>}
                                             </tr>
                                             <tr>
-                                                {result.firstRoundTotal !== null ? <div>{result.firstRoundTotal} p.</div> : null}
+                                                {<div>{result.firstRoundTotal} p.</div>}
                                             </tr>
                                         </td>
                                         : null}
                                     {result.secondRoundDistance !== null && result.secondRoundTotal !== null ?
                                         <td>
                                             <tr>
-                                                {result.secondRoundDistance !== null ? <div>{result.secondRoundDistance} m</div> : null}
+                                                {<div>{result.secondRoundDistance} m</div>}
                                             </tr>
                                             <tr>
-                                                {result.secondRoundTotal !== null ? <div>{result.secondRoundTotal} p.</div> : null}
+                                                {<div>{result.secondRoundTotal} p.</div>}
                                             </tr>
                                         </td>
                                     : null}
@@ -77,20 +76,20 @@ const ResultsModal = (props) => {
                                     {result.thirdRoundDistance !== null && result.thirdRoundTotal !== null ?
                                         <td>
                                             <tr>
-                                                {result.thirdRoundDistance !== null ? <div>{result.thirdRoundDistance} m</div> : null}
+                                                {<div>{result.thirdRoundDistance} m</div>}
                                             </tr>
                                             <tr>
-                                                {result.thirdRoundTotal !== null ? <div>{result.thirdRoundTotal} p.</div> : null}
+                                                {<div>{result.thirdRoundTotal} p.</div>}
                                             </tr>
                                         </td>
                                         : null}
                                     {result.fourthRoundDistance !== null && result.fourthRoundTotal !== null ?
                                         <td>
                                             <tr>
-                                                {result.fourthRoundDistance !== null ? <div>{result.fourthRoundDistance} m</div> : null}
+                                                {<div>{result.fourthRoundDistance} m</div>}
                                             </tr>
                                             <tr>
-                                                {result.fourthRoundTotal !== null ? <div>{result.fourthRoundTotal} p.</div> : null}
+                                                {<div>{result.fourthRoundTotal} p.</div>}
                                             </tr>
                                         </td>
                                         : null}

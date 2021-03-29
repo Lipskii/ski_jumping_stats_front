@@ -1,10 +1,10 @@
-import {Col, Form, Row} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import React from "react";
-import {Select} from "antd";
-import {Option} from "antd/es/mentions";
 import SearchingField from "./SearchingField";
+import {DatePicker, Select} from "antd";
 
 const SearchResults = (props) => {
+    const { RangePicker } = DatePicker;
 
     return (
         <Col sm={8}>
@@ -16,45 +16,64 @@ const SearchResults = (props) => {
                 label={"Series:"}
                 placeholder={"Select a series"}
             >
-                <Option value={""}>All series</Option>
+                <Select.Option value={""}>All series</Select.Option>
                 {props.series.map(series =>
-                    <Option key={series.id} value={series.id}>
+                    <Select.Option key={series.id} value={series.id}>
                         {series.name}
-                    </Option>)}
+                    </Select.Option>)}
             </SearchingField>
 
             <SearchingField
                 label={"Country:"}
                 placeholder={"Select a country"}
             >
-                <Option value={""}>All countries</Option>
+                <Select.Option value={""}>All countries</Select.Option>
                 {props.countries.map(country =>
-                    <Option key={country.id} value={country.id}>
+                    <Select.Option key={country.id} value={country.id}>
                         {country.name}
-                    </Option>)}
+                    </Select.Option>)}
             </SearchingField>
 
             <SearchingField
                 label={"Venues:"}
                 placeholder={"Select a venue"}
             >
-                <Option value={""}>All venues</Option>
+                <Select.Option value={""}>All venues</Select.Option>
                 {props.venues.map(venues =>
-                    <Option key={venues.id} value={venues.id}>
+                    <Select.Option key={venues.id} value={venues.id}>
                         {venues.name}
-                    </Option>)}
+                    </Select.Option>)}
             </SearchingField>
 
             <SearchingField
                 label={"Size of hill:"}
                 placeholder={"Select a size"}
             >
-                <Option value={""}>All sizes</Option>
+                <Select.Option value={""}>All sizes</Select.Option>
                 {props.sizes.map(size =>
-                    <Option key={size.id} value={size.id}>
+                    <Select.Option key={size.id} value={size.id}>
                         {size.designation}
-                    </Option>)}
+                    </Select.Option>)}
             </SearchingField>
+
+            <Row style={{marginBottom: "10px"}}>
+                <Col sm={2}>
+                    <label>Year:</label>
+                </Col>
+                <Col sm={10}>
+                    <DatePicker picker="year" />
+                </Col>
+            </Row>
+
+            <Row style={{marginBottom: "10px"}}>
+                <Col sm={2}>
+                    <label>Month:</label>
+                </Col>
+                <Col sm={10}>
+                    <DatePicker picker="month" />
+                </Col>
+            </Row>
+
 
         </Col>
     )

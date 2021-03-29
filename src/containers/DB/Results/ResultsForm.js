@@ -13,6 +13,7 @@ import {ResultsValidationSchema} from "./ResultsValidationSchema";
 import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
 import {FormikDatePicker} from "../../../components/CommonForms/FormikDatePicker";
 import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";
+import FormikTimePicker from "../../../components/CommonForms/FormikTimePicker";
 
 
 const ResultsForm = (props) => {
@@ -69,6 +70,7 @@ const ResultsForm = (props) => {
                 firstRoundMinWind: '',
                 firstRoundSnowTempStart: '',
                 firstRoundSnowTempFinish: '',
+                firstRoundStartTime: '',
                 firstRoundWeatherId: '',
                 fourthRoundAirTempStart: '',
                 fourthRoundAirTempFinish: '',
@@ -271,6 +273,11 @@ const ResultsForm = (props) => {
                                             label={"2. day:"}
                                         />
                                         : null}
+
+                                    <FormikTimePicker
+                                        name="firstRoundStartTime"
+                                        label={"Start time"}
+                                    />
 
                                     <FormikTextInputForm
                                         name="cancelledAtRound"

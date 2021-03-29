@@ -15,7 +15,7 @@ const LatestResults = (props) => {
                 <h6 style={{marginBottom: "30px"}}>Latest results</h6>
                 {props.competitions.slice(0, 6).map(competition => (
                         <div key={competition.id} style={{marginBottom: "20px", height: "20%"}}>
-                            <Media style={{width: "450px"}}>
+                            <Media>
                                 <img
                                     width={64}
                                     height={64}
@@ -31,7 +31,6 @@ const LatestResults = (props) => {
                                         style={{height: "15px", marginRight: "5px"}}/>
                                         {competition.hillVersion.hill.venue.city.name}, {competition.hillVersion.hill.venue.city.region.country.code} (HS: {competition.hillVersion.hillSize} m)
                                     </p>
-                                    <p>
                                         <ul style={{listStyleType: "none"}}>
                                             {competition.results.slice(0, 3).map(result => (
                                                 <li>{result.totalRank}. <img
@@ -45,7 +44,6 @@ const LatestResults = (props) => {
                                             ))}
                                             <Button variant={"link"} size={"sm"} >Read more</Button>
                                         </ul>
-                                    </p>
                                 </Media.Body>
                             </Media>
                         </div>

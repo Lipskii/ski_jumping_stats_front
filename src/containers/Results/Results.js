@@ -1,11 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Button, Col, Container, Media, Row} from "react-bootstrap";
-import {Header3, Header31, Header6, StyledDivCentered1200} from "../../components/StyledComponents";
-import fisLogo from "../../assets/fis_logo.png"
-import SelectInputForm from "../../components/CommonForms/SelectInputForm";
-import {Select} from "antd";
-import {Option} from "antd/es/mentions";
+import {Container, Row} from "react-bootstrap";
 import Loader from "react-loader-spinner";
 import LatestResults from "./LatestResults";
 import SearchResults from "./SearchResults";

@@ -10,7 +10,6 @@ import Loader from "react-loader-spinner";
 import AthletesForm from "./AthletesForm";
 
 
-
 class DBAthletes extends Component {
 
     state = {
@@ -120,15 +119,20 @@ class DBAthletes extends Component {
                     completedModalText: modalText,
                     completedModalStatus: successful,
                     showAddingModal: false,
+                    editAthlete: false,
                 })
             })
     }
 
     deleteAthlete = () => {
-        window.alert("Delete athlete called " + this.state.athleteToDelete.id)
-        this.setState({
-            showDeleteModal: false
-        })
+        axios.delete("/api/skiJumpers/" + this.state.athleteToDelete.id)
+            .then(res => console.log(res))
+            .catch(error => console.log(error))
+            .finally(() => {
+                this.setState({
+                    showDeleteModal: false,
+                }, () => this.filter())
+            })
     }
 
     postAthlete = (values) => {
@@ -154,7 +158,7 @@ class DBAthletes extends Component {
                 formData.append('file', values.file)
                 axios.post('/api/people/photo/' + res.data.person.id, formData)
                     .then((res) => {
-                        this.updateToCountry()
+                        this.filter()
                     })
                     .catch(error => {
                         console.log(error)
@@ -234,18 +238,20 @@ class DBAthletes extends Component {
                     onHide={() => this.setState({
                         showCompletedModal: false,
                         completedModalText: ""
-                    })}
+                    }, () => this.filter())}
                     status={this.state.completedModalStatus}
                 />
-                <DeleteModal
-                    show={this.state.showDeleteModal}
-                    onHide={() => this.setState({
-                        showDeleteModal: false,
-                        athleteToDelete: ''
-                    })}
-                    title={this.state.athleteToDelete.firstName + " " + this.state.athleteToDelete.lastName}
-                    handleDelete={this.deleteAthlete}
-                />
+                {this.state.showDeleteModal ?
+                    <DeleteModal
+                        show={this.state.showDeleteModal}
+                        onHide={() => this.setState({
+                            showDeleteModal: false,
+                            athleteToDelete: ''
+                        })}
+                        title={this.state.athleteToDelete.person.firstName + " " + this.state.athleteToDelete.person.lastName}
+                        handleDelete={this.deleteAthlete}
+                    /> : null}
+
 
                 <Header3>Athletes</Header3>
 

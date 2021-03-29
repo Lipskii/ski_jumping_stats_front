@@ -8,7 +8,7 @@ import {
     StyledForm
 } from "../../../components/StyledComponents";
 import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";
-import {Accordion, Button, Card, Modal} from "react-bootstrap";
+import {Accordion, Button, Card} from "react-bootstrap";
 import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
 import {FormikDatePicker} from "../../../components/CommonForms/FormikDatePicker";
 import {HillsValidationSchema} from "./HillsValidationSchema";

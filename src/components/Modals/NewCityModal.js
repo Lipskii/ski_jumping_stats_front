@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Form, Formik} from "formik";
 import axios from "axios";
 import * as Yup from 'yup';
-import {Button, Card, Modal} from "react-bootstrap";
+import {Button, Modal} from "react-bootstrap";
 import SelectInputForm from "../CommonForms/SelectInputForm";
 import FormikSelectInputForm from "../CommonForms/FormikSelectInputForm";
 import {Header3, StyledDiv2Right1200} from "../StyledComponents";
@@ -38,7 +38,7 @@ class NewCityModal extends Component {
     }
 
     onSubmit = (values) => {
-        axios.post("/api/city",{
+        axios.post("/api/cities",{
             name: values.name,
             region: this.state.regions.find(region => region.id = values.regionId)
         })

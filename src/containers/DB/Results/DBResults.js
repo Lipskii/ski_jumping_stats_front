@@ -24,11 +24,6 @@ class DBResults extends Component {
         competitions: [],
         competitionsLoading: true,
         competitionToDelete: '',
-        // competitionToEdit: {
-        //     assistantRD: {
-        //         id: ''
-        //     }
-        // },
         competitionToResults: '',
         countries: [],
         equipmentControllers: [],
@@ -47,6 +42,7 @@ class DBResults extends Component {
         filterSeriesMinorId: '',
         filterVenueId: '',
         showAddResultsModal: false,
+        showDeleteModal: false,
         showReadMoreModal: false,
         showResultsModal: false,
         venues: [],
@@ -118,6 +114,17 @@ class DBResults extends Component {
             }))
     }
 
+    deleteCompetition = () => {
+        axios.delete("/api/competitions/" + this.state.competitionToDelete.id)
+            .then(res => console.log(res))
+            .catch(error => console.log(error))
+            .finally(() => {
+                this.setState({
+                    showDeleteModal: false,
+                }, () => this.filter())
+            })
+    }
+
     handleResultsButton = (competition) => {
         axios.get('/api/results/' + competition.id)
             .then(res => this.setState({
@@ -162,6 +169,7 @@ class DBResults extends Component {
             firstRoundAirTempFinish: values.firstRoundAirTempFinish,
             firstRoundSnowTempStart: values.firstRoundSnowTempStart,
             firstRoundSnowTempFinish: values.firstRoundSnowTempFinish,
+            firstRoundStartTime: values.firstRoundStartTime,
             firstRoundHumidityStart: values.firstRoundHumidityStart,
             firstRoundHumidityFinish: values.firstRoundHumidityFinish,
             firstRoundMinWind: values.firstRoundMinWind,
@@ -255,7 +263,7 @@ class DBResults extends Component {
                     completedModalStatus: successful,
                     showAddingModal: false,
                     showAddResultsModal: false
-                },() => this.filter())
+                }, () => this.filter())
             })
     }
 
@@ -301,7 +309,7 @@ class DBResults extends Component {
 
                 {this.state.showAddResultsModal ?
                     <AddResultsModal
-                        mainHeader={"Adding results for " + this.state.addResultsCompetition.seriesMajor.name
+                        mainHeader={"Uploading results for " + this.state.addResultsCompetition.seriesMajor.name
                         + "( " + this.state.addResultsCompetition.date1 + " " + this.state.addResultsCompetition.hillVersion.hill.name
                         + " )"}
                         show={this.state.showAddResultsModal}
@@ -325,15 +333,17 @@ class DBResults extends Component {
                     status={this.state.completedModalStatus}
                 />
 
-                <DeleteModal
-                    show={this.state.showDeleteModal}
-                    onHide={() => this.setState({
-                        showDeleteModal: false,
-                        competitionToDelete: ''
-                    })}
-                    title={"the jury"}
-                    handleDelete={this.deleteAthlete}
-                />
+                {this.state.showDeleteModal ?
+                    <DeleteModal
+                        show={this.state.showDeleteModal}
+                        onHide={() => this.setState({
+                            showDeleteModal: false,
+                            competitionToDelete: ''
+                        })}
+                        title={this.state.competitionToDelete.seriesMajor.name + "( " + this.state.competitionToDelete.date1 + " ) competition"}
+                        handleDelete={this.deleteCompetition}
+                    /> : null}
+
 
                 {this.state.showReadMoreModal ? <CompetitionReadMoreModal
                     asistantsRD={this.state.assistantsRD}
@@ -490,7 +500,7 @@ class DBResults extends Component {
                                             if (((this.state.activePage - 1) * 10 <= this.state.competitions.indexOf(competition)) && (this.state.competitions.indexOf(competition) < this.state.activePage * 10)) {
                                                 return (
                                                     <tr key={competition.id} id={competition.id}>
-                                                        <td>{competition.date1}</td>
+                                                        <td>{competition.date1} {competition.firstRoundStartTime !== '' ?  competition.firstRoundStartTime : null}</td>
                                                         <td>{competition.seriesMajor.name} {competition.seriesMinor !== null ?
                                                             <small>({competition.seriesMinor.name})</small> : null}
                                                             <TableButton id={competition.id + "tbEdit"}
@@ -512,7 +522,14 @@ class DBResults extends Component {
                                                                              variant={"outline-info"}
                                                                              onClick={() => this.handleResultsButton(competition)}>
                                                                     results
-                                                                </TableButton> :
+                                                                </TableButton> : null
+                                                            }
+
+
+                                                        </td>
+                                                        <td>{competition.hillVersion.hill.name}</td>
+                                                        <td style={{width: "250px"}}>
+                                                            {competition.results.length > 0 ?
                                                                 <TableButton id={competition.id + "tbEdit"}
                                                                              name={competition.name}
                                                                              size="sm"
@@ -524,26 +541,21 @@ class DBResults extends Component {
                                                                                  })
                                                                              }
                                                                              }>
+                                                                    Edit results
+                                                                </TableButton> :
+                                                                <TableButton id={competition.id + "tbEdit"}
+                                                                             name={competition.name}
+                                                                             size="sm"
+                                                                             variant={"warning"}
+                                                                             onClick={() => {
+                                                                                 this.setState({
+                                                                                     showAddResultsModal: true,
+                                                                                     addResultsCompetition: competition,
+                                                                                 })
+                                                                             }
+                                                                             }>
                                                                     Add results
                                                                 </TableButton>}
-
-
-                                                        </td>
-                                                        <td>{competition.hillVersion.hill.name}</td>
-                                                        <td style={{width: "250px"}}>
-                                                            <TableButton id={competition.id + "tbEdit"}
-                                                                         name={competition.name}
-                                                                         size="sm"
-                                                                         variant={"info"}
-                                                                         onClick={() => {
-                                                                             this.setState({
-                                                                                 competitionToEdit: competition,
-                                                                                 editCompetition: true,
-                                                                             })
-                                                                         }
-                                                                         }>
-                                                                Edit
-                                                            </TableButton>
                                                             <TableButton id={competition.id + "tbDelete"}
                                                                          name={competition.name} size="sm"
                                                                          variant={"danger"}

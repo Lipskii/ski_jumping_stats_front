@@ -2,15 +2,12 @@ import React from "react";
 import {useField, useFormikContext} from "formik";
 import {Col, Form, Row} from "react-bootstrap";
 import {ErrorLabel} from "../StyledComponents";
-import {DatePicker} from 'antd';
-import moment from 'moment';
+import {TimePicker} from 'antd';
 import 'antd/dist/antd.css';
 
-
-export const FormikDatePicker = ({label, ...props}) => {
+const FormikTimePicker = ({label, ...props}) => {
     const {setFieldValue} = useFormikContext();
     const [field, meta] = useField(props);
-    const dateFormat = 'DD/MM/YYYY';
 
     return (
         <Form.Group as={Row}>
@@ -18,12 +15,9 @@ export const FormikDatePicker = ({label, ...props}) => {
                 {label}
             </Form.Label>
             <Col sm={2}>
-                <DatePicker
+                <TimePicker
                     {...field}
                     {...props}
-                    defaultValue={moment('01/01/2001', dateFormat)}
-                    format={dateFormat}
-                    selected={moment(field.value && new Date(field.value)) || null}
                     onChange={val => {
                         setFieldValue(field.name, val);
                     }}
@@ -37,3 +31,5 @@ export const FormikDatePicker = ({label, ...props}) => {
 
     );
 };
+
+export default FormikTimePicker

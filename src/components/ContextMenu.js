@@ -65,4 +65,3 @@ class ContextMenu extends Component {
 
 }
 
-export default ContextMenu

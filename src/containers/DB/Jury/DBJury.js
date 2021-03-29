@@ -11,7 +11,7 @@ import Loader from "react-loader-spinner";
 import JuryForm from "./JuryForm";
 
 
-class Athletes extends Component {
+class Jury extends Component {
 
     state = {
         activePage: 1,
@@ -73,6 +73,17 @@ class Athletes extends Component {
                 })
             }))
             .catch(error => console.log(error))
+    }
+
+    deleteJury = () => {
+        axios.delete("/api/jury/" + this.state.juryToDelete.id)
+            .then(res => console.log(res))
+            .catch(error => console.log(error))
+            .finally(() => {
+                this.setState({
+                    showDeleteModal: false,
+                }, () => this.filter())
+            })
     }
 
     filterFormPeople = (e) => {
@@ -183,7 +194,7 @@ class Athletes extends Component {
                         juryToDelete: ''
                     })}
                     title={"the jury"}
-                    handleDelete={this.deleteAthlete}
+                    handleDelete={this.deleteJury}
                 />
 
                 <Header3>Jury</Header3>
@@ -335,4 +346,4 @@ class Athletes extends Component {
 }
 
 
-export default Athletes
+export default Jury

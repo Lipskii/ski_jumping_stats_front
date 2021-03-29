@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import {Form, Formik} from "formik";
 import NewCityModal from "../../../components/Modals/NewCityModal";
-import {Header3, StyledDiv2Right1200, StyledForm} from "../../../components/StyledComponents";
-import {Button, Card, Modal} from "react-bootstrap";
+import {Header3, StyledDiv2Right1200} from "../../../components/StyledComponents";
+import {Button, Modal} from "react-bootstrap";
 import {SkiClubsValidationSchema} from "./SkiClubsValidationSchema";
 import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";
 import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";

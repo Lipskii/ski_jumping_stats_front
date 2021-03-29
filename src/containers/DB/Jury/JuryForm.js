@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Formik} from "formik";
-import {Header3, StyledDiv2Right1200, StyledForm} from "../../../components/StyledComponents";
-import {Button, Card, Col, Form, Modal, Row} from "react-bootstrap";
+import {Header3, StyledDiv2Right1200} from "../../../components/StyledComponents";
+import {Button, Form, Modal} from "react-bootstrap";
 import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
 
 import {JuryValidationSchema} from "./JuryValidationSchema";

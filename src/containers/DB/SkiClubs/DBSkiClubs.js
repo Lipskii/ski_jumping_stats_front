@@ -10,7 +10,6 @@ import Loader from "react-loader-spinner";
 import SkiClubForm from "./SkiClubForm";
 
 
-
 class DBSkiClubs extends Component {
 
     state = {
@@ -56,10 +55,14 @@ class DBSkiClubs extends Component {
     }
 
     deleteClub = () => {
-        window.alert("Delete club called " + this.state.clubToDelete.id)
-        this.setState({
-            showDeleteModal: false
-        })
+        axios.delete("/api/skiClubs/" + this.state.clubToDelete.id)
+            .then(res => console.log(res))
+            .catch(error => console.log(error))
+            .finally(() => {
+                this.setState({
+                    showDeleteModal: false,
+                }, () => this.filter())
+            })
     }
 
     editClub = (values) => {
@@ -73,7 +76,7 @@ class DBSkiClubs extends Component {
             })
                 .then(res => {
                     successful = true
-                    this.updateToCountry()
+                    this.filter()
                 })
                 .catch(error => console.log(error))
                 .finally(() => {
@@ -109,11 +112,12 @@ class DBSkiClubs extends Component {
         axios.post('/api/skiClubs', {
             name: values.name,
             city: this.state.citiesForForm.find(city => city.id === parseInt(values.cityId))
-        }).then(res => {
-            successful = true
-            console.log(res)
-            this.updateToCountry()
         })
+            .then(res => {
+                successful = true
+                console.log(res)
+                this.filter()
+            })
             .catch(error => console.log(error))
             .finally(() => {
                 let modalText
@@ -233,7 +237,8 @@ class DBSkiClubs extends Component {
                     >
                         <option value={""}>All cities</option>
                         {this.state.cities.map(city => (
-                            <option key={city.id} value={city.id} name={city.name}>{city.name}, {city.region.country.code}</option>
+                            <option key={city.id} value={city.id}
+                                    name={city.name}>{city.name}, {city.region.country.code}</option>
                         ))}
                     </SelectInputForm>
 
@@ -317,12 +322,12 @@ class DBSkiClubs extends Component {
                         countries={this.state.countries}
                         currentCountry={this.state.currentCountry}
                         filterByCountry={this.filterFormCities}
-                        updateCities={this.updateToCountry}
+                    //    updateCities={this.updateToCountry}
                         isEdit={false}
-                        onSubmit={() => {
+                        onSubmit={(values) => {
                             this.setState({
                                 showAddingModal: true
-                            }, () => this.postClub)
+                            }, () => this.postClub(values))
                         }}
                     />
                     : null}
@@ -340,7 +345,7 @@ class DBSkiClubs extends Component {
                     countries={this.state.countries}
                     currentCountry={this.state.currentCountry}
                     filterByCountry={this.filterFormCities}
-                    updateCities={this.updateToCountry}
+                   // updateCities={this.updateToCountry}
                     isEdit={false}
                     onSubmit={(values) => {
                         this.setState({

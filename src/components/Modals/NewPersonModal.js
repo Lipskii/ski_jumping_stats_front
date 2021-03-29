@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Form, Formik} from "formik";
 import axios from "axios";
 import * as Yup from 'yup';
-import {Button, Card, Modal} from "react-bootstrap";
+import {Button, Modal} from "react-bootstrap";
 import FormikSelectInputForm from "../CommonForms/FormikSelectInputForm";
 import {Header3, StyledDiv2Right1200} from "../StyledComponents";
 import FormikTextInputForm from "../CommonForms/FormikTextInputForm";
@@ -10,6 +10,7 @@ import NewCityModal from "./NewCityModal";
 import {FormikDatePicker} from "../CommonForms/FormikDatePicker";
 import AddingModal from "./AddingModal";
 import CompletedModal from "./CompletedModal";
+
 
 class NewPersonModal extends Component {
 

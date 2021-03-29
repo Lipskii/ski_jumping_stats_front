@@ -47,6 +47,7 @@ export const ResultsValidationSchema = () => Yup.object(
         firstRoundSnowTempFinish: Yup.number()
             .max(99.9, 'Too large. Value should be less than 100.')
             .min(-99.9, 'Too small. Value should be more than -100.'),
+        firstRoundStartTime: Yup.date(),
         firstRoundWeatherId: Yup.number(),
         fourthRoundAirTempStart: Yup.number()
             .max(99.9, 'Too large. Value should be less than 100.')

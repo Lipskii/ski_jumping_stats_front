@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import bsCustomFileInput from "bs-custom-file-input";
 import {Formik} from "formik";
-import {Button, Col, Form, Modal, Row} from "react-bootstrap";
+import {Button, Form, Modal} from "react-bootstrap";
 import {ErrorLabel, Header3, StyledDiv2Right1200} from "../../../components/StyledComponents";
 import * as Yup from 'yup'
 
