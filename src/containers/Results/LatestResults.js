@@ -1,6 +1,7 @@
 import {Button, Card, Col, Media} from "react-bootstrap";
 import fisLogo from "../../assets/fis_logo.png";
 import React from "react";
+import {LinkContainer} from "react-router-bootstrap";
 
 const LatestResults = (props) => {
 
@@ -12,7 +13,7 @@ const LatestResults = (props) => {
             }}>
                 <h6 style={{marginBottom: "10px"}}>Latest results</h6>
                 {props.competitions.slice(0, 6).map(competition => (
-                        <div key={competition.id} style={{marginBottom: "20px", height: "20%"}}>
+                        <div key={competition.id + "_lr"} style={{marginBottom: "20px", height: "20%"}}>
                             <Card>
                                 <Card.Header>{competition.seriesMajor.name} ({competition.date1})</Card.Header>
                                 <Card.Subtitle className="mb-2 text-muted" style={{marginTop: "5px", marginLeft: "10px"}}><img
@@ -32,7 +33,7 @@ const LatestResults = (props) => {
                                 <Media.Body>
                                         <ul style={{listStyleType: "none"}}>
                                             {competition.results.slice(0, 3).map(result => (
-                                                <li>{result.totalRank}. <img
+                                                <li key={result.id}>{result.totalRank}. <img
                                                     alt={result.skiJumper.person.country.code}
                                                     src={'./flags/' + result.skiJumper.person.country.code + '.png'}
                                                     style={{
@@ -41,7 +42,9 @@ const LatestResults = (props) => {
                                                     }}/> {result.skiJumper.person.firstName} {result.skiJumper.person.lastName} <b>{result.totalPoints} p.</b>
                                                 </li>
                                             ))}
+                                            <LinkContainer to={'/showResults/' + competition.id}>
                                             <Button variant={"link"} size={"sm"} >Read more</Button>
+                                            </LinkContainer>
                                         </ul>
                                 </Media.Body>
                             </Media>

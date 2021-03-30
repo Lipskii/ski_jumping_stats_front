@@ -214,7 +214,7 @@ class DBResults extends Component {
                 if (values.resultsCsv !== '') {
                     console.log(res)
                     const formData = new FormData();
-                    formData.append('csv', values.file)
+                    formData.append('csv', values.resultsCsv)
                     // const formDataPdf = new FormData()
                     // formData.append('pdf', values.resultsPdf)
                     // console.log(formDataPdf)
@@ -500,7 +500,7 @@ class DBResults extends Component {
                                             if (((this.state.activePage - 1) * 10 <= this.state.competitions.indexOf(competition)) && (this.state.competitions.indexOf(competition) < this.state.activePage * 10)) {
                                                 return (
                                                     <tr key={competition.id} id={competition.id}>
-                                                        <td>{competition.date1} {competition.firstRoundStartTime !== '' ?  competition.firstRoundStartTime : null}</td>
+                                                        <td>{competition.date1}</td>
                                                         <td>{competition.seriesMajor.name} {competition.seriesMinor !== null ?
                                                             <small>({competition.seriesMinor.name})</small> : null}
                                                             <TableButton id={competition.id + "tbEdit"}

@@ -16,7 +16,6 @@ class HomePage extends Component {
 
         return (
             <React.Fragment>
-                ELOOOO
             </React.Fragment>
         )
     }

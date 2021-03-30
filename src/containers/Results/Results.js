@@ -7,6 +7,7 @@ import SearchResults from "./SearchResults";
 import UpcomingCompetitions from "./UpcomingCompetitions";
 
 
+
 class Results extends Component {
     state = {
         activePage: 1,
@@ -33,7 +34,7 @@ class Results extends Component {
 
         axios.all([
             axios.get('/api/cities'),
-            axios.get('/api/competitions?'),
+            axios.get('/api/competitions?seriesMajorId=10&season=2021'),
             axios.get('/api/competitions?hasResults=true'),
             axios.get('/api/competitions?hasResults=true&after=' + date),
             axios.get('/api/countries'),
@@ -102,6 +103,8 @@ class Results extends Component {
                     width={80}
                     style={{textAlign: 'center'}}
                 />}
+
+
             </div>
 
         )

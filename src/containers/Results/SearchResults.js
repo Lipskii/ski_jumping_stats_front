@@ -1,108 +1,205 @@
 import {Col, Row} from "react-bootstrap";
-import React from "react";
+import React, {Component, useEffect, useState} from "react";
 import SearchingField from "./SearchingField";
 import {DatePicker, Select} from "antd";
 import CompetitionsTable from "./CompetitionsTable";
+import axios from "axios";
 
-const SearchResults = (props) => {
-    const { RangePicker } = DatePicker;
+class SearchResults extends Component {
 
-    return (
-        <Col sm={8}>
-            <Row>
-                <h3 style={{margin: "auto", marginBottom: "10px"}}>Search Competitions</h3>
-            </Row>
-
-            <SearchingField
-                label={"Series:"}
-                placeholder={"Select series"}
-            >
-                <Select.Option value={""}>All series</Select.Option>
-                {props.series.map(series =>
-                    <Select.Option key={series.id} value={series.id}>
-                        {series.name}
-                    </Select.Option>)}
-            </SearchingField>
-
-            <SearchingField
-                label={"Country:"}
-                placeholder={"Select country"}
-            >
-                <Select.Option value={""}>All countries</Select.Option>
-                {props.countries.map(country =>
-                    <Select.Option key={country.id} value={country.id}>
-                        {country.name}
-                    </Select.Option>)}
-            </SearchingField>
-
-            <SearchingField
-                label={"Venues:"}
-                placeholder={"Select venue"}
-            >
-                <Select.Option value={""}>All venues</Select.Option>
-                {props.venues.map(venues =>
-                    <Select.Option key={venues.id} value={venues.id}>
-                        {venues.name}
-                    </Select.Option>)}
-            </SearchingField>
-
-            <SearchingField
-                label={"Size of hill:"}
-                placeholder={"Select size"}
-            >
-                <Select.Option value={""}>All sizes</Select.Option>
-                {props.sizes.map(size =>
-                    <Select.Option key={size.id} value={size.id}>
-                        {size.designation}
-                    </Select.Option>)}
-            </SearchingField>
-
-            <Row style={{marginBottom: "10px"}}>
-                <Col sm={2}>
-                    <label>Season:</label>
-                </Col>
-                <Col sm={10}>
-                    <DatePicker picker="year" placeholder={"Select season"} />
-                </Col>
-            </Row>
-
-            <Row style={{marginBottom: "10px"}}>
-                <Col sm={2}>
-                    <label>Month:</label>
-                </Col>
-                <Col sm={10}>
-                    <DatePicker picker="month" />
-                </Col>
-            </Row>
-
-            <Row style={{margin: "auto"}}>
-                {props.competitions.length > 0 ? <CompetitionsTable competitions={props.competitions}/> : <p style={{textAlign: "center"}}>No competitions found</p>}
-            </Row>
+    state = {
+        competitions: [],
+        competitionsLoading: false,
+        countries: [],
+        filterCountryId: '',
+        filterSeason: '',
+        filterSeriesId: '',
+        filterSizeId: '',
+        filterVenueId: '',
+        series: [],
+        sizes: [],
+        venues: [],
+    }
 
 
-        </Col>
-    )
+    componentDidMount() {
+        this.setState({
+            competitions: this.props.competitions,
+            countries: this.props.countries,
+            series: this.props.series,
+            sizes: this.props.sizes,
+            venues: this.props.venues,
+        })
+    }
+
+    filter = () => {
+        console.log(this.state)
+        axios.get('/api/competitions?seriesMajorId=' + this.state.filterSeriesId
+            + '&countryId=' + this.state.filterCountryId
+            + '&venueId=' + this.state.filterVenueId
+            + '&sizeOfHillId=' + this.state.filterSizeId
+            + '&season=' + this.state.filterSeason)
+            .then(res => {
+                this.setState({
+                    competitions: res.data,
+                    competitionsLoading: false
+                })
+            })
+            .catch(error => console.log(error))
+    }
+
+    render() {
+        console.log(this.state)
+        return (
+            <Col sm={8}>
+                <Row>
+                    <h3 style={{margin: "auto", marginBottom: "10px"}}>Search Competitions</h3>
+                </Row>
+
+                <SearchingField
+                    label={"Series:"}
+                    placeholder={"Select series"}
+                    selected={10}
+                    onChange={(id) => {
+                        this.setState({
+                            competitionsLoading: true,
+                            filterSeriesId: id
+                        }, () => this.filter())
+                    }}
+                >
+                    <Select.Option value={""}>All series</Select.Option>
+                    {this.state.series.map(series =>
+                        <Select.Option key={series.id} value={series.id}>
+                            {series.name}
+                        </Select.Option>)}
+                </SearchingField>
+
+                <SearchingField
+                    label={"Country:"}
+                    placeholder={"Select country"}
+                    onChange={(id) => {
+                        this.setState({
+                            competitionsLoading: true,
+                            filterCountryId: id
+                        }, () => this.filter())
+                    }}
+                >
+                    <Select.Option value={""}>All countries</Select.Option>
+                    {this.state.countries.map(country =>
+                        <Select.Option key={country.id} value={country.id}>
+                            {country.name}
+                        </Select.Option>)}
+                </SearchingField>
+
+                <SearchingField
+                    label={"Venues:"}
+                    placeholder={"Select venue"}
+                    onChange={(id) => {
+                        this.setState({
+                            competitionsLoading: true,
+                            filterVenueId: id
+                        }, () => this.filter())
+                    }}
+                >
+                    <Select.Option value={""}>All venues</Select.Option>
+                    {this.state.venues.map(venues =>
+                        <Select.Option key={venues.id} value={venues.id}>
+                            {venues.name}
+                        </Select.Option>)}
+                </SearchingField>
+
+                <SearchingField
+                    label={"Size of hill:"}
+                    placeholder={"Select size"}
+                    onChange={(id) => {
+                        this.setState({
+                            competitionsLoading: true,
+                            filterSizeId: id
+                        }, () => this.filter())
+                    }}
+                >
+                    <Select.Option value={""}>All sizes</Select.Option>
+                    {this.state.sizes.map(size =>
+                        <Select.Option key={size.id} value={size.id}>
+                            {size.designation}
+                        </Select.Option>)}
+                </SearchingField>
+
+                <Row style={{marginBottom: "10px"}}>
+                    <Col sm={2}>
+                        <label>Season:</label>
+                    </Col>
+                    <Col sm={10}>
+                        <DatePicker
+                            picker="year"
+                            placeholder={"Select season"}
+                            onChange={(e) => {
+                                let year
+                                if (e !== null) {
+                                    year = e._d.getFullYear()
+                                } else {
+                                    year = ''
+                                }
+                                this.setState({
+                                    competitionsLoading: true,
+                                    filterSeason: year
+                                }, () => this.filter())
+                            }}
+                        />
+                    </Col>
+                </Row>
+
+
+                <Row style={{margin: "auto"}}>
+                    {this.state.competitions.length > 0 ? <CompetitionsTable
+                        competitions={this.state.competitions}
+                        competitionsLoading={this.state.competitionsLoading}
+                    /> : <p style={{textAlign: "center"}}>No competitions found</p>}
+                </Row>
+
+
+            </Col>
+        )
+    }
 }
 
 export default SearchResults
 
 
-{/*</div>*/}
-{/*<SelectInputForm*/}
-{/*    title={"Series:"}*/}
-{/*    defaultValue={""}*/}
-{/*    onChange={e => {*/}
-{/*        this.setState({*/}
-{/*            activePage: 1,*/}
-{/*            competitionsLoading: true,*/}
-{/*            filterSeriesId: e.target.value*/}
-{/*        }, () => this.filter())*/}
-{/*    }}*/}
-{/*>*/}
-{/*    <option value={""}>All series</option>*/}
-{/*    {this.state.series.map(series =>*/}
-{/*        <option key={series.id} value={series.id}>*/}
-{/*            {series.name}*/}
-{/*        </option>)}*/}
-{/*</SelectInputForm>*/}
+{/*</div>*/
+}
+{/*<SelectInputForm*/
+}
+{/*    title={"Series:"}*/
+}
+{/*    defaultValue={""}*/
+}
+{/*    onChange={e => {*/
+}
+{/*        this.setState({*/
+}
+{/*            activePage: 1,*/
+}
+{/*            competitionsLoading: true,*/
+}
+{/*            filterSeriesId: e.target.value*/
+}
+{/*        }, () => this.filter())*/
+}
+{/*    }}*/
+}
+{/*>*/
+}
+{/*    <option value={""}>All series</option>*/
+}
+{/*    {this.state.series.map(series =>*/
+}
+{/*        <option key={series.id} value={series.id}>*/
+}
+{/*            {series.name}*/
+}
+{/*        </option>)}*/
+}
+{/*</SelectInputForm>*/
+}
 
