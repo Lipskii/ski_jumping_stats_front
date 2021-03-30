@@ -1,10 +1,12 @@
 import {Col, Row} from "react-bootstrap";
 import React from "react";
 import {Select} from "antd";
+import CompetitionsTable from "./CompetitionsTable";
 
 const SearchingField = ({children,...props}) => {
 
     return (
+        <div>
         <Row style={{marginBottom: "10px"}}>
             <Col sm={2}>
                 <label>{props.label}</label>
@@ -23,6 +25,7 @@ const SearchingField = ({children,...props}) => {
                 </Select>
             </Col>
         </Row>
+        </div>
     )
 }
 

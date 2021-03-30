@@ -2,6 +2,7 @@ import {Col, Row} from "react-bootstrap";
 import React from "react";
 import SearchingField from "./SearchingField";
 import {DatePicker, Select} from "antd";
+import CompetitionsTable from "./CompetitionsTable";
 
 const SearchResults = (props) => {
     const { RangePicker } = DatePicker;
@@ -14,7 +15,7 @@ const SearchResults = (props) => {
 
             <SearchingField
                 label={"Series:"}
-                placeholder={"Select a series"}
+                placeholder={"Select series"}
             >
                 <Select.Option value={""}>All series</Select.Option>
                 {props.series.map(series =>
@@ -25,7 +26,7 @@ const SearchResults = (props) => {
 
             <SearchingField
                 label={"Country:"}
-                placeholder={"Select a country"}
+                placeholder={"Select country"}
             >
                 <Select.Option value={""}>All countries</Select.Option>
                 {props.countries.map(country =>
@@ -36,7 +37,7 @@ const SearchResults = (props) => {
 
             <SearchingField
                 label={"Venues:"}
-                placeholder={"Select a venue"}
+                placeholder={"Select venue"}
             >
                 <Select.Option value={""}>All venues</Select.Option>
                 {props.venues.map(venues =>
@@ -47,7 +48,7 @@ const SearchResults = (props) => {
 
             <SearchingField
                 label={"Size of hill:"}
-                placeholder={"Select a size"}
+                placeholder={"Select size"}
             >
                 <Select.Option value={""}>All sizes</Select.Option>
                 {props.sizes.map(size =>
@@ -58,10 +59,10 @@ const SearchResults = (props) => {
 
             <Row style={{marginBottom: "10px"}}>
                 <Col sm={2}>
-                    <label>Year:</label>
+                    <label>Season:</label>
                 </Col>
                 <Col sm={10}>
-                    <DatePicker picker="year" />
+                    <DatePicker picker="year" placeholder={"Select season"} />
                 </Col>
             </Row>
 
@@ -72,6 +73,10 @@ const SearchResults = (props) => {
                 <Col sm={10}>
                     <DatePicker picker="month" />
                 </Col>
+            </Row>
+
+            <Row style={{margin: "auto"}}>
+                {props.competitions.length > 0 ? <CompetitionsTable competitions={props.competitions}/> : <p style={{textAlign: "center"}}>No competitions found</p>}
             </Row>
 
 

@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Container, Row} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import Loader from "react-loader-spinner";
 import LatestResults from "./LatestResults";
 import SearchResults from "./SearchResults";
+import UpcomingCompetitions from "./UpcomingCompetitions";
 
 
 class Results extends Component {
@@ -11,6 +12,7 @@ class Results extends Component {
         activePage: 1,
         cities: [],
         competitions: [],
+        competitionsWithResults: [],
         competitionsLoading: true,
         countries: [],
         filterSeriesId: '',
@@ -19,13 +21,21 @@ class Results extends Component {
         seasons: [],
         series: [],
         sizesOfHill: [],
+        upcomingCompetitions: [],
         venues: []
     }
 
     componentDidMount() {
+        console.log(Date())
+        let today = new Date(),
+            date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();
+        console.log(date)
+
         axios.all([
             axios.get('/api/cities'),
+            axios.get('/api/competitions?'),
             axios.get('/api/competitions?hasResults=true'),
+            axios.get('/api/competitions?hasResults=true&after=' + date),
             axios.get('/api/countries'),
             axios.get('/api/hills'),
             axios.get('/api/seasons'),
@@ -37,6 +47,8 @@ class Results extends Component {
             .then(axios.spread((
                 citiesData,
                 competitionsData,
+                competitionsWithResultsData,
+                upcomingCompetitionsData,
                 countriesData,
                 hillsData,
                 seasonsData,
@@ -46,12 +58,14 @@ class Results extends Component {
             ) => {
                 this.setState({
                     cities: citiesData.data,
-                    competitions: competitionsData.data,
+                    competitions: competitionsData.data.slice(0,20),
+                    competitionsWithResults: competitionsWithResultsData.data,
                     countries: countriesData.data,
                     hills: hillsData.data,
                     seasons: seasonsData.data,
                     series: seriesData.data,
                     sizesOfHill: sizesData.data,
+                    upcomingCompetitions: upcomingCompetitionsData.data,
                     venues: venuesData.data,
                 })
             }))
@@ -70,12 +84,16 @@ class Results extends Component {
                 {!this.state.pageLoading ? <Container fluid>
                     <Row>
                         <SearchResults
+                            competitions={this.state.competitions}
                             countries={this.state.countries}
                             series={this.state.series}
                             sizes={this.state.sizesOfHill}
                             venues={this.state.venues}
                         />
-                        <LatestResults competitions={this.state.competitions}/>
+                        <Col sm={4}>
+                            <UpcomingCompetitions competitions={this.state.upcomingCompetitions}/>
+                            <LatestResults competitions={this.state.competitionsWithResults}/>
+                        </Col>
                     </Row>
                 </Container> : <Loader
                     type="ThreeDots"
@@ -85,6 +103,7 @@ class Results extends Component {
                     style={{textAlign: 'center'}}
                 />}
             </div>
+
         )
     }
 

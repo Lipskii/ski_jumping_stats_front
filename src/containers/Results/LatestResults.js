@@ -1,21 +1,27 @@
-import {Button, Col, Media} from "react-bootstrap";
+import {Button, Card, Col, Media} from "react-bootstrap";
 import fisLogo from "../../assets/fis_logo.png";
 import React from "react";
 
 const LatestResults = (props) => {
 
     return (
-        <Col sm={4}>
             <div style={{
-                margin: 'auto',
-                backgroundColor: "#dfe0ed",
+                marginTop: '20px',
                 borderRadius: "10px",
                 paddingLeft: "10px",
             }}>
-                <h6 style={{marginBottom: "30px"}}>Latest results</h6>
+                <h6 style={{marginBottom: "10px"}}>Latest results</h6>
                 {props.competitions.slice(0, 6).map(competition => (
                         <div key={competition.id} style={{marginBottom: "20px", height: "20%"}}>
-                            <Media>
+                            <Card>
+                                <Card.Header>{competition.seriesMajor.name} ({competition.date1})</Card.Header>
+                                <Card.Subtitle className="mb-2 text-muted" style={{marginTop: "5px", marginLeft: "10px"}}><img
+                                    alt={competition.hillVersion.hill.venue.city.region.country.code}
+                                    src={'./flags/' + competition.hillVersion.hill.venue.city.region.country.code + '.png'}
+                                    style={{height: "15px", marginRight: "5px"}}/>
+                                    {competition.hillVersion.hill.venue.city.name} (HS: {competition.hillVersion.hillSize} m)
+                                </Card.Subtitle>
+                            <Media style={{marginLeft: "5px", marginTop: "10px"}}>
                                 <img
                                     width={64}
                                     height={64}
@@ -23,14 +29,7 @@ const LatestResults = (props) => {
                                     src={fisLogo}
                                     alt="Generic placeholder"
                                 />
-                                <Media.Body style={{marginRight: "10vh"}}>
-                                    <h6>{competition.seriesMajor.name} ({competition.date1})</h6>
-                                    <p><img
-                                        alt={competition.hillVersion.hill.venue.city.region.country.code}
-                                        src={'./flags/' + competition.hillVersion.hill.venue.city.region.country.code + '.png'}
-                                        style={{height: "15px", marginRight: "5px"}}/>
-                                        {competition.hillVersion.hill.venue.city.name}, {competition.hillVersion.hill.venue.city.region.country.code} (HS: {competition.hillVersion.hillSize} m)
-                                    </p>
+                                <Media.Body>
                                         <ul style={{listStyleType: "none"}}>
                                             {competition.results.slice(0, 3).map(result => (
                                                 <li>{result.totalRank}. <img
@@ -46,12 +45,12 @@ const LatestResults = (props) => {
                                         </ul>
                                 </Media.Body>
                             </Media>
+                            </Card>
                         </div>
                     )
                 )
                 }
             </div>
-        </Col>
     )
 }
 
