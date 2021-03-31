@@ -12,16 +12,18 @@ const Toolbar = () => (
                 <LinkContainer to="/results">
                     <Nav.Link>Results</Nav.Link>
                 </LinkContainer>
+                <LinkContainer to="/skiJumpers">
                 <Nav.Link>Ski Jumpers</Nav.Link>
+                </LinkContainer>
                 <Nav.Link>Hills</Nav.Link>
-                <NavDropdown title="Competitions" id="collasible-nav-dropdown">
+                <NavDropdown title="Series" id="collasible-nav-dropdown">
                     <NavDropdown.Item>Olympic Games</NavDropdown.Item>
                     <NavDropdown.Item>World Championships</NavDropdown.Item>
                     <NavDropdown.Item>Ski Flying World Championships</NavDropdown.Item>
                     <NavDropdown.Item>World Cup</NavDropdown.Item>
                     <NavDropdown.Item>Four Hills Tournament</NavDropdown.Item>
                     <NavDropdown.Divider/>
-                    <NavDropdown.Item>Other Competitions</NavDropdown.Item>
+                    <NavDropdown.Item>Other Series</NavDropdown.Item>
                 </NavDropdown>
                 <Nav.Link>SJS All Time Ranking</Nav.Link>
                 <Nav.Link>Stats</Nav.Link>

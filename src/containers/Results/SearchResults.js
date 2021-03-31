@@ -4,6 +4,7 @@ import SearchingField from "./SearchingField";
 import {DatePicker, Select} from "antd";
 import CompetitionsTable from "./CompetitionsTable";
 import axios from "axios";
+import moment from "moment";
 
 class SearchResults extends Component {
 
@@ -13,7 +14,7 @@ class SearchResults extends Component {
         countries: [],
         filterCountryId: '',
         filterSeason: '',
-        filterSeriesId: '',
+        filterSeriesId: 9,
         filterSizeId: '',
         filterVenueId: '',
         series: [],
@@ -59,7 +60,7 @@ class SearchResults extends Component {
                 <SearchingField
                     label={"Series:"}
                     placeholder={"Select series"}
-                    selected={10}
+                    defaultValue={9}
                     onChange={(id) => {
                         this.setState({
                             competitionsLoading: true,
@@ -77,6 +78,7 @@ class SearchResults extends Component {
                 <SearchingField
                     label={"Country:"}
                     placeholder={"Select country"}
+                    defaultValue={''}
                     onChange={(id) => {
                         this.setState({
                             competitionsLoading: true,
@@ -94,6 +96,7 @@ class SearchResults extends Component {
                 <SearchingField
                     label={"Venues:"}
                     placeholder={"Select venue"}
+                    defaultValue={''}
                     onChange={(id) => {
                         this.setState({
                             competitionsLoading: true,
@@ -102,15 +105,16 @@ class SearchResults extends Component {
                     }}
                 >
                     <Select.Option value={""}>All venues</Select.Option>
-                    {this.state.venues.map(venues =>
-                        <Select.Option key={venues.id} value={venues.id}>
-                            {venues.name}
+                    {this.state.venues.map(venue =>
+                        <Select.Option key={venue.id} value={venue.id}>
+                            {venue.name}, {venue.city.name}
                         </Select.Option>)}
                 </SearchingField>
 
                 <SearchingField
                     label={"Size of hill:"}
                     placeholder={"Select size"}
+                    defaultValue={''}
                     onChange={(id) => {
                         this.setState({
                             competitionsLoading: true,

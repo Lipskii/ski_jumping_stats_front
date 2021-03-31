@@ -139,37 +139,41 @@ class DBAthletes extends Component {
         console.log(values)
         let successful = true
         let modalText = values.firstName + " " + values.lastName + " added."
-        axios.post('api/skiJumpers', {
-            person: {
-                firstName: values.firstName,
-                lastName: values.lastName,
-                gender: this.state.genders.find(gender => gender.id === parseInt(values.genderId)),
-                birthdate: values.birthdate,
-                country: this.state.countries.find(country => country.id === parseInt(values.countryId)),
-                city: this.state.cities.find(city => city.id === parseInt(values.cityId))
-            },
-            isActive: values.active,
-            fisCode: values.fisCode,
-            skis: this.state.skis.find(skis => skis.id === parseInt(values.skisId)),
-            skiClub: this.state.clubsForForm.find(club => club.id === parseInt(values.clubId))
+        axios.post('/api/people', {
+            firstName: values.firstName,
+            lastName: values.lastName,
+            gender: this.state.genders.find(gender => gender.id === parseInt(values.genderId)),
+            birthdate: values.birthdate,
+            country: this.state.countries.find(country => country.id === parseInt(values.countryId)),
+            city: this.state.cities.find(city => city.id === parseInt(values.cityId))
         })
             .then(res => {
-                const formData = new FormData();
-                formData.append('file', values.file)
-                axios.post('/api/people/photo/' + res.data.person.id, formData)
-                    .then((res) => {
-                        this.filter()
+                console.log(res)
+                axios.post('api/skiJumpers', {
+                    person: res.data,
+                    isActive: values.active,
+                    fisCode: values.fisCode,
+                    skis: this.state.skis.find(skis => skis.id === parseInt(values.skisId)),
+                    skiClub: this.state.clubsForForm.find(club => club.id === parseInt(values.clubId))
+                })
+                    .then(res => {
+                        const formData = new FormData();
+                        formData.append('file', values.file)
+                        axios.post('/api/people/photo/' + res.data.person.id, formData)
+                            .then(() => {
+                                this.filter()
+                            })
+                            .catch(error => {
+                                console.log(error)
+                                successful = false
+                                modalText = "Athlete added, but there was a problem with photo."
+                            })
                     })
                     .catch(error => {
                         console.log(error)
                         successful = false
-                        modalText = "Athlete added, but there was a problem with photo."
+                        modalText = "Ups, there was a problem. Try again."
                     })
-            })
-            .catch(error => {
-                console.log(error)
-                successful = false
-                modalText = "Ups, there was a problem. Try again."
             })
             .finally(() => {
                 this.setState({
@@ -177,7 +181,7 @@ class DBAthletes extends Component {
                     completedModalText: modalText,
                     completedModalStatus: successful,
                     showAddingModal: false,
-                })
+                }, () => this.filter())
             })
     }
 
@@ -462,7 +466,6 @@ class DBAthletes extends Component {
                         currentCountry={this.state.currentCountry}
                         genders={this.state.genders}
                         skis={this.state.skis}
-                        updateCities={this.updateToCountry}
                         isEdit={false}
                         onSubmit={(values) => {
                             this.setState({
@@ -495,7 +498,6 @@ class DBAthletes extends Component {
                         currentCountry={this.state.currentCountry}
                         genders={this.state.genders}
                         skis={this.state.skis}
-                        updateCities={this.updateToCountry}
                         isEdit={true}
                         onSubmit={(values) => {
                             this.setState({

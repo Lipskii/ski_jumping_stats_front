@@ -34,7 +34,7 @@ class Results extends Component {
 
         axios.all([
             axios.get('/api/cities'),
-            axios.get('/api/competitions?seriesMajorId=10&season=2021'),
+            axios.get('/api/competitions?seriesMajorId=9&season=2021'),
             axios.get('/api/competitions?hasResults=true'),
             axios.get('/api/competitions?hasResults=true&after=' + date),
             axios.get('/api/countries'),

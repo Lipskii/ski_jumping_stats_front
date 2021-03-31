@@ -328,6 +328,7 @@ class Jury extends Component {
                         countries={this.state.countriesWithPeople}
                         filterByCountry={this.filterFormPeople}
                         juryTypes={this.state.juryTypes}
+                        onHidePersonModal={this.filter}
                         people={this.state.people}
                         updateCities={this.updateToCountry}
                         onSubmit={(values) => {

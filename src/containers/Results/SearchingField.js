@@ -13,11 +13,13 @@ const SearchingField = ({children,...props}) => {
             </Col>
             <Col sm={10}>
                 <Select
+                    {...props}
                     showSearch
                     style={{width: "100%"}}
                     placeholder={props.placeholder}
                     onChange={id => props.onChange(id)}
                     optionFilterProp="children"
+
                     filterOption={(input, option) =>
                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }

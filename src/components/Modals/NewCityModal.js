@@ -18,7 +18,7 @@ class NewCityModal extends Component {
 
 
     componentDidMount() {
-        this.updateRegions()
+
     }
 
     updateRegions = () => {
@@ -38,6 +38,7 @@ class NewCityModal extends Component {
     }
 
     onSubmit = (values) => {
+        console.log(values)
         axios.post("/api/cities",{
             name: values.name,
             region: this.state.regions.find(region => region.id = values.regionId)
