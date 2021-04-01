@@ -28,8 +28,7 @@ class ShowResults extends Component {
                 this.setState({
                     competition: res.data[0],
                 }, () => {
-                    this.loadComponent(this.state.competition.hillVersion.hill.venue.city.region.country.code)
-                    console.log("PO IMPORT")
+                    this.loadFlag(this.state.competition.hillVersion.hill.venue.city.region.country.code)
                 })
             })
             .catch(error => {
@@ -38,7 +37,7 @@ class ShowResults extends Component {
 
     }
 
-    loadComponent = (code) => {
+    loadFlag = (code) => {
         if (code !== undefined) {
             import(`../../assets/flags/${code}.png`)
                 .then(res => {
@@ -83,41 +82,41 @@ class ShowResults extends Component {
                                 }}>
                                     <div style={{marginBottom: "20px", height: "20%"}}>
                                         <AccordionWithPadding defaultActiveKey="0">
-                                        <Card>
-                                            <Accordion.Toggle as={Card.Header} eventKey="0">
-                                                Basic info
-                                            </Accordion.Toggle>
-                                            <Accordion.Collapse eventKey="0">
-                                            <ListGroup variant="flush">
-                                                <ListGroup.Item style={{fontSize: "13px"}}>
-                                                    <label style={{marginRight: "5px"}}>Date:</label>
-                                                    <b>{this.state.competition.date1}</b>
-                                                </ListGroup.Item>
-                                                <ListGroup.Item style={{fontSize: "13px"}}>
-                                                    <label style={{marginRight: "5px"}}>City:</label>
-                                                    <img
-                                                        alt={this.state.competition.hillVersion.hill.venue.city.region.country.code}
-                                                        src={this.state.locationFlag}
-                                                        style={{height: "15px", marginRight: "2px"}}/>
-                                                    <b>  {this.state.competition.hillVersion.hill.venue.city.name}</b>
-                                                </ListGroup.Item>
-                                                <ListGroup.Item style={{fontSize: "13px"}}>
-                                                    <label style={{marginRight: "5px"}}>Hill:</label>
-                                                    <b>{this.state.competition.hillVersion.hill.name}</b>
-                                                </ListGroup.Item>
-                                                <ListGroup.Item style={{fontSize: "13px"}}>
-                                                    <label style={{marginRight: "5px"}}>K:</label>
-                                                    <b>{this.state.competition.hillVersion.kPoint} m</b>
-                                                </ListGroup.Item>
-                                                {this.state.competition.hillVersion.hillSize !== null ?
-                                                    <ListGroup.Item style={{fontSize: "13px"}}>
-                                                        <label style={{marginRight: "5px"}}>HS:</label>
-                                                        <b>{this.state.competition.hillVersion.hillSize} m</b>
-                                                    </ListGroup.Item>
-                                                    : null}
-                                            </ListGroup>
-                                            </Accordion.Collapse>
-                                        </Card>
+                                            <Card>
+                                                <Accordion.Toggle as={Card.Header} eventKey="0">
+                                                    Basic info
+                                                </Accordion.Toggle>
+                                                <Accordion.Collapse eventKey="0">
+                                                    <ListGroup variant="flush">
+                                                        <ListGroup.Item style={{fontSize: "13px"}}>
+                                                            <label style={{marginRight: "5px"}}>Date:</label>
+                                                            <b>{this.state.competition.date1}</b>
+                                                        </ListGroup.Item>
+                                                        <ListGroup.Item style={{fontSize: "13px"}}>
+                                                            <label style={{marginRight: "5px"}}>City:</label>
+                                                            <img
+                                                                alt={this.state.competition.hillVersion.hill.venue.city.region.country.code}
+                                                                src={this.state.locationFlag}
+                                                                style={{height: "15px", marginRight: "2px"}}/>
+                                                            <b>  {this.state.competition.hillVersion.hill.venue.city.name}</b>
+                                                        </ListGroup.Item>
+                                                        <ListGroup.Item style={{fontSize: "13px"}}>
+                                                            <label style={{marginRight: "5px"}}>Hill:</label>
+                                                            <b>{this.state.competition.hillVersion.hill.name}</b>
+                                                        </ListGroup.Item>
+                                                        <ListGroup.Item style={{fontSize: "13px"}}>
+                                                            <label style={{marginRight: "5px"}}>K:</label>
+                                                            <b>{this.state.competition.hillVersion.kPoint} m</b>
+                                                        </ListGroup.Item>
+                                                        {this.state.competition.hillVersion.hillSize !== null ?
+                                                            <ListGroup.Item style={{fontSize: "13px"}}>
+                                                                <label style={{marginRight: "5px"}}>HS:</label>
+                                                                <b>{this.state.competition.hillVersion.hillSize} m</b>
+                                                            </ListGroup.Item>
+                                                            : null}
+                                                    </ListGroup>
+                                                </Accordion.Collapse>
+                                            </Card>
                                             <Card>
                                                 <Accordion.Toggle as={Card.Header} eventKey="1">
                                                     Jury
@@ -125,11 +124,14 @@ class ShowResults extends Component {
                                                 <Accordion.Collapse eventKey="1">
                                                     <ListGroup variant="flush">
                                                         <ListGroup.Item style={{fontSize: "13px"}}>
-                                                            <label style={{marginRight: "5px"}}>Race director:</label>
-                                                            <b>
-                                                                {this.state.competition.raceDirector.person.firstName} {this.state
-                                                                .competition.raceDirector.person.lastName}
-                                                            </b>
+                                                            {this.state.competition.raceDirector != null ? <div>
+                                                                <label style={{marginRight: "5px"}}>Race
+                                                                    director:</label>
+                                                                <b>
+                                                                    {this.state.competition.raceDirector.person.firstName} {this.state
+                                                                    .competition.raceDirector.person.lastName}
+                                                                </b>
+                                                            </div> : <div>no info</div>}
                                                         </ListGroup.Item>
                                                     </ListGroup>
                                                 </Accordion.Collapse>

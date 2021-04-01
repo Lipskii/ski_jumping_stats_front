@@ -2,10 +2,8 @@ import React, {Component} from "react";
 import axios from "axios";
 import {Col, Container, Row} from "react-bootstrap";
 import Loader from "react-loader-spinner";
-import UpcomingCompetitions from "../Results/UpcomingCompetitions";
-import LatestResults from "../Results/LatestResults";
-import SearchResults from "../Results/SearchResults";
 import SearchSkiJumpers from "./SearchSkiJumpers";
+
 
 
 
@@ -26,6 +24,7 @@ class SkiJumpers extends Component {
         series: [],
         sizesOfHill: [],
         skiClubs: [],
+        skiJumpers: [],
         skis: [],
         upcomingCompetitions: [],
         venues: []
@@ -69,9 +68,8 @@ class SkiJumpers extends Component {
     render() {
         console.log(this.state)
         return (
-            <div style={{marginLeft: "30px", paddingBottom: "10px"}}>
+            <div style={{marginRight: "10%", marginLeft: "10%", paddingBottom: "10px"}}>
                 {!this.state.pageLoading ? <Container fluid>
-                    <Row>
                         <SearchSkiJumpers
                             countries={this.state.countries}
                             competitions={this.state.competitions}
@@ -81,10 +79,6 @@ class SkiJumpers extends Component {
                             skiJumpers={this.state.skiJumpers}
                             skis={this.state.skis}
                         />
-                        <Col sm={4}>
-                            {/*<UpcomingCompetitions competitions={this.state.upcomingCompetitions}/>*/}
-                        </Col>
-                    </Row>
                 </Container> : <Loader
                     type="ThreeDots"
                     color="#00BFFF"

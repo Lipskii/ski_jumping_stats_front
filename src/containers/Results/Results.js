@@ -29,7 +29,7 @@ class Results extends Component {
     componentDidMount() {
         console.log(Date())
         let today = new Date(),
-            date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();
+            date = today.getFullYear() + '-' + ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2);
         console.log(date)
 
         axios.all([

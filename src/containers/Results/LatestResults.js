@@ -9,7 +9,7 @@ const LatestResults = (props) => {
             <div style={{
                 marginTop: '20px',
                 borderRadius: "10px",
-                paddingLeft: "10px",
+                //paddingLeft: "10px",
             }}>
                 <h6 style={{marginBottom: "10px"}}>Latest results</h6>
                 {props.competitions.slice(0, 6).map(competition => (
@@ -29,6 +29,9 @@ const LatestResults = (props) => {
                                     className="mr-3"
                                     src={fisLogo}
                                     alt="Generic placeholder"
+                                    style={{
+                                        marginLeft: "5px"
+                                    }}
                                 />
                                 <Media.Body>
                                         <ul style={{listStyleType: "none"}}>
@@ -38,7 +41,8 @@ const LatestResults = (props) => {
                                                     src={'./flags/' + result.skiJumper.person.country.code + '.png'}
                                                     style={{
                                                         height: "15px",
-                                                        marginRight: "5px"
+                                                        marginRight: "5px",
+                                                       // marginLeft: "5px"
                                                     }}/> {result.skiJumper.person.firstName} {result.skiJumper.person.lastName} <b>{result.totalPoints} p.</b>
                                                 </li>
                                             ))}

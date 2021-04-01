@@ -21,7 +21,10 @@ const ResultsTableAthleteRow = (props) => {
                 className="mr-3"
                 src={flag}
                 alt={props.result.skiJumper.person.country.code}
-            /> {props.result.skiJumper.person.firstName} {props.result.skiJumper.person.lastName}
+            /> <a
+            href={'/skiJumper/' + props.result.skiJumper.id}
+            style={{color: "black"}}
+        > {props.result.skiJumper.person.firstName} {props.result.skiJumper.person.lastName} </a>
         </td>
     )
 }

@@ -1,10 +1,12 @@
 import {Col, Row} from "react-bootstrap";
 import React, {Component, useEffect, useState} from "react";
-import {DatePicker, Select} from "antd";
+import {DatePicker, Input, Select} from "antd";
 import axios from "axios";
 import SearchingField from "../Results/SearchingField";
 import CompetitionsTable from "../Results/CompetitionsTable";
 import SkiJumpersTable from "./SkiJumpersTable";
+
+const {RangePicker} = DatePicker;
 
 class SearchSkiJumpers extends Component {
 
@@ -16,11 +18,14 @@ class SearchSkiJumpers extends Component {
         filterCityId: '',
         filterCountryId: '',
         filterGenderId: '',
+        filterLastName: '',
         filterSeason: '',
         filterSeriesId: '',
         filterSizeId: '',
         filterSkiClubId: '',
         filterVenueId: '',
+        filterYearAfter: '',
+        filterYearBefore: '',
         genders: [],
         series: [],
         skiClubs: [],
@@ -42,12 +47,22 @@ class SearchSkiJumpers extends Component {
     }
 
     filter = () => {
-        console.log(this.state)
+        // let lastNamePathPart
+        // console.log("FILTER")
+        // if(this.state.filterLastName === '' ){
+        //     lastNamePathPart = ''
+        // } else {
+        //     lastNamePathPart = '&lastNameLike=' + this.state.filterLastName
+        // }
+        // console.log(lastNamePathPart)
         axios.get('/api/skiJumpers?&countryId=' + this.state.filterCountryId
             + '&cityId=' + this.state.filterCityId
             + '&genderId=' + this.state.filterGenderId
             + '&isActive=' + this.state.filterActive
             + '&skiClubId=' + this.state.filterSkiClubId
+            + '&bornAfter=' + this.state.filterYearAfter
+            + '&bornBefore=' + this.state.filterYearBefore
+            // + lastNamePathPart
         )
             .then(res => {
                 this.setState({
@@ -61,7 +76,7 @@ class SearchSkiJumpers extends Component {
     render() {
         console.log(this.state)
         return (
-            <Col sm={8}>
+            <div>
                 <Row>
                     <h3 style={{margin: "auto", marginBottom: "10px"}}>Search Ski Jumpers</h3>
                 </Row>
@@ -154,17 +169,33 @@ class SearchSkiJumpers extends Component {
                         </Select.Option>)}
                 </SearchingField>
 
+                <Row style={{marginBottom: "10px"}}>
+                    <Col sm={2}>
+                        <label>Born between:</label>
+                    </Col>
+                    <Col sm={10}>
+                        <RangePicker
+                            picker="year"
+                            onChange={(e) => {
 
+                                this.setState({
+                                    competitionsLoading: true,
+                                    filterYearAfter: e[0]._d.toISOString().slice(0, 10),
+                                    filterYearBefore: e[1]._d.toISOString().slice(0, 10)
+                                }, () => this.filter())
+                            }}
+                        />
+                    </Col>
+                </Row>
 
-                <Row style={{margin: "auto"}}>
+                <Row>
                     {this.state.skiJumpers.length > 0 ? <SkiJumpersTable
                         skiJumpers={this.state.skiJumpers}
                         skiJumpersLoading={this.state.skiJumpersLoading}
                     /> : <p style={{textAlign: "center"}}>No jumpers found</p>}
                 </Row>
 
-
-            </Col>
+            </div>
         )
     }
 }

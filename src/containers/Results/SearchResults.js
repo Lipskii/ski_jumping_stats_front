@@ -137,7 +137,9 @@ class SearchResults extends Component {
                         <DatePicker
                             picker="year"
                             placeholder={"Select season"}
+                          //  defaultValue={'2021-01-01'}
                             onChange={(e) => {
+                                console.log(e)
                                 let year
                                 if (e !== null) {
                                     year = e._d.getFullYear()

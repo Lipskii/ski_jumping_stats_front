@@ -7,6 +7,7 @@ import Results from "./containers/Results/Results";
 import ShowResults from "./containers/Results/ShowResults";
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 import SkiJumpers from "./containers/SkiJumpers/SkiJumpers";
+import ShowSkiJumper from "./containers/SkiJumpers/ShowSkiJumper";
 
 const asyncVenues = asyncComponent(() => {
     return import("./containers/DB/Venues/DBVenues")
@@ -42,6 +43,7 @@ class App extends Component {
                 <Route path="/results" component={Results}/>
                 <Route path="/skiJumpers" component={SkiJumpers}/>
                 <Route path="/showResults/:competition" exact component={ShowResults}/>
+                <Route path="/skiJumper/:skiJumper" exact component={ShowSkiJumper}/>
                 <Route path="/" component={HomePage}/>
                 <Route component={NotFound}/>
             </Switch>

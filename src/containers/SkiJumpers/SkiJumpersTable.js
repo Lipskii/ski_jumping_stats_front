@@ -68,7 +68,7 @@ const SkiJumpersTable = (props) => {
                                             <div>{skiJumper.skiClub.name}</div> : null}</td>
                                         <td>{skiJumper.skis !== null ? <div>{skiJumper.skis.brand}</div> : null}</td>
                                         <td>
-                                            {/*<LinkContainer to={'/skiJumper/' + skiJumper.id}>*/}
+                                            <LinkContainer to={'/skiJumper/' + skiJumper.id}>
                                             <TableButton id={skiJumper.id + "tbEdit"}
                                                          name={skiJumper.name}
                                                          size="sm"
@@ -76,7 +76,7 @@ const SkiJumpersTable = (props) => {
                                             >
                                                 Read more
                                             </TableButton>
-                                            {/*</LinkContainer>*/}
+                                            </LinkContainer>
 
                                         </td>
                                     </tr>
