@@ -1,16 +1,9 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {AccordionWithPadding, StyledDivCentered1200, TableButton} from "../../components/StyledComponents";
+import {AccordionWithPadding} from "../../components/StyledComponents";
 import Loader from "react-loader-spinner";
 import fisLogo from "../../assets/fis_logo.png";
-import {LinkContainer} from "react-router-bootstrap";
-import {Accordion, Button, Card, Col, Container, ListGroup, Media, Row, Table} from "react-bootstrap";
-import SearchResults from "./SearchResults";
-import UpcomingCompetitions from "./UpcomingCompetitions";
-import LatestResults from "./LatestResults";
-import SearchingField from "./SearchingField";
-import {DatePicker, Select} from "antd";
-import CompetitionsTable from "./CompetitionsTable";
+import {Accordion, Card, Col, Container, ListGroup, Row} from "react-bootstrap";
 import ResultsTable from "./ResultsTable";
 
 
@@ -62,14 +55,21 @@ class ShowResults extends Component {
                         <Row>
                             <Col sm={8}>
                                 <Row>
-                                    <h3 style={{margin: "auto", marginBottom: "10px"}}><img
-                                        width={64}
-                                        height={64}
-                                        className="mr-3"
-                                        src={fisLogo}
-                                        alt="Generic placeholder"
-                                    /> {this.state.competition.seriesMajor.name}</h3>
+                                    <h3 style={{margin: "auto", marginBottom: "10px"}}>
+                                        <img
+                                            width={64}
+                                            height={64}
+                                            className="mr-3"
+                                            src={fisLogo}
+                                            alt="Generic placeholder"
+                                        /> {this.state.competition.seriesMajor.name} </h3>
                                 </Row>
+                                {this.state.competition.seriesMinor !== null ?
+                                    <Row>
+                                        <small style={{margin: "auto", marginBottom: "10px"}}>
+                                            ({this.state.competition.seriesMinor.name})
+                                        </small>
+                                    </Row> : null}
                                 <Row>
                                     <ResultsTable results={this.state.competition.results}/>
                                 </Row>

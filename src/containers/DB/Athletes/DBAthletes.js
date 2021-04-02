@@ -371,6 +371,7 @@ class DBAthletes extends Component {
                                 <thead>
                                 <tr>
                                     <th>Athlete</th>
+                                    <th>Code</th>
                                     <th>Gender</th>
                                     <th>Birthdate</th>
                                     <th>City</th>
@@ -387,6 +388,7 @@ class DBAthletes extends Component {
                                         return (
                                             <tr key={athlete.id} id={athlete.id}>
                                                 <td>{athlete.person.firstName} {athlete.person.lastName}</td>
+                                                <td>{athlete.fisCode}</td>
                                                 <td style={{textAlign: "center"}}>{athlete.person.gender.gender.charAt(0)}</td>
                                                 <td>{athlete.person.birthdate}</td>
                                                 <td>{athlete.person.city !== null ?

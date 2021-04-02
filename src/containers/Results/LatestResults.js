@@ -43,7 +43,10 @@ const LatestResults = (props) => {
                                                         height: "15px",
                                                         marginRight: "5px",
                                                        // marginLeft: "5px"
-                                                    }}/> {result.skiJumper.person.firstName} {result.skiJumper.person.lastName} <b>{result.totalPoints} p.</b>
+                                                    }}/> <a
+                                                    href={'/skiJumper/' + result.skiJumper.id}
+                                                    style={{color: "black"}}
+                                                > {result.skiJumper.person.firstName} {result.skiJumper.person.lastName}  </a>  <b>{result.totalPoints} p.</b>
                                                 </li>
                                             ))}
                                             <LinkContainer to={'/showResults/' + competition.id}>
