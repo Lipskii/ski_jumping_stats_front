@@ -33,7 +33,7 @@ class SkiJumpers extends Component {
     componentDidMount() {
         axios.all([
             axios.get('/api/cities?hasPeople=true'),
-            axios.get('/api/countries'),
+            axios.get('/api/countries?hasPeople=true'),
             axios.get('/api/genders'),
             axios.get('/api/skiClubs?hasJumpers=true'),
             axios.get('/api/skiJumpers'),

@@ -74,7 +74,7 @@ export const SmallTd = styled.td`
 
 export const StyledDivCentered1200 = styled.div`
   margin: auto;
-  max-width: 1200px;
+  max-width: 1300px;
 `
 
 export const StyledDiv1 = styled.div`

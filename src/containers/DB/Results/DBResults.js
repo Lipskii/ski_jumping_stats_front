@@ -6,11 +6,12 @@ import DeleteModal from "../../../components/Modals/DeleteModal";
 import {Header3, Header5, StyledDivCentered1200, TableButton} from "../../../components/StyledComponents";
 import ResultsForm from "./ResultsForm";
 import Loader from "react-loader-spinner";
-import {Pagination, Table} from "react-bootstrap";
+import {Button, Pagination, Table} from "react-bootstrap";
 import CompetitionReadMoreModal from "./CompetitionReadMoreModal";
 import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
 import ResultsModal from "./ResultsModal";
 import AddResultsModal from "./AddResultsModal";
+import AddQualificationsModal from "./AddQualificationsModal";
 
 
 class DBResults extends Component {
@@ -45,6 +46,8 @@ class DBResults extends Component {
         showDeleteModal: false,
         showReadMoreModal: false,
         showResultsModal: false,
+        showQualificationsModal: false,
+        qualificationsCompetition: '',
         venues: [],
         technicalDelegates: [],
         weather: []
@@ -136,9 +139,7 @@ class DBResults extends Component {
     }
 
     postCompetition = (values) => {
-        console.log(values)
         let successful = true
-
         let dataValues = {
             season: this.state.seasons.find(season => season.id === parseInt(values.seasonId)),
             date1: values.date1,
@@ -211,14 +212,8 @@ class DBResults extends Component {
         }
         axios.post("/api/competitions", {...dataValues})
             .then(res => {
-                if (values.resultsCsv !== '') {
-                    console.log(res)
-                    const formData = new FormData();
-                    formData.append('csv', values.resultsCsv)
-                    // const formDataPdf = new FormData()
-                    // formData.append('pdf', values.resultsPdf)
-                    // console.log(formDataPdf)
-                    axios.post('/api/results/files/csv/' + res.data.id, formData)
+                if (values.resultsLink !== '') {
+                    axios.post('/api/results/link/' + res.data.id, values.resultsLink)
                         .then(res => console.log(res))
                         .catch(error => {
                             console.log(error)
@@ -249,9 +244,7 @@ class DBResults extends Component {
 
     postResults = (values) => {
         let successful = true
-        const formData = new FormData();
-        formData.append('csv', values.file)
-        axios.post('/api/results/files/csv/' + this.state.addResultsCompetition.id, formData)
+        axios.post('/api/results/link/' + this.state.addResultsCompetition.id, values.resultsLink)
             .then(res => console.log(res))
             .catch(error => {
                 console.log(error)
@@ -267,6 +260,29 @@ class DBResults extends Component {
             })
     }
 
+    postQualifications = (values) => {
+        let successful = true
+        const data = {
+            competition: this.state.qualificationsCompetition,
+            ...values
+        }
+        axios.post("/api/qualifications", data)
+            .then(res => console.log(res.data))
+            .catch(e => {
+                console.log(e)
+                successful = false
+            })
+            .finally(() => {
+                    this.setState({
+                        completedModalStatus: successful,
+                        showCompletedModal: true,
+                        showAddingModal: false,
+                    //    showQualificationsModal: false
+                    }, () => this.filter())
+                }
+            )
+
+    }
 
     filter = () => {
         axios.get('/api/competitions?seasonId=' + this.state.filterSeasonId
@@ -333,6 +349,23 @@ class DBResults extends Component {
                     status={this.state.completedModalStatus}
                 />
 
+                {this.state.showQualificationsModal ?
+                    <AddQualificationsModal
+                        show={this.state.showQualificationsModal}
+                        judges={this.state.judges}
+                        weather={this.state.weather}
+                        onHide={() => this.setState({
+                            showQualificationsModal: false,
+                            qualificationsCompetition: ''
+                        })}
+                        onSubmit={(values) => {
+                            this.setState({
+                                showAddingModal: true
+                            }, () => this.postQualifications(values))
+                        }}
+                    />
+                    : null}
+
                 {this.state.showDeleteModal ?
                     <DeleteModal
                         show={this.state.showDeleteModal}
@@ -372,7 +405,6 @@ class DBResults extends Component {
                 <Header3>Results</Header3>
 
                 <StyledDivCentered1200>
-
                     {/*Select Country*/}
                     <strong>Filter</strong>
                     <SelectInputForm
@@ -528,7 +560,7 @@ class DBResults extends Component {
 
                                                         </td>
                                                         <td>{competition.hillVersion.hill.name}</td>
-                                                        <td style={{width: "250px"}}>
+                                                        <td style={{textAlign: "center"}}>
                                                             {competition.results.length > 0 ?
                                                                 <TableButton id={competition.id + "tbEdit"}
                                                                              name={competition.name}
@@ -555,6 +587,34 @@ class DBResults extends Component {
                                                                              }
                                                                              }>
                                                                     Add results
+                                                                </TableButton>}
+
+                                                            {competition.qualification !== null ?
+                                                                <TableButton id={competition.id}
+                                                                             name={competition.name}
+                                                                             size="sm"
+                                                                             variant={"outline-info"}
+                                                                             onClick={() => {
+                                                                                 this.setState({
+                                                                                     showQualificationsModal: true,
+                                                                                     qualificationsCompetition: competition,
+                                                                                 })
+                                                                             }
+                                                                             }>
+                                                                    Edit qualifying
+                                                                </TableButton> :
+                                                                <TableButton id={competition.id}
+                                                                             name={competition.name}
+                                                                             size="sm"
+                                                                             variant={"outline-warning"}
+                                                                             onClick={() => {
+                                                                                 this.setState({
+                                                                                     showQualificationsModal: true,
+                                                                                     qualificationsCompetition: competition,
+                                                                                 })
+                                                                             }
+                                                                             }>
+                                                                    Add qualifiying
                                                                 </TableButton>}
                                                             <TableButton id={competition.id + "tbDelete"}
                                                                          name={competition.name} size="sm"

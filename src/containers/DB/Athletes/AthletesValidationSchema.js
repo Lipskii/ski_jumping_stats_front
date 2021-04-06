@@ -11,8 +11,7 @@ const SUPPORTED_FORMATS = [
 export const AthletesValidationSchema = () => Yup.object(
     {
         active: Yup.bool(),
-        birthdate: Yup.date()
-            .required('Required'),
+        birthdate: Yup.date(),
         cityId: Yup.number(),
         clubId: Yup.number(),
         countryId: Yup.number()
@@ -24,8 +23,7 @@ export const AthletesValidationSchema = () => Yup.object(
         fisCode: Yup.number(),
         genderId: Yup.number()
             .required('Required'),
-        skisId: Yup.number()
-            .required('Required'),
+        skisId: Yup.number(),
         file: Yup.mixed()
             .required("A file is required")
             .test(

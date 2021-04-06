@@ -4,6 +4,7 @@ import {Formik} from "formik";
 import {Button, Form, Modal} from "react-bootstrap";
 import {ErrorLabel, Header3, StyledDiv2Right1200} from "../../../components/StyledComponents";
 import * as Yup from 'yup'
+import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";
 
 //TODO add on submit
 const AddResultsModal = (props) => {
@@ -17,11 +18,11 @@ const AddResultsModal = (props) => {
             <Formik
                 isInitialValid={false}
                 initialValues={{
-                    file: ''
+                    resultsLink: ''
                 }}
                 validationSchema={Yup.object({
-                    file: Yup.mixed()
-                        .required("A file is required")
+                    resultsLink: Yup.string()
+                        .url('Must be an URL')
                 })}
                 onSubmit={(values) => {
                     props.onSubmit(values)
@@ -44,14 +45,10 @@ const AddResultsModal = (props) => {
                                 handleSubmit()
                             }}
                         >
-                            <Form.Group>
-                                <input id="file" name="file" type="file" onChange={(event) => {
-                                    setFieldValue("file", event.currentTarget.files[0]);
-                                }}/>
-                                {touched.file && errors.file ? (
-                                    <ErrorLabel>{errors.file}</ErrorLabel>
-                                ) : null}
-                            </Form.Group>
+                            <FormikTextInputForm
+                                name="resultsLink"
+                                label="Link to results:"
+                            />
 
                             <StyledDiv2Right1200>
                                 <Button type={"submit"}>Submit</Button>

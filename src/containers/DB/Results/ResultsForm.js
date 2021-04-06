@@ -94,8 +94,7 @@ const ResultsForm = (props) => {
                 judgeSCId: '',
                 meterValue: '',
                 raceDirectorId: '',
-                resultsCsv: '',
-                resultsPdf: '',
+                resultsLink: '',
                 seasonId: '',
                 secondRoundAirTempStart: '',
                 secondRoundAirTempFinish: '',
@@ -155,8 +154,7 @@ const ResultsForm = (props) => {
                                     (errors['seriesMajorId'] !== undefined && touched['seriesMajorId']) ||
                                     (errors['hillVersionId'] !== undefined && touched['hillVersionId']) ||
                                     (errors['seasonId'] !== undefined && touched['seasonId']) ||
-                                    (errors['resultsCsv'] !== undefined && touched['resultsCsv']) ||
-                                    (errors['resultsPdf'] !== undefined && touched['resultsPdf']) ||
+                                    (errors['resultsLink'] !== undefined && touched['resultsLink']) ||
                                     (errors['cancelledAtRound'] !== undefined && touched['cancelledAtRound']) ||
                                     (errors['date1'] !== undefined && touched['date1']) ?
                                         <text style={{marginRight: "2px"}}>errors</text> : null
@@ -286,29 +284,10 @@ const ResultsForm = (props) => {
                                         style={{width: "100px"}}
                                     />
 
-                                    <Form.Group as={Row}>
-                                        <Form.Label column sm={2}>Results (CSV):</Form.Label>
-                                        <Col sm={10}>
-                                            <input id="fileCsv" name="resultsCsv" type="file" onChange={(event) => {
-                                                setFieldValue("resultsCsv", event.currentTarget.files[0]);
-                                            }}/>
-                                            {touched.file && errors.file ? (
-                                                <ErrorLabel>{errors.file}</ErrorLabel>
-                                            ) : null}
-                                        </Col>
-                                    </Form.Group>
-
-                                    <Form.Group as={Row}>
-                                        <Form.Label column sm={2}>Results (PDF):</Form.Label>
-                                        <Col sm={10}>
-                                            <input id="filePdf" name="resultsPdf" type="file" onChange={(event) => {
-                                                setFieldValue("resultsPdf", event.currentTarget.files[0]);
-                                            }}/>
-                                            {touched.file && errors.file ? (
-                                                <ErrorLabel>{errors.file}</ErrorLabel>
-                                            ) : null}
-                                        </Col>
-                                    </Form.Group>
+                                    <FormikTextInputForm
+                                        name="resultsLink"
+                                        label="Link to results:"
+                                    />
 
                                 </Card.Body>
                             </Accordion.Collapse>

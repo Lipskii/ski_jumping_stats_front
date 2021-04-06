@@ -215,8 +215,8 @@ class DBAthletes extends Component {
         console.log(this.state)
 
         let items = [];
-        let numberOfPages = this.state.athletes.length / 8
-        if (this.state.athletes.length % 8 !== 0) {
+        let numberOfPages = this.state.athletes.length / 15
+        if (this.state.athletes.length % 15 !== 0) {
             numberOfPages++
         }
 
@@ -384,7 +384,7 @@ class DBAthletes extends Component {
                                 </thead>
                                 <tbody>
                                 {this.state.athletes.map(athlete => {
-                                    if (((this.state.activePage - 1) * 8 <= this.state.athletes.indexOf(athlete)) && (this.state.athletes.indexOf(athlete) < this.state.activePage * 8)) {
+                                    if (((this.state.activePage - 1) * 15 <= this.state.athletes.indexOf(athlete)) && (this.state.athletes.indexOf(athlete) < this.state.activePage * 15)) {
                                         return (
                                             <tr key={athlete.id} id={athlete.id}>
                                                 <td>{athlete.person.firstName} {athlete.person.lastName}</td>

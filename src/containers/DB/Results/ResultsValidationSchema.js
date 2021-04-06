@@ -95,6 +95,8 @@ export const ResultsValidationSchema = () => Yup.object(
             .min(0, 'Value cannot be less than zero.')
             .max(99.9, 'Too large. Value should be less than 100.'),
         raceDirectorId: Yup.number(),
+        resultsLink: Yup.string()
+            .url('Must be an URL'),
         // resultsFile: Yup.mixed()
         //     .required("A file is required")
         //     .test(
