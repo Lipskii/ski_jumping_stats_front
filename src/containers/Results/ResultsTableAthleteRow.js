@@ -10,7 +10,6 @@ const ResultsTableAthleteRow = (props) => {
         import(`../../assets/flags/${props.result.skiJumper.person.country.code}.png`)
             .then(res => {
                 setFlag(res.default)
-                console.log(flag)
             })
     })
 

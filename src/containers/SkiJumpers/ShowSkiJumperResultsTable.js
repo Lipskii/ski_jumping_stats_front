@@ -19,16 +19,28 @@ const ShowSkiJumperTable = (props) => {
                     })
                     .map(result => (
                         <tr>
-                            <td>{result.totalRank < 4 ? <b>{result.totalRank}.</b> : <div>{result.totalRank}</div>}</td>
+                            <td>{result.totalRank < 4 ?
+                                <div>
+                                    {result.totalRank !== 0 ? <b>{result.totalRank}.</b> : <div>DSQ</div>}
+                                </div>
+
+                                :
+                                <div>{result.totalRank}.</div>}</td>
                             <td>{result.competition.date1}</td>
-                            <td><a href={"/showResults/" + result.competition.id} style={{color: "black"}}> {result.competition.seriesMajor.name}</a></td>
+                            <td><a href={"/showResults/" + result.competition.id} style={{color: "black"}}> {result.competition
+                                .seriesMajor.name} {result.competition.seriesMinor !== null ?  <small>
+                                ({result.competition.seriesMinor.name})</small> : null}
+                               </a></td>
                             <td><img
                                 height={24}
                                 className="mr-3"
                                 src={props.photos['result_' + result.id]}
                                 alt="Generic placeholder"/>{result.competition.hillVersion.hill.venue.city.name} (HS: {result.competition.hillVersion.hillSize} m)</td>
                             {result.firstRoundDistance !== null ? <td>{result.firstRoundDistance} m</td> : null}
-                            {result.secondRoundDistance !== null ? <td>{result.secondRoundDistance} m</td> : null}
+                            {result.secondRoundDistance !== null ?
+                                <td>
+                                    {result.secondRoundDistance !== 0 ?  <div>{result.secondRoundDistance} m</div> : null}
+                                </td> : null}
                             {result.thirdRoundDistance !== null ? <td>{result.thirdRoundDistance} m</td> : null}
                             {result.fourthRoundDistance !== null ? <td>{result.fourthRoundDistance} m</td> : null}
                             {result.totalPoints !== null ? <td><b>{result.totalPoints} p.</b></td> : null}
