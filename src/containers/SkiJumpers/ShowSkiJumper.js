@@ -177,7 +177,7 @@ class ShowSkiJumper extends Component {
         console.log(this.state)
 
         return (
-            <div style={{marginLeft: "13%", marginRight: "13%"}}>
+            <div style={{marginLeft: "13%", marginRight: "13%", paddingBottom: "50px"}}>
 
                 <WinsModal
                     show={this.state.showModal}
@@ -265,7 +265,7 @@ class ShowSkiJumper extends Component {
                                     <Table striped size={"sm"} hover>
                                         <th><h6>Major Individual starts</h6></th>
                                         <th style={{textAlign: "center"}}>Starts</th>
-                                        <th colSpan={3}/>
+                                        <th colSpan={3} style={{textAlign: "center"}}>Podiums</th>
                                         {/*<th/>*/}
                                         <tbody>
                                         <tr style={{cursor: "pointer"}}
@@ -363,7 +363,7 @@ class ShowSkiJumper extends Component {
                             </Row>
                         </Col>
 
-                        <div style={{paddingTop: "30px"}}>
+                        <div style={{paddingTop: "20px"}}>
                             <Tabs
                                 defaultActiveKey={this.state.resultsSeasons[0]}
                                 onSelect={season => {
@@ -395,7 +395,6 @@ class ShowSkiJumper extends Component {
     }
 
 }
-
 
 export default ShowSkiJumper
 

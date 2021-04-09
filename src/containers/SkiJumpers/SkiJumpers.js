@@ -22,12 +22,10 @@ class SkiJumpers extends Component {
         pageLoading: true,
         seasons: [],
         series: [],
-        sizesOfHill: [],
         skiClubs: [],
         skiJumpers: [],
         skis: [],
         upcomingCompetitions: [],
-        venues: []
     }
 
     componentDidMount() {
@@ -59,7 +57,6 @@ class SkiJumpers extends Component {
             }))
             .catch(error => console.log(error))
             .finally(() => this.setState({
-                competitionsLoading: false,
                 pageLoading: false,
             }))
     }

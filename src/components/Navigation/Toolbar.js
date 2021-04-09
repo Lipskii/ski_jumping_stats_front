@@ -15,7 +15,9 @@ const Toolbar = () => (
                 <LinkContainer to="/skiJumpers">
                 <Nav.Link>Ski Jumpers</Nav.Link>
                 </LinkContainer>
+                <LinkContainer to="/hills">
                 <Nav.Link>Hills</Nav.Link>
+                </LinkContainer>
                 <NavDropdown title="Series" id="collasible-nav-dropdown">
                     <NavDropdown.Item>Olympic Games</NavDropdown.Item>
                     <NavDropdown.Item>World Championships</NavDropdown.Item>

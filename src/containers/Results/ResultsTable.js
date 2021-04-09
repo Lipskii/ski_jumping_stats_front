@@ -22,7 +22,7 @@ const ResultsTable = (props) => {
                             <td style={{textAlign: "center"}}>{result.totalRank !== 0 ? <div>{result.totalRank}.</div> : <div>DSQ</div> }</td>
                             <ResultsTableAthleteRow result={result}/>
                             <td>{result.firstRoundDistance !== 0 ? <div>{result.firstRoundDistance} m</div> : <div>-</div>}</td>
-                            <td>{result.firstRoundDistance !== 0 ? <div>{result.firstRoundDistance} m</div> : <div>-</div>}</td>
+                            <td>{result.secondRoundDistance !== 0 ? <div>{result.secondRoundDistance} m</div> : <div>-</div>}</td>
                             <td><b>{result.totalPoints !== 0 ? <div>{result.totalPoints} p.</div> : <div>DSQ</div>}</b></td>
                             <td>{result.totalPoints === bestScore ? <div/> : <div>-{(bestScore - result.totalPoints).toFixed(1)}</div> }</td>
                         </tr>

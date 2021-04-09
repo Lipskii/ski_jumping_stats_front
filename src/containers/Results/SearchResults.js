@@ -35,18 +35,29 @@ class SearchResults extends Component {
 
     filter = () => {
         console.log(this.state)
-        axios.get('/api/competitions?seriesMajorId=' + this.state.filterSeriesId
-            + '&countryId=' + this.state.filterCountryId
-            + '&venueId=' + this.state.filterVenueId
-            + '&sizeOfHillId=' + this.state.filterSizeId
-            + '&season=' + this.state.filterSeason)
-            .then(res => {
+        axios.all([
+            axios.get('/api/competitions?seriesMajorId=' + this.state.filterSeriesId
+                + '&countryId=' + this.state.filterCountryId
+                + '&venueId=' + this.state.filterVenueId
+                + '&sizeOfHillId=' + this.state.filterSizeId
+                + '&season=' + this.state.filterSeason),
+            axios.get('/api/venues?hasHills=true'
+                + '&countryId='+ this.state.filterCountryId)
+        ])
+            .then(axios.spread((
+                competitionsData,
+                venuesData
+            ) => {
                 this.setState({
-                    competitions: res.data,
-                    competitionsLoading: false
+                    competitions:  competitionsData.data,
+                    competitionsLoading: false,
+                    venues: venuesData.data
                 })
-            })
+            }))
             .catch(error => console.log(error))
+            .finally(() => this.setState({
+                pageLoading: false,
+            }))
     }
 
     render() {
@@ -94,6 +105,7 @@ class SearchResults extends Component {
                 </SearchingField>
 
                 <SearchingField
+                    key={this.state.venues}
                     label={"Venues:"}
                     placeholder={"Select venue"}
                     defaultValue={''}

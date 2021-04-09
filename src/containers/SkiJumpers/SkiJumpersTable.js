@@ -51,6 +51,7 @@ const SkiJumpersTable = (props) => {
                         {props.skiJumpers.map(skiJumper => {
                             if (((activePage - 1) * numOfSkiJumpers <= props.skiJumpers.indexOf(skiJumper)) && (props.skiJumpers.indexOf(skiJumper) < activePage * numOfSkiJumpers)) {
                                 return (
+                                    <LinkContainer to={'/skiJumper/' + skiJumper.id} style={{cursor: "pointer"}}>
                                     <tr key={skiJumper.id} id={skiJumper.id}>
                                         <td width={"10px"}><img
                                             alt={skiJumper.person.country.code}
@@ -68,7 +69,7 @@ const SkiJumpersTable = (props) => {
                                             <div>{skiJumper.skiClub.name}</div> : null}</td>
                                         <td>{skiJumper.skis !== null ? <div>{skiJumper.skis.brand}</div> : null}</td>
                                         <td>
-                                            <LinkContainer to={'/skiJumper/' + skiJumper.id}>
+
                                             <TableButton id={skiJumper.id + "tbEdit"}
                                                          name={skiJumper.name}
                                                          size="sm"
@@ -76,10 +77,11 @@ const SkiJumpersTable = (props) => {
                                             >
                                                 Read more
                                             </TableButton>
-                                            </LinkContainer>
+
 
                                         </td>
                                     </tr>
+                                    </LinkContainer>
                                 )
                             }
                         })}
