@@ -194,7 +194,7 @@ class ShowSkiJumper extends Component {
                     <Container fluid>
                         <Col>
                             <Row>
-                                <h1 style={{marginBottom: "30px", width: "100%"}}><img
+                                <h1 style={{marginBottom: "60px", width: "100%"}}><img
                                     height={"100%"}
                                     className="mr-3"
                                     src={this.state.photos['jumperFlag']}

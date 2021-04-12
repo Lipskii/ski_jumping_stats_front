@@ -16,6 +16,7 @@ class SearchHills extends Component {
         countries: [],
         filterCityId: '',
         filterCountryId: '',
+        filterSizeId: '',
         filterVenueId: '',
         hills: [],
         hillsLoading: false,
@@ -41,6 +42,7 @@ class SearchHills extends Component {
             axios.get('api/cities?cityId=' + this.state.filterCountryId),
             axios.get('/api/hills?countryId=' + this.state.filterCountryId
                 + '&cityId=' + this.state.filterCityId
+                + '&sizeOfHillId=' + this.state.filterSizeId
                 + '&venueId=' + this.state.filterVenueId),
             axios.get('/api/venues?hasHills=true'
                 + '&countryId='+ this.state.filterCountryId)
@@ -106,7 +108,7 @@ class SearchHills extends Component {
                 </SearchingField>
 
                 <SearchingField
-                    key={this.state.venues}
+             //      key={this.state.venues}
                     label={"Venue:"}
                     defaultValue={""}
                     placeholder={"Select venue"}
@@ -124,10 +126,30 @@ class SearchHills extends Component {
                         </Select.Option>)}
                 </SearchingField>
 
+                <SearchingField
+                    key={this.state.sizes}
+                    label={"Size:"}
+                    defaultValue={""}
+                    placeholder={"Select size"}
+                    onChange={(id) => {
+                        this.setState({
+                            hillsLoading: true,
+                            filterSizeId: id
+                        }, () => this.filter())
+                    }}
+                >
+                    <Select.Option value={""}>All sizes</Select.Option>
+                    {this.state.sizes.map(size =>
+                        <Select.Option key={size.id} value={size.id}>
+                            {size.designation}
+                        </Select.Option>)}
+                </SearchingField>
+
                 <Row>
                     {this.state.hills.length > 0 ? <SearchHillsTable
                         hills={this.state.hills}
                         hillsLoading={this.state.hillsLoading}
+                        hillRecords={this.state.hillRecords}
                     /> : <p style={{textAlign: "center"}}>No hills found</p>}
                 </Row>
             </div>
