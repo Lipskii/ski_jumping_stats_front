@@ -24,7 +24,7 @@ class ShowHill extends Component {
     componentDidMount() {
         axios.all([
             axios.get("/api/hills?id=" + this.props.match.params.hill),
-            axios.get("/api/competitions?hillId" + this.props.match.params.hill + '&hasResults=true')
+            axios.get("/api/competitions?hillId=" + this.props.match.params.hill)
         ])
             .then(axios.spread((
                 hillData,
@@ -34,19 +34,22 @@ class ShowHill extends Component {
                     competitions: competitionsData.data,
                     hill: hillData.data[0]
                 }, () => {
-                    const sortedHillVersions = this.state.hill.hillVersions.sort(function (a, b) {
-                        return new Date(b.validSince) - new Date(a.validSince);
-                    })
-                    this.setHillRecord(sortedHillVersions)
+                    this.setHillRecord(this.state.hill.hillVersions)
                     this.loadPhoto('flags/' + this.state.hill.venue.city.region.country.code, 'hillFlag')
                     this.loadPhoto('athletes/blankProfile', 'hillPhoto')
+
+                    //LOAD WINNERS FLAGS
                     for(const competition of this.state.competitions){
-                        this.loadPhoto('flags/' + competition.results[0].skiJumper.person.country.code, competition.results[0].skiJumper.person.country.code)
+                        for(const result of competition.results){
+                            if(result.totalRank === 1){
+                                this.loadPhoto('flags/' + result.skiJumper.person.country.code, result.skiJumper.person.country.code)
+                            }
+                        }
                     }
 
-                    const latestHillVersion = sortedHillVersions[0]
+                    const latestHillVersion = this.state.hill.hillVersions[0]
 
-                    const oldestHillVersion = sortedHillVersions[sortedHillVersions.length - 1]
+                    const oldestHillVersion = this.state.hill.hillVersions[this.state.hill.hillVersions.length - 1]
 
                     this.setState({
                         latestHillVersion: latestHillVersion,

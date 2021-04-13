@@ -219,7 +219,7 @@ const ResultsForm = (props) => {
                                         <option value={""}>Choose...</option>
                                         {hills.map(hill =>
                                             <option key={hill.id} value={hill.id}>
-                                                {hill.name}
+                                                {hill.name}, {hill.sizeOfHill.designation}
                                             </option>)}
                                     </SelectInputForm>
 

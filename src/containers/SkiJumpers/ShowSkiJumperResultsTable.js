@@ -19,13 +19,12 @@ const ShowSkiJumperTable = (props) => {
                     })
                     .map(result => (
                         <tr>
-                            <td>{result.totalRank < 4 ?
+                            <td>{result.totalRank > 4 ?
                                 <div>
-                                    {result.totalRank !== 0 ? <b>{result.totalRank}.</b> : <div>DSQ</div>}
+                                    {result.totalRank !== 999 ? <div>{result.totalRank}.</div>  : <div>DSQ</div>}
                                 </div>
-
-                                :
-                                <div>{result.totalRank}.</div>}</td>
+                                : <b>{result.totalRank}.</b>
+                                }</td>
                             <td>{result.competition.date1}</td>
                             <td><a href={"/showResults/" + result.competition.id}
                                    style={{color: "black"}}> {result.competition

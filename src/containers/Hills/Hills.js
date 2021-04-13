@@ -58,10 +58,7 @@ class Hills extends Component {
     setHillRecords = (hill) => {
         if (hill.hillVersions.length > 0) {
             let hillRecords = this.state.hillRecords
-            let hillVersions = hill.hillVersions.sort(function (a, b) {
-                return a.validUntil - b.validUntil
-            })
-            axios.get("/api/results/hillRecords?hillVersionId=" + hillVersions[0].id)
+            axios.get("/api/results/hillRecords?hillVersionId=" + hill.hillVersions[0].id)
                 .then(res => {
                     if (res.data.length > 0) {
                         hillRecords.push(...res.data)

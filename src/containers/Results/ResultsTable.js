@@ -19,7 +19,7 @@ const ResultsTable = (props) => {
                 <tbody>
                 {props.results.map(result => (
                         <tr key={result.id} id={result.id}>
-                            <td style={{textAlign: "center"}}>{result.totalRank !== 0 ? <div>{result.totalRank}.</div> : <div>DSQ</div> }</td>
+                            <td style={{textAlign: "center"}}>{result.totalRank !== 999 ? <div>{result.totalRank}.</div> : <div>DSQ</div> }</td>
                             <ResultsTableAthleteRow result={result}/>
                             <td>{result.firstRoundDistance !== 0 ? <div>{result.firstRoundDistance} m</div> : <div>-</div>}</td>
                             <td>{result.secondRoundDistance !== 0 ? <div>{result.secondRoundDistance} m</div> : <div>-</div>}</td>
