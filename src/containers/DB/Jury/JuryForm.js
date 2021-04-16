@@ -21,7 +21,7 @@ const JuryForm = (props) => {
                 show={showModal}
                 onHide={() => {
                     setShowModal(false)
-                    props.onHidePersonModal
+                    props.onHidePersonModal()
                     //  setPeople(props.cities)
                 }}
                 country={currentCountry}

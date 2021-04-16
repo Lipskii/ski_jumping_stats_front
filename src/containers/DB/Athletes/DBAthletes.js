@@ -10,6 +10,7 @@ import Loader from "react-loader-spinner";
 import AthletesForm from "./AthletesForm";
 
 
+
 class DBAthletes extends Component {
 
     state = {
@@ -159,7 +160,7 @@ class DBAthletes extends Component {
                     .then(res => {
                         const formData = new FormData();
                         formData.append('file', values.file)
-                        axios.post('/api/people/photo/' + res.data.person.id, formData)
+                        axios.post('/api/people/photo/' + res.data.person.id, formData,)
                             .then(() => {
                                 this.filter()
                             })
@@ -196,9 +197,9 @@ class DBAthletes extends Component {
                 + '&isActive=' + this.state.filterIsActive),
             axios.get('/api/cities?&countryId=' + this.state.filterCountryId
                 + '&hasPeople=true'
-            ),
+                 ),
             axios.get('/api/skiClubs?&countryId=' + this.state.filterCountryId
-            ),
+               ),
         ])
             .then(axios.spread((athletesData, citiesData, skiClubsData) => {
                 this.setState({

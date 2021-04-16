@@ -1,9 +1,7 @@
-import {Card, Pagination, Table} from "react-bootstrap";
+import {Pagination, Table} from "react-bootstrap";
 import React, {useState} from "react";
 import {TableButton} from "../../components/StyledComponents";
-import fisLogo from "../../assets/fis_logo.png";
 import Loader from "react-loader-spinner";
-import {Link} from "react-router-dom";
 import {LinkContainer} from "react-router-bootstrap";
 
 const SkiJumpersTable = (props) => {

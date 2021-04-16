@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import axios from "axios";
 import Loader from "react-loader-spinner";
-import {Button, Col, Container, Row, Tab, Table, Tabs} from "react-bootstrap";
+import {Col, Container, Row, Tab, Table, Tabs} from "react-bootstrap";
 import ShowSkiJumperResultsTable from "./ShowSkiJumperResultsTable";
 import WinsModal from "./WinsModal";
+
 
 
 class ShowSkiJumper extends Component {

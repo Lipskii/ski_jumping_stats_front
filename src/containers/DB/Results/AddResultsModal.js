@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import bsCustomFileInput from "bs-custom-file-input";
 import {Formik} from "formik";
 import {Button, Form, Modal} from "react-bootstrap";
-import {ErrorLabel, Header3, StyledDiv2Right1200} from "../../../components/StyledComponents";
+import {Header3, StyledDiv2Right1200} from "../../../components/StyledComponents";
 import * as Yup from 'yup'
 import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";
 

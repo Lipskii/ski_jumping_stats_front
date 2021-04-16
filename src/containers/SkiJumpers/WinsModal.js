@@ -1,6 +1,5 @@
-import {Card, ListGroup, Modal, Table} from "react-bootstrap";
+import {Modal, Table} from "react-bootstrap";
 import React from "react";
-import Loader from "react-loader-spinner";
 
 
 const WinsModal = (props) => {

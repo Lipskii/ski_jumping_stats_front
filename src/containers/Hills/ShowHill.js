@@ -1,12 +1,11 @@
 import React, {Component} from "react";
 import axios from "axios";
 import Loader from "react-loader-spinner";
-import {Accordion, Card, Col, Container, Row} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import {LinkContainer} from "react-router-bootstrap";
-import {AccordionWithPadding, Header5} from "../../components/StyledComponents";
-import {Table} from "antd";
 import ShowHillVersionTable from "./ShowHillVersionTable";
 import ShowHillCompetitionsTable from "./ShowHillCompetitionsTable";
+
 
 
 class ShowHill extends Component {

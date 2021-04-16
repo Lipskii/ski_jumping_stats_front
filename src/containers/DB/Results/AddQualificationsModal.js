@@ -1,15 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Formik} from "formik";
 import {
-    AccordionWithPadding,
     Header3,
-    Header5,
     StyledDiv2Right1200,
     StyledForm
 } from "../../../components/StyledComponents";
-import {Accordion, Button, Card, Modal} from "react-bootstrap";
-import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
-import {ResultsValidationSchema} from "./ResultsValidationSchema";
+import {Button, Modal} from "react-bootstrap";
 import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
 import {FormikDatePicker} from "../../../components/CommonForms/FormikDatePicker";
 import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";

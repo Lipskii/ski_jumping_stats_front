@@ -10,6 +10,7 @@ import DeleteModal from "../../../components/Modals/DeleteModal";
 import CompletedModal from "../../../components/Modals/CompletedModal";
 
 
+
 class DBVenues extends Component {
     state = {
         activePage: 1,
@@ -78,8 +79,7 @@ class DBVenues extends Component {
         axios.all([
             axios.get('/api/venues?skiClubId=' + this.state.filterSkiClubId
                 + '&countryId=' + this.state.filterCountryId
-                + '&cityId=' + this.state.filterCityId
-                ),
+                + '&cityId=' + this.state.filterCityId),
             axios.get('/api/cities?&countryId=' + this.state.filterCountryId),
             axios.get('/api/skiClubs?&countryId=' + this.state.filterCountryId),
         ])

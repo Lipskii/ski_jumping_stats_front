@@ -1,10 +1,10 @@
 import {Col, Row} from "react-bootstrap";
-import React, {Component, useEffect, useState} from "react";
+import React, {Component} from "react";
 import SearchingField from "./SearchingField";
 import {DatePicker, Select} from "antd";
 import CompetitionsTable from "./CompetitionsTable";
 import axios from "axios";
-import moment from "moment";
+
 
 class SearchResults extends Component {
 

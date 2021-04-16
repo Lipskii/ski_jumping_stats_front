@@ -1,4 +1,4 @@
-import {Button, Card, Col, Media} from "react-bootstrap";
+import {Button, Card, Media} from "react-bootstrap";
 import fisLogo from "../../assets/fis_logo.png";
 import React from "react";
 import {LinkContainer} from "react-router-bootstrap";

@@ -1,6 +1,4 @@
-import {Table} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
-import fisLogo from "../../assets/fis_logo.png";
 
 const ResultsTableAthleteRow = (props) => {
 

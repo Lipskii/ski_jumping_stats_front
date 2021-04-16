@@ -13,6 +13,7 @@ import Loader from "react-loader-spinner";
 import AddingModal from "../../../components/Modals/AddingModal";
 import CompletedModal from "../../../components/Modals/CompletedModal";
 
+
 //TODO refactor this class
 class DBHills extends Component {
 
@@ -68,7 +69,7 @@ class DBHills extends Component {
     filter = () => {
         axios.all([
             axios.get('/api/venues?countryId=' + this.state.filterCountryId
-            ),
+                 ),
             axios.get('/api/cities?&countryId=' + this.state.filterCountryId),
             axios.get('/api/skiClubs?&countryId=' + this.state.filterCountryId),
         ])

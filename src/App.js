@@ -30,10 +30,18 @@ const asyncHills = asyncComponent(() => {
     return import("./containers/DB/Hills/DBHills")
 })
 
+
 class App extends Component {
 
-    render() {
+    // componentDidMount() {
+    //     AuthService.login("frontend","221plamal07")
+    //         .catch(error => console.log(error))
+    // }
 
+    //TEMPORARY SOLUTION
+    render() {
+        // AuthService.login("frontend","221plamal07")
+        //     .catch(error => console.log(error))
         const routes = (
             <Switch>
                 <Route path="/dbVenues" component={asyncVenues}/>

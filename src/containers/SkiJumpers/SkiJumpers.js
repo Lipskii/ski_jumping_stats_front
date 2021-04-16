@@ -1,11 +1,8 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Col, Container, Row} from "react-bootstrap";
+import {Container} from "react-bootstrap";
 import Loader from "react-loader-spinner";
 import SearchSkiJumpers from "./SearchSkiJumpers";
-
-
-
 
 
 class SkiJumpers extends Component {

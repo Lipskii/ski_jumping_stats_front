@@ -1,11 +1,10 @@
-import {Col, Row} from "react-bootstrap";
-import React, {Component, useEffect, useState} from "react";
-import {DatePicker, Input, Select} from "antd";
+import {Row} from "react-bootstrap";
+import React, {Component} from "react";
+import {DatePicker, Select} from "antd";
 import axios from "axios";
 import SearchingField from "../Results/SearchingField";
-import CompetitionsTable from "../Results/CompetitionsTable";
-import SkiJumpersTable from "../SkiJumpers/SkiJumpersTable";
 import SearchHillsTable from "./SearchHillsTable";
+
 
 const {RangePicker} = DatePicker;
 

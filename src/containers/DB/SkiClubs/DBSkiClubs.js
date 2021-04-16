@@ -10,6 +10,7 @@ import Loader from "react-loader-spinner";
 import SkiClubForm from "./SkiClubForm";
 
 
+
 class DBSkiClubs extends Component {
 
     state = {
@@ -37,7 +38,7 @@ class DBSkiClubs extends Component {
     componentDidMount() {
         axios.all([
             axios.get('/api/countries'),
-            axios.get('/api/countries/skiClubs'),
+            axios.get('/api/countries/skiClubs',),
             axios.get('/api/skiClubs'),
             axios.get('/api/cities'),
             axios.get('/api/cities/skiClubs')
@@ -139,7 +140,7 @@ class DBSkiClubs extends Component {
         axios.all([
             axios.get('/api/skiClubs?countryId=' + this.state.filterCountryId
                 + '&cityId=' + this.state.filterCityId
-            ),
+                ),
             axios.get('/api/cities?&countryId=' + this.state.filterCountryId)
         ])
             .then(axios.spread((skiClubsData, citiesData) => {

@@ -1,9 +1,9 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Col, Container, Row} from "react-bootstrap";
+import {Container} from "react-bootstrap";
 import Loader from "react-loader-spinner";
-import SearchSkiJumpers from "../SkiJumpers/SearchSkiJumpers";
 import SearchHills from "./SearchHills";
+
 
 
 class Hills extends Component {
@@ -23,7 +23,7 @@ class Hills extends Component {
 
         axios.all([
             axios.get("/api/hills"),
-            axios.get('/api/cities'),
+            axios.get('/api/cities' ),
             axios.get('/api/countries/venues'),
             axios.get('/api/sizeOfHill'),
             axios.get('/api/venues?hasHills=true'),

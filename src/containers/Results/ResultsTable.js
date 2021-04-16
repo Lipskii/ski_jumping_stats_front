@@ -1,5 +1,5 @@
 import {Table} from "react-bootstrap";
-import React, {useEffect} from "react";
+import React from "react";
 import ResultsTableAthleteRow from "./ResultsTableAthleteRow";
 
 const ResultsTable = (props) => {

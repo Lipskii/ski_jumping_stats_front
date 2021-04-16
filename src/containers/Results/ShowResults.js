@@ -7,6 +7,7 @@ import {Accordion, Card, Col, Container, ListGroup, Row} from "react-bootstrap";
 import ResultsTable from "./ResultsTable";
 
 
+
 class ShowResults extends Component {
     state = {
         competition: '',

@@ -7,7 +7,6 @@ import SearchResults from "./SearchResults";
 import UpcomingCompetitions from "./UpcomingCompetitions";
 
 
-
 class Results extends Component {
     state = {
         activePage: 1,

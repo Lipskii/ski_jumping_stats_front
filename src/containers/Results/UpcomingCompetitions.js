@@ -1,5 +1,4 @@
-import {Button, Card, Col, ListGroup, Media} from "react-bootstrap";
-import fisLogo from "../../assets/fis_logo.png";
+import {Card, ListGroup} from "react-bootstrap";
 import React from "react";
 
 const UpcomingCompetitions = (props) => {

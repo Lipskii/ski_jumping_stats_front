@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {Formik} from "formik";
 import {
-    AccordionWithPadding, ErrorLabel,
-    Header3,
+    AccordionWithPadding, Header3,
     Header5,
     StyledDiv2Right1200,
     StyledForm
 } from "../../../components/StyledComponents";
-import {Accordion, Button, Card, Col, Form, Row} from "react-bootstrap";
+import {Accordion, Button, Card} from "react-bootstrap";
 import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
 import {ResultsValidationSchema} from "./ResultsValidationSchema";
 import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";

@@ -6,12 +6,13 @@ import DeleteModal from "../../../components/Modals/DeleteModal";
 import {Header3, Header5, StyledDivCentered1200, TableButton} from "../../../components/StyledComponents";
 import ResultsForm from "./ResultsForm";
 import Loader from "react-loader-spinner";
-import {Button, Pagination, Table} from "react-bootstrap";
+import {Pagination, Table} from "react-bootstrap";
 import CompetitionReadMoreModal from "./CompetitionReadMoreModal";
 import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
 import ResultsModal from "./ResultsModal";
 import AddResultsModal from "./AddResultsModal";
 import AddQualificationsModal from "./AddQualificationsModal";
+
 
 
 class DBResults extends Component {
