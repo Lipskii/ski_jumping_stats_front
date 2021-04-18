@@ -19,7 +19,7 @@ const ShowSkiJumperTable = (props) => {
                     })
                     .map(result => (
                         <tr>
-                            <td>{result.totalRank > 4 ?
+                            <td>{result.totalRank > 3 ?
                                 <div>
                                     {result.totalRank !== 999 ? <div>{result.totalRank}.</div>  : <div>DSQ</div>}
                                 </div>

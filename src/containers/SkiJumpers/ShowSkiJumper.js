@@ -4,6 +4,7 @@ import Loader from "react-loader-spinner";
 import {Col, Container, Row, Tab, Table, Tabs} from "react-bootstrap";
 import ShowSkiJumperResultsTable from "./ShowSkiJumperResultsTable";
 import WinsModal from "./WinsModal";
+import OverallStandingsTable from "./OverallStandingsTable";
 
 
 
@@ -15,6 +16,7 @@ class ShowSkiJumper extends Component {
         modalTitle: '',
         olympicGamesStarts: 0,
         olympicGamesPodiums: [0, 0, 0],
+        overallStandings: [],
         overallWorldCupPodiums: [0, 0, 0],
         overallWorldCupStarts: 0,
         raceDirectorFlag: '',
@@ -37,77 +39,83 @@ class ShowSkiJumper extends Component {
 
 
     componentDidMount() {
-        axios.get("/api/skiJumpers?id=" + this.props.match.params.skiJumper)
-            .then(res => {
-                this.setState({
-                    skiJumper: res.data[0],
-                }, () => {
-                    this.loadPhoto('flags/' + this.state.skiJumper.person.country.code, 'jumperFlag')
-                    this.loadPhoto('athletes/blankProfile', 'jumperPhoto')
+        axios.all([
+            axios.get("/api/skiJumpers?id=" + this.props.match.params.skiJumper),
+            axios.get('/api/overallStandings?skiJumperId='+ this.props.match.params.skiJumper + "&seriesId=9")
+        ]).then(axios.spread((
+            skiJumperData,
+            overallStandingsData
+        ) => {
+            this.setState({
+                skiJumper: skiJumperData.data[0],
+                overallStandings: overallStandingsData.data
+            }, () => {
+                this.loadPhoto('flags/' + this.state.skiJumper.person.country.code, 'jumperFlag')
+                this.loadPhoto('athletes/blankProfile', 'jumperPhoto')
 
-                    let fourHillsTournamentStarts = 0
-                    let olympicGamesStarts = 0
-                    let skiFlyingWorldChampionshipsStarts = 0
-                    let worldCupStarts = 0
-                    let worldChampionshipsStarts = 0
-                    let worldCupDebut
+                let fourHillsTournamentStarts = 0
+                let olympicGamesStarts = 0
+                let skiFlyingWorldChampionshipsStarts = 0
+                let worldCupStarts = 0
+                let worldChampionshipsStarts = 0
+                let worldCupDebut
 
-                    //set flags and world cup starts
-                    for (const result of this.state.skiJumper.results) {
-                        this.loadPhoto('flags/' + result.competition.hillVersion.hill.venue.city.region.country.code, 'result_' + result.id)
-                        if (result.competition.seriesMajor.id === 9) {
+                //set flags and world cup starts
+                for (const result of this.state.skiJumper.results) {
+                    this.loadPhoto('flags/' + result.competition.hillVersion.hill.venue.city.region.country.code, 'result_' + result.id)
+                    if (result.competition.seriesMajor.id === 9) {
+                        worldCupDebut = this.state.skiJumper.results.filter(result => result.competition.seriesMajor.id === 9)[0].competition
+                        this.setPodiums(result, 'worldCupPodiums')
+                        worldCupStarts++
+                    }
+                    if (result.competition.seriesMajor.id === 3 || result.competition.seriesMajor.id === 4) {
+                        this.setPodiums(result, 'worldChampionshipsPodiums')
+                        worldChampionshipsStarts++
+                    }
+                    if (result.competition.seriesMajor.id === 12) {
+                        this.setPodiums(result, 'fourHillsTournamentPodiums')
+                        fourHillsTournamentStarts++
+                    }
+                    if (result.competition.seriesMajor.id === 12) {
+                        this.setPodiums(result, 'olympicGamesPodiums')
+                        olympicGamesStarts++
+                    }
+                    if (result.competition.seriesMajor.id === 5) {
+                        this.setPodiums(result, 'skiFlyingWorldChampionshipsPodiums')
+                        skiFlyingWorldChampionshipsStarts++
+                    }
+                    if(result.competition.seriesMinor !== null){
+                        if(result.competition.seriesMinor.id === 12){
+                            this.setPodiums(result, 'fourHillsTournamentPodiums')
+                            fourHillsTournamentStarts++
+                        }
+                        if (result.competition.seriesMinor.id === 9) {
                             worldCupDebut = this.state.skiJumper.results.filter(result => result.competition.seriesMajor.id === 9)[0].competition
                             this.setPodiums(result, 'worldCupPodiums')
                             worldCupStarts++
                         }
-                        if (result.competition.seriesMajor.id === 3 || result.competition.seriesMajor.id === 4) {
-                            this.setPodiums(result, 'worldChampionshipsPodiums')
-                            worldChampionshipsStarts++
-                        }
-                        if (result.competition.seriesMajor.id === 12) {
-                            this.setPodiums(result, 'fourHillsTournamentPodiums')
-                            fourHillsTournamentStarts++
-                        }
-                        if (result.competition.seriesMajor.id === 12) {
-                            this.setPodiums(result, 'olympicGamesPodiums')
-                            olympicGamesStarts++
-                        }
-                        if (result.competition.seriesMajor.id === 5) {
-                            this.setPodiums(result, 'skiFlyingWorldChampionshipsPodiums')
-                            skiFlyingWorldChampionshipsStarts++
-                        }
-                        if(result.competition.seriesMinor !== null){
-                            if(result.competition.seriesMinor.id === 12){
-                                this.setPodiums(result, 'fourHillsTournamentPodiums')
-                                fourHillsTournamentStarts++
-                            }
-                            if (result.competition.seriesMinor.id === 9) {
-                                worldCupDebut = this.state.skiJumper.results.filter(result => result.competition.seriesMajor.id === 9)[0].competition
-                                this.setPodiums(result, 'worldCupPodiums')
-                                worldCupStarts++
-                            }
-                        }
                     }
+                }
 
-                    this.setResultsSeasons()
-                    this.filterResults(this.state.resultsSeasons[0])
+                this.setResultsSeasons()
+                this.filterResults(this.state.resultsSeasons[0])
 
-                    //Calculate age
-                    let today = new Date(),
-                        yearNow = today.getFullYear()
-                    let yearBorn = this.state.skiJumper.person.birthdate.slice(0, 4)
+                //Calculate age
+                let today = new Date(),
+                    yearNow = today.getFullYear()
+                let yearBorn = this.state.skiJumper.person.birthdate.slice(0, 4)
 
-                    this.setState({
-                        fourHillsTournamentStarts: fourHillsTournamentStarts,
-                        pageLoading: false,
-                        skiFlyingWorldChampionshipsStarts:  skiFlyingWorldChampionshipsStarts,
-                        skiJumperAge: yearNow - yearBorn,
-                        worldChampionshipsStarts: worldChampionshipsStarts,
-                        worldCupDebut: worldCupDebut,
-                        worldCupStarts: worldCupStarts
-                    })
+                this.setState({
+                    fourHillsTournamentStarts: fourHillsTournamentStarts,
+                    pageLoading: false,
+                    skiFlyingWorldChampionshipsStarts:  skiFlyingWorldChampionshipsStarts,
+                    skiJumperAge: yearNow - yearBorn,
+                    worldChampionshipsStarts: worldChampionshipsStarts,
+                    worldCupDebut: worldCupDebut,
+                    worldCupStarts: worldCupStarts
                 })
             })
+        }))
             .catch(error => {
                 console.log(error)
             })
@@ -178,7 +186,7 @@ class ShowSkiJumper extends Component {
         console.log(this.state)
 
         return (
-            <div style={{marginLeft: "13%", marginRight: "13%", paddingBottom: "50px"}}>
+            <div style={{marginLeft: "11%", marginRight: "11%", paddingBottom: "50px"}}>
 
                 <WinsModal
                     show={this.state.showModal}
@@ -350,18 +358,13 @@ class ShowSkiJumper extends Component {
                                         </tbody>
                                     </Table>
 
-                                    {/*<Button*/}
-                                    {/*    block*/}
-                                    {/*    variant={"outline-success"}*/}
-                                    {/*    size={"sm"}*/}
-                                    {/*    onClick={() => this.setState({*/}
-                                    {/*        showWinsModal: true*/}
-                                    {/*    })}*/}
-                                    {/*>*/}
-                                    {/*    <b>World Cup wins: </b>{this.state.wins.length}*/}
-                                    {/*</Button>*/}
                                 </Col>
+
                             </Row>
+                        </Col>
+
+                        <Col>
+                            <OverallStandingsTable overallStandings={this.state.overallStandings.sort((a,b) => a.season.season - b.season.season )}/>
                         </Col>
 
                         <div style={{paddingTop: "20px"}}>
