@@ -5,13 +5,12 @@ import {LinkContainer} from 'react-router-bootstrap'
 const Toolbar = () => {
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
+            <LinkContainer to="/results">
             <Navbar.Brand href="/">Ski Jumping Stats</Navbar.Brand>
+            </LinkContainer>
             <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
-                    <LinkContainer to="/results">
-                        <Nav.Link>Results</Nav.Link>
-                    </LinkContainer>
                     <LinkContainer to="/skiJumpers">
                         <Nav.Link>Ski Jumpers</Nav.Link>
                     </LinkContainer>
@@ -19,13 +18,36 @@ const Toolbar = () => {
                         <Nav.Link>Hills</Nav.Link>
                     </LinkContainer>
                     <NavDropdown title="Series" id="collasible-nav-dropdown">
+                        <LinkContainer to="/showSeries/9">
+                        <NavDropdown.Item>World Cup</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to="/showSeries/10">
+                            <NavDropdown.Item>Ski Flying World Cup</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to="/showSeries/12">
+                        <NavDropdown.Item>Four Hills Tournament</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to="/showSeries/18">
+                        <NavDropdown.Item>Raw Air</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to="/showSeries/26">
+                            <NavDropdown.Item>Continental Cup</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to="/showSeries/28">
+                            <NavDropdown.Item>FIS Cup</NavDropdown.Item>
+                        </LinkContainer>
+                        <NavDropdown.Divider/>
+                        <LinkContainer to="/showSeries/22">
+                            <NavDropdown.Item>Summer Grand Prix</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to="/showSeries/27">
+                            <NavDropdown.Item>Summer Continental Cup</NavDropdown.Item>
+                        </LinkContainer>
+                    </NavDropdown>
+                    <NavDropdown title="Championships" id="collasible-nav-dropdown">
                         <NavDropdown.Item>Olympic Games</NavDropdown.Item>
                         <NavDropdown.Item>World Championships</NavDropdown.Item>
                         <NavDropdown.Item>Ski Flying World Championships</NavDropdown.Item>
-                        <NavDropdown.Item>World Cup</NavDropdown.Item>
-                        <NavDropdown.Item>Four Hills Tournament</NavDropdown.Item>
-                        <NavDropdown.Divider/>
-                        <NavDropdown.Item>Other Series</NavDropdown.Item>
                     </NavDropdown>
                     <Nav.Link>SJS All Time Ranking</Nav.Link>
                     <Nav.Link>Stats</Nav.Link>

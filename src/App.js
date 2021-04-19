@@ -10,6 +10,7 @@ import SkiJumpers from "./containers/SkiJumpers/SkiJumpers";
 import ShowSkiJumper from "./containers/SkiJumpers/ShowSkiJumper";
 import Hills from "./containers/Hills/Hills";
 import ShowHill from "./containers/Hills/ShowHill";
+import ShowSeries from "./containers/Series/ShowSeries";
 
 const asyncVenues = asyncComponent(() => {
     return import("./containers/DB/Venues/DBVenues")
@@ -50,13 +51,14 @@ class App extends Component {
                 <Route path="/dbHills" component={asyncHills}/>
                 <Route path="/dbJury" component={asyncJury}/>
                 <Route path="/dbAthletes" component={asyncAthletes}/>
-                <Route path="/results" component={Results}/>
                 <Route path="/skiJumpers" component={SkiJumpers}/>
+                <Route path="/showSeries/:series" component={ShowSeries}/>
                 <Route path="/hills" component={Hills}/>
                 <Route path="/hill/:hill" exact component={ShowHill}/>
                 <Route path="/showResults/:competition" exact component={ShowResults}/>
                 <Route path="/skiJumper/:skiJumper" exact component={ShowSkiJumper}/>
-                <Route path="/" component={HomePage}/>
+                <Route path="/" component={Results}/>
+                {/*<Route path="/" component={HomePage}/>*/}
                 <Route component={NotFound}/>
             </Switch>
         )
