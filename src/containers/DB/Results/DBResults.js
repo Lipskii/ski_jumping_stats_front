@@ -4,15 +4,14 @@ import AddingModal from "../../../components/Modals/AddingModal";
 import CompletedModal from "../../../components/Modals/CompletedModal";
 import DeleteModal from "../../../components/Modals/DeleteModal";
 import {Header3, Header5, StyledDivCentered1200, TableButton} from "../../../components/StyledComponents";
-import ResultsForm from "./ResultsForm";
 import Loader from "react-loader-spinner";
-import {Pagination, Table} from "react-bootstrap";
+import {Button, Pagination, Table} from "react-bootstrap";
 import CompetitionReadMoreModal from "./CompetitionReadMoreModal";
 import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
 import ResultsModal from "./ResultsModal";
 import AddResultsModal from "./AddResultsModal";
 import AddQualificationsModal from "./AddQualificationsModal";
-
+import ResultsFormModal from "./ResultsFormModal";
 
 
 class DBResults extends Component {
@@ -25,9 +24,11 @@ class DBResults extends Component {
         chiefsOfCompetition: [],
         competitions: [],
         competitionsLoading: true,
+        competitionToForm: '',
         competitionToDelete: '',
         competitionToResults: '',
         countries: [],
+        editing: false,
         equipmentControllers: [],
         hills: [],
         hillVersions: [],
@@ -38,6 +39,7 @@ class DBResults extends Component {
         selectedFile: '',
         series: [],
         seriesLoading: true,
+        showFormModal: false,
         filterHillId: '',
         filterSeasonId: '',
         filterSeriesMajorId: '',
@@ -109,6 +111,12 @@ class DBResults extends Component {
                     technicalDelegates: technicalDelegatesData.data,
                     venues: venuesData.data,
                     weather: weatherData.data
+                }, () => {
+                    let competitionToForm = {...this.state.competitions[0]}
+                    this.setCompetitionToFormWithNull(competitionToForm)
+                    this.setState({
+                        competitionToForm: competitionToForm
+                    })
                 })
             }))
             .catch(error => console.log(error))
@@ -137,6 +145,24 @@ class DBResults extends Component {
                 showResultsModal: true
             }))
             .catch(error => console.log(error))
+    }
+
+    setCompetitionToFormWithValues = (competition) => {
+        Object.keys(competition).forEach((key, index) => {
+                if (competition[key] === null) {
+                    competition[key] = ''
+                }
+            }
+        )
+        return competition
+    }
+
+    setCompetitionToFormWithNull = (competition) => {
+        Object.keys(competition).forEach((key, index) => {
+                competition[key] = ''
+            }
+        )
+        return competition
     }
 
     postCompetition = (values) => {
@@ -278,7 +304,7 @@ class DBResults extends Component {
                         completedModalStatus: successful,
                         showCompletedModal: true,
                         showAddingModal: false,
-                    //    showQualificationsModal: false
+                        //    showQualificationsModal: false
                     }, () => this.filter())
                 }
             )
@@ -562,6 +588,20 @@ class DBResults extends Component {
                                                         </td>
                                                         <td>{competition.hillVersion.hill.name}</td>
                                                         <td style={{textAlign: "center"}}>
+                                                            <TableButton id={competition.id}
+                                                                         name={competition.name}
+                                                                         size="sm"
+                                                                         variant={"outline-info"}
+                                                                         onClick={() => {
+                                                                             const competitionToForm = this.setCompetitionToFormWithValues(competition)
+                                                                             this.setState({
+                                                                                 competitionToForm: competitionToForm,
+                                                                                 editing: true
+                                                                             })
+                                                                         }
+                                                                         }>
+                                                                Edit
+                                                            </TableButton>
                                                             {competition.results.length > 0 ?
                                                                 <TableButton id={competition.id + "tbEdit"}
                                                                              name={competition.name}
@@ -641,23 +681,38 @@ class DBResults extends Component {
                         </div>
                     }
 
-                    {this.state.venues.length > 0 ?
-                        <ResultsForm
-                            aRDs={this.state.assistantsRD}
-                            aTDs={this.state.assistantsTD}
-                            chiefsOfCompetition={this.state.chiefsOfCompetition}
-                            countries={this.state.countries}
-                            equipmentControllers={this.state.equipmentControllers}
-                            judges={this.state.judges}
-                            onSubmit={this.postCompetition}
-                            raceDirectors={this.state.raceDirectors}
-                            seasons={this.state.seasons}
-                            series={this.state.series}
-                            technicalDelegates={this.state.technicalDelegates}
-                            venues={this.state.venues}
-                            weather={this.state.weather}
-                        />
-                        : null}
+                    <Button
+                        onClick={() => {
+                            this.setState({
+                                showFormModal: true
+                            })
+                        }}
+                    >
+                        Add competition
+                    </Button>
+
+                    {this.state.showFormModal ? <ResultsFormModal showModal={this.state.showFormModal}
+                                                                  aRDs={this.state.assistantsRD}
+                                                                  aTDs={this.state.assistantsTD}
+                                                                  chiefsOfCompetition={this.state.chiefsOfCompetition}
+                                                                  countries={this.state.countries}
+                                                                  equipmentControllers={this.state.equipmentControllers}
+                                                                  judges={this.state.judges}
+                                                                  hills={this.state.hills}
+                                                                  onSubmit={this.postCompetition}
+                                                                  raceDirectors={this.state.raceDirectors}
+                                                                  seasons={this.state.seasons}
+                                                                  series={this.state.series}
+                                                                  technicalDelegates={this.state.technicalDelegates}
+                                                                  venues={this.state.venues}
+                                                                  weather={this.state.weather}
+                                                                  {...this.state.competitionToForm}
+                                                                  onHide={() => {
+                                                                      this.setState({
+                                                                          showFormModal: false
+                                                                      })
+                                                                  }}
+                    /> : null}
 
 
                 </StyledDivCentered1200>

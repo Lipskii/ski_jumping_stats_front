@@ -11,6 +11,7 @@ import OverallStandingsTable from "./OverallStandingsTable";
 class ShowSkiJumper extends Component {
     state = {
         competitionsForModal: [],
+        fourHillsOverallStandings: [],
         fourHillsTournamentStarts: 0,
         fourHillsTournamentPodiums: [0, 0, 0],
         modalTitle: '',
@@ -35,20 +36,26 @@ class ShowSkiJumper extends Component {
         worldCupPodiums: [0, 0, 0],
         worldCupDebut: [],
         worldCupStarts: 0,
+        worldCupOverallPodiums: [0, 0, 0],
+        worldCupOverallDebut: [],
+        worldCupOverallStarts: 0,
     }
 
 
     componentDidMount() {
         axios.all([
             axios.get("/api/skiJumpers?id=" + this.props.match.params.skiJumper),
-            axios.get('/api/overallStandings?skiJumperId='+ this.props.match.params.skiJumper + "&seriesId=9")
+            axios.get('/api/overallStandings?skiJumperId='+ this.props.match.params.skiJumper + "&seriesId=9"),
+            axios.get('/api/overallStandings?skiJumperId='+ this.props.match.params.skiJumper + "&seriesId=12")
         ]).then(axios.spread((
             skiJumperData,
-            overallStandingsData
+            overallStandingsData,
+            fourHillsOverallStandingsData
         ) => {
             this.setState({
                 skiJumper: skiJumperData.data[0],
-                overallStandings: overallStandingsData.data
+                overallStandings: overallStandingsData.data,
+                fourHillsOverallStandings: fourHillsOverallStandingsData.data,
             }, () => {
                 this.loadPhoto('flags/' + this.state.skiJumper.person.country.code, 'jumperFlag')
                 this.loadPhoto('athletes/blankProfile', 'jumperPhoto')
@@ -58,7 +65,18 @@ class ShowSkiJumper extends Component {
                 let skiFlyingWorldChampionshipsStarts = 0
                 let worldCupStarts = 0
                 let worldChampionshipsStarts = 0
+                let worldCupOverallStarts = 0
                 let worldCupDebut
+
+                for(const fourHillsStart of this.state.fourHillsOverallStandings){
+                    fourHillsTournamentStarts++
+                    this.setOverallPodiums(fourHillsStart, 'fourHillsTournamentPodiums')
+                }
+
+                for(const overallStanding of this.state.overallStandings){
+                    worldCupOverallStarts++
+                    this.setOverallPodiums(overallStanding, 'worldCupOverallPodiums')
+                }
 
                 //set flags and world cup starts
                 for (const result of this.state.skiJumper.results) {
@@ -72,11 +90,11 @@ class ShowSkiJumper extends Component {
                         this.setPodiums(result, 'worldChampionshipsPodiums')
                         worldChampionshipsStarts++
                     }
-                    if (result.competition.seriesMajor.id === 12) {
-                        this.setPodiums(result, 'fourHillsTournamentPodiums')
-                        fourHillsTournamentStarts++
-                    }
-                    if (result.competition.seriesMajor.id === 12) {
+                    // if (result.competition.seriesMajor.id === 12) {
+                    //     this.setPodiums(result, 'fourHillsTournamentPodiums')
+                    //     fourHillsTournamentStarts++
+                    // }
+                    if (result.competition.seriesMajor.id === 1) {
                         this.setPodiums(result, 'olympicGamesPodiums')
                         olympicGamesStarts++
                     }
@@ -85,10 +103,10 @@ class ShowSkiJumper extends Component {
                         skiFlyingWorldChampionshipsStarts++
                     }
                     if(result.competition.seriesMinor !== null){
-                        if(result.competition.seriesMinor.id === 12){
-                            this.setPodiums(result, 'fourHillsTournamentPodiums')
-                            fourHillsTournamentStarts++
-                        }
+                        // if(result.competition.seriesMinor.id === 12){
+                        //     this.setPodiums(result, 'fourHillsTournamentPodiums')
+                        //     fourHillsTournamentStarts++
+                        // }
                         if (result.competition.seriesMinor.id === 9) {
                             worldCupDebut = this.state.skiJumper.results.filter(result => result.competition.seriesMajor.id === 9)[0].competition
                             this.setPodiums(result, 'worldCupPodiums')
@@ -112,7 +130,8 @@ class ShowSkiJumper extends Component {
                     skiJumperAge: yearNow - yearBorn,
                     worldChampionshipsStarts: worldChampionshipsStarts,
                     worldCupDebut: worldCupDebut,
-                    worldCupStarts: worldCupStarts
+                    worldCupStarts: worldCupStarts,
+                    worldCupOverallStarts: worldCupOverallStarts
                 })
             })
         }))
@@ -125,6 +144,16 @@ class ShowSkiJumper extends Component {
         if (result.totalRank < 4) {
             let podiums = this.state[stateParamName]
             podiums[result.totalRank - 1]++
+            this.setState({
+                stateParamName: podiums,
+            })
+        }
+    }
+
+    setOverallPodiums = (overallResults, stateParamName) => {
+        if (overallResults.ranking < 4) {
+            let podiums = this.state[stateParamName]
+            podiums[overallResults.ranking - 1]++
             this.setState({
                 stateParamName: podiums,
             })
@@ -332,14 +361,20 @@ class ShowSkiJumper extends Component {
                                             <td style={{backgroundColor: "#cd7f32"}}>{this.state.fourHillsTournamentPodiums[2] > 0 ?
                                                 <b>{this.state.fourHillsTournamentPodiums[2]}</b> : 0}</td>
                                         </tr>
-                                        <tr>
-                                            <td><b>World Cup Overall</b></td>
-                                            <td style={{textAlign: "center"}}>0</td>
-                                            <td style={{backgroundColor: "gold"}}>0</td>
-                                            <td style={{backgroundColor: "silver"}}>0</td>
-                                            <td style={{backgroundColor: "#cd7f32"}}>0</td>
 
+                                        <tr style={{cursor: "pointer"}}>
+                                            <td><b>World Cup Overall</b></td>
+                                            <td style={{textAlign: "center"}}>{this.state.worldCupOverallStarts}</td>
+                                            <td style={{backgroundColor: "gold"}}>
+                                                {this.state.worldCupOverallPodiums[0] > 0 ?
+                                                    <b>{this.state.worldCupOverallPodiums[0]}</b> : 0}
+                                            </td>
+                                            <td style={{backgroundColor: "silver"}}>{this.state.worldCupOverallPodiums[1] > 0 ?
+                                                <b>{this.state.worldCupOverallPodiums[1]}</b> : 0}</td>
+                                            <td style={{backgroundColor: "#cd7f32"}}>{this.state.worldCupOverallPodiums[2] > 0 ?
+                                                <b>{this.state.worldCupOverallPodiums[2]}</b> : 0}</td>
                                         </tr>
+
                                         <tr style={{cursor: "pointer"}}
                                             onClick={() =>{
                                                 this.showModal(9, "World Cup")

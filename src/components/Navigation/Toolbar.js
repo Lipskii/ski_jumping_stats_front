@@ -6,7 +6,7 @@ const Toolbar = () => {
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
             <LinkContainer to="/results">
-            <Navbar.Brand href="/">Ski Jumping Stats</Navbar.Brand>
+                <Navbar.Brand href="/">Ski Jumping Stats</Navbar.Brand>
             </LinkContainer>
             <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
             <Navbar.Collapse id="responsive-navbar-nav">
@@ -19,16 +19,16 @@ const Toolbar = () => {
                     </LinkContainer>
                     <NavDropdown title="Series" id="collasible-nav-dropdown">
                         <LinkContainer to="/showSeries/9">
-                        <NavDropdown.Item>World Cup</NavDropdown.Item>
+                            <NavDropdown.Item>World Cup</NavDropdown.Item>
                         </LinkContainer>
                         <LinkContainer to="/showSeries/10">
                             <NavDropdown.Item>Ski Flying World Cup</NavDropdown.Item>
                         </LinkContainer>
                         <LinkContainer to="/showSeries/12">
-                        <NavDropdown.Item>Four Hills Tournament</NavDropdown.Item>
+                            <NavDropdown.Item>Four Hills Tournament</NavDropdown.Item>
                         </LinkContainer>
                         <LinkContainer to="/showSeries/18">
-                        <NavDropdown.Item>Raw Air</NavDropdown.Item>
+                            <NavDropdown.Item>Raw Air</NavDropdown.Item>
                         </LinkContainer>
                         <LinkContainer to="/showSeries/26">
                             <NavDropdown.Item>Continental Cup</NavDropdown.Item>
@@ -45,9 +45,15 @@ const Toolbar = () => {
                         </LinkContainer>
                     </NavDropdown>
                     <NavDropdown title="Championships" id="collasible-nav-dropdown">
-                        <NavDropdown.Item>Olympic Games</NavDropdown.Item>
-                        <NavDropdown.Item>World Championships</NavDropdown.Item>
-                        <NavDropdown.Item>Ski Flying World Championships</NavDropdown.Item>
+                        <LinkContainer to="/showChampionships/1">
+                            <NavDropdown.Item>Olympic Games</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to="/showChampionships/3">
+                            <NavDropdown.Item>World Championships</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to="/showChampionships/5">
+                            <NavDropdown.Item>Ski Flying World Championships</NavDropdown.Item>
+                        </LinkContainer>
                     </NavDropdown>
                     <Nav.Link>SJS All Time Ranking</Nav.Link>
                     <Nav.Link>Stats</Nav.Link>

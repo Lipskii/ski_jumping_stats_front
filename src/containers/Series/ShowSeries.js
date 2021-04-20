@@ -28,7 +28,7 @@ class ShowSeries extends Component {
     }
 
     fetchData = () =>{
-        let seriesGet = this.getSeriesGerUrl()
+        let seriesGet = this.getSeriesGetUrl()
         axios.all([
             axios.get(seriesGet),
             axios.get("/api/overallStandings?seriesId=" + this.props.match.params.series + "&season=" + 2021),
@@ -58,7 +58,7 @@ class ShowSeries extends Component {
                 }
                 for (const competition of this.state.competitions) {
                     this.loadPhoto('flags/' + competition.hillVersion.hill.venue.city.region.country.code,
-                        "flag_" + +competition.hillVersion.hill.venue.city.region.country.code)
+                        "flag_" + competition.hillVersion.hill.venue.city.region.country.code)
                 }
                 this.setState({
                     pageLoading: false
@@ -91,7 +91,7 @@ class ShowSeries extends Component {
         }
     }
 
-    getSeriesGerUrl = () =>{
+    getSeriesGetUrl = () =>{
         let seriesGet = "/api/competitions?seriesMajorId=" + this.props.match.params.series + "&season=" + this.state.filterSeason
         if(parseInt(this.props.match.params.series) === 12 || parseInt(this.props.match.params.series) === 18 || parseInt(this.props.match.params.series) === 10){
             seriesGet = "/api/competitions?seriesMinorId=" + this.props.match.params.series + "&season=" + this.state.filterSeason
@@ -100,7 +100,7 @@ class ShowSeries extends Component {
     }
 
     filter = () => {
-        let seriesGet = this.getSeriesGerUrl()
+        let seriesGet = this.getSeriesGetUrl()
         axios.all([
             axios.get(seriesGet),
             axios.get("/api/overallStandings?seriesId=" + this.props.match.params.series + "&season=" + this.state.filterSeason),

@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import Layout from "./hoc/Layout/Layout";
 import {withRouter, Switch, Route} from 'react-router-dom'
 import NotFound from "./containers/NotFound";
-import HomePage from "./containers/HomePage/HomePage";
 import Results from "./containers/Results/Results";
 import ShowResults from "./containers/Results/ShowResults";
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
@@ -11,6 +10,7 @@ import ShowSkiJumper from "./containers/SkiJumpers/ShowSkiJumper";
 import Hills from "./containers/Hills/Hills";
 import ShowHill from "./containers/Hills/ShowHill";
 import ShowSeries from "./containers/Series/ShowSeries";
+import ShowChampionship from "./containers/Championships/ShowChampionship";
 
 const asyncVenues = asyncComponent(() => {
     return import("./containers/DB/Venues/DBVenues")
@@ -53,12 +53,12 @@ class App extends Component {
                 <Route path="/dbAthletes" component={asyncAthletes}/>
                 <Route path="/skiJumpers" component={SkiJumpers}/>
                 <Route path="/showSeries/:series" component={ShowSeries}/>
+                <Route path="/showChampionships/:championship" component={ShowChampionship}/>
                 <Route path="/hills" component={Hills}/>
                 <Route path="/hill/:hill" exact component={ShowHill}/>
                 <Route path="/showResults/:competition" exact component={ShowResults}/>
                 <Route path="/skiJumper/:skiJumper" exact component={ShowSkiJumper}/>
                 <Route path="/" component={Results}/>
-                {/*<Route path="/" component={HomePage}/>*/}
                 <Route component={NotFound}/>
             </Switch>
         )
