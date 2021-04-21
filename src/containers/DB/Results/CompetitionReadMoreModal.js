@@ -4,67 +4,67 @@ import {Modal} from "react-bootstrap";
 
 const CompetitionReadMoreModal = (props) => {
     let raceDirector = null
-    if (props.competition.raceDirector !== null) {
+    if (props.competition.raceDirector !== null && props.competition.raceDirector !== '') {
         let jury = props.raceDirectors.find(jury => jury.id === props.competition.raceDirector.id)
         raceDirector = <li>Race director: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let technicalDelegate = null
-    if (props.competition.technicalDelegate !== null) {
+    if (props.competition.technicalDelegate !== null && props.competition.technicalDelegate !== '') {
         let jury = props.technicalDelegates.find(jury => jury.id === props.competition.technicalDelegate.id)
         technicalDelegate = <li>Technical delegate: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let chiefOfCompetition = null
-    if (props.competition.chiefOfCompetition !== null) {
+    if (props.competition.chiefOfCompetition !== null && props.competition.chiefOfCompetition !== '') {
         let jury = props.chiefsOfCompetition.find(jury => jury.id === props.competition.chiefOfCompetition.id)
         chiefOfCompetition = <li>Chief of competition: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let assistantTD = null
-    if (props.competition.assistantTD !== null) {
+    if (props.competition.assistantTD !== null && props.competition.assistantTD !== '') {
         let jury = props.asistantsTD.find(jury => jury.id === props.competition.assistantTD.id)
         assistantTD = <li>Assistant TD: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let assistantRD = null
-    if (props.competition.assistantRD !== null) {
+    if (props.competition.assistantRD !== null && props.competition.assistantRD !== '') {
         let jury = props.asistantsRD.find(jury => jury.id === props.competition.assistantRD.id)
         assistantRD = <li>Assistant RD: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let equipmentController1 = null
-    if (props.competition.equipmentController1 !== null) {
+    if (props.competition.equipmentController1 !== null && props.competition.equipmentController1 !== '') {
         let jury = props.equipmentControllers.find(jury => jury.id === props.competition.equipmentController1.id)
         equipmentController1 = <li>Equipment controller: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let equipmentController2 = null
-    if (props.competition.equipmentController2 !== null) {
+    if (props.competition.equipmentController2 !== null && props.competition.equipmentController2 !== '') {
         let jury = props.equipmentControllers.find(jury => jury.id === props.competition.equipmentController2.id)
         equipmentController2 = <li>2.Equipment controller: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let judgeA = null
-    if (props.competition.judgeA !== null) {
+    if (props.competition.judgeA !== null && props.competition.judgeA !== '') {
         let jury = props.judges.find(jury => jury.id === props.competition.judgeA.id)
         judgeA = <li>Judge A: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let judgeB = null
-    if (props.competition.judgeB !== null) {
+    if (props.competition.judgeB !== null && props.competition.judgeB !== '') {
         let jury = props.judges.find(jury => jury.id === props.competition.judgeB.id)
         judgeB = <li>Judge B: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let judgeC = null
-    if (props.competition.judgeC !== null) {
+    if (props.competition.judgeC !== null && props.competition.judgeC !== '') {
         let jury = props.judges.find(jury => jury.id === props.competition.judgeC.id)
         judgeC = <li>Judge C: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let judgeD = null
-    if (props.competition.judgeD !== null) {
+    if (props.competition.judgeD !== null && props.competition.judgeD !== '') {
         let jury = props.judges.find(jury => jury.id === props.competition.judgeD.id)
         judgeD = <li>Judge D: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let judgeE = null
-    if (props.competition.judgeE !== null) {
+    if (props.competition.judgeE !== null && props.competition.judgeE !== '') {
         let jury = props.judges.find(jury => jury.id === props.competition.judgeE.id)
         judgeE = <li>Judge E: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
     let judgeSC = null
-    if (props.competition.judgeSC !== null) {
+    if (props.competition.judgeSC !== null && props.competition.judgeSC !== '') {
         let jury = props.judges.find(jury => jury.id === props.competition.judgeSC.id)
         judgeSC = <li>Judge SC: <b>{jury.person.firstName} {jury.person.lastName}</b></li>
     }
@@ -73,7 +73,7 @@ const CompetitionReadMoreModal = (props) => {
     return (
         <Modal show={props.show} onHide={props.onHide} size={"lg"} scrollable={true}>
             <Modal.Header closeButton>
-                <Modal.Title>{props.competition.date1}: {props.competition.seriesMajor.name} {props.competition.seriesMinor !== null ?
+                <Modal.Title>{props.competition.date1}: {props.competition.seriesMajor.name} {props.competition.seriesMinor !== null && props.competition.seriesMinor !== '' ?
                     <small>({props.competition.seriesMinor.name})</small> : null}</Modal.Title>
                 <br/>
             </Modal.Header>
@@ -83,10 +83,10 @@ const CompetitionReadMoreModal = (props) => {
                     <li>Major series: <b>{props.competition.seriesMajor.name}</b></li>
                     <li>Hill: <b>{props.competition.hillVersion.hill.name} (HS: {props.competition.hillVersion.hillSize} m)</b>
                     </li>
-                    {props.competition.seriesMinor !== null ?
+                    {props.competition.seriesMinor !== null && props.competition.seriesMinor !== '' ?
                         <li>Minor series: <b>{props.competition.seriesMinor.name}</b></li> : null}
                     <li>Date 1: <b>{props.competition.date1}</b></li>
-                    {props.competition.date2 !== null ? <li>Date 2: <b>{props.competition.date2}</b></li> : null}
+                    {props.competition.date2 !== null && props.competition.date2 !== '' ? <li>Date 2: <b>{props.competition.date2}</b></li> : null}
 
                     {raceDirector === null && technicalDelegate === null &&
                     chiefOfCompetition === null && assistantTD === null &&
@@ -138,7 +138,7 @@ const CompetitionReadMoreModal = (props) => {
                     && props.competition.fourthRoundHumidityFinish === null && props.competition.fourthRoundMinWind === null
                     && props.competition.fourthRoundMaxWind === null && props.competition.fourthRoundAvgWind === null
                         ? null : <div><br/><h5>Details:</h5></div>}
-                    {props.competition.meterValue !== null ?
+                    {props.competition.meterValue !== null &&  props.competition.meterValue !== '' ?
                         <li>Meter value: <b>{props.competition.meterValue} points/m</b></li> : null}
                     {props.competition.gateFactor !== null ?
                         <li>Gate factor: <b>{props.competition.gateFactor} points/gate</b></li> : null}

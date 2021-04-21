@@ -246,27 +246,120 @@ class DBResults extends Component {
                             console.log(error)
                             successful = false
                         })
-                        .finally(() => {
-                            this.setState({
-                                showCompletedModal: true,
-                                completedModalStatus: successful,
-                                showAddingModal: false,
-                            })
-                        })
                 }
+                this.setState({
+                    showCompletedModal: true,
+                    completedModalStatus: successful,
+                    showAddingModal: false,
+                    showFormModal: false,
+                    editing: false,
+                }, () => {
+                    this.filter()
+                })
             })
             .catch(error => {
                 console.log(error)
                 successful = false
             })
-            .finally(() => {
+
+    }
+
+    updateCompetition = (values) => {
+        let successful = true
+        let dataValues = {
+            season: this.state.seasons.find(season => season.id === parseInt(values.seasonId)),
+            date1: values.date1,
+            date2: values.date2,
+            seriesMajor: this.state.series.find(series => series.id === parseInt(values.seriesMajorId)),
+            seriesMinor: this.state.series.find(series => series.id === parseInt(values.seriesMinorId)),
+            hillVersion: this.state.hillVersions.find(hillVersion => hillVersion.id === parseInt(values.hillVersionId)),
+            judgeA: this.state.judges.find(judge => judge.id === parseInt(values.judgeAId)),
+            judgeB: this.state.judges.find(judge => judge.id === parseInt(values.judgeBId)),
+            judgeC: this.state.judges.find(judge => judge.id === parseInt(values.judgeCId)),
+            judgeD: this.state.judges.find(judge => judge.id === parseInt(values.judgeDId)),
+            judgeE: this.state.judges.find(judge => judge.id === parseInt(values.judgeEId)),
+            judgeSC: this.state.judges.find(judge => judge.id === parseInt(values.judgeSCId)),
+            raceDirector: this.state.raceDirectors.find(rd => rd.id === parseInt(values.raceDirectorId)),
+            technicalDelegate: this.state.technicalDelegates.find(td => td.id === parseInt(values.technicalDelegateId)),
+            chiefOfCompetition: this.state.chiefsOfCompetition.find(coc => coc.id === parseInt(values.chiefOfCompetitionId)),
+            assistantTD: this.state.assistantsTD.find(aTd => aTd.id === parseInt(values.assistantTDId)),
+            assistantRD: this.state.assistantsRD.find(aRD => aRD.id === parseInt(values.assistantRDId)),
+            equipmentController1: this.state.equipmentControllers.find(ec => ec.id === parseInt(values.equipmentController1Id)),
+            equipmentController2: this.state.equipmentControllers.find(ec => ec.id === parseInt(values.equipmentController2Id)),
+            meterValue: values.meterValue,
+            gateFactor: values.gateFactor,
+            windFactorTail: values.windFactorTail,
+            windFactorFront: values.windFactorFront,
+            firstRoundBaseGate: values.firstRoundBaseGate,
+            firstRoundWeather: this.state.weather.find(weather => weather.id === values.firstRoundWeatherId),
+            firstRoundAirTempStart: values.firstRoundAirTempStart,
+            firstRoundAirTempFinish: values.firstRoundAirTempFinish,
+            firstRoundSnowTempStart: values.firstRoundSnowTempStart,
+            firstRoundSnowTempFinish: values.firstRoundSnowTempFinish,
+            firstRoundStartTime: values.firstRoundStartTime,
+            firstRoundHumidityStart: values.firstRoundHumidityStart,
+            firstRoundHumidityFinish: values.firstRoundHumidityFinish,
+            firstRoundMinWind: values.firstRoundMinWind,
+            firstRoundMaxWind: values.firstRoundMaxWind,
+            firstRoundAvgWind: values.firstRoundAvgWind,
+            secondRoundBaseGate: values.secondRoundBaseGate,
+            secondRoundWeather: this.state.weather.find(weather => weather.id === values.secondRoundWeatherId),
+            secondRoundAirTempStart: values.secondRoundAirTempStart,
+            secondRoundAirTempFinish: values.secondRoundAirTempFinish,
+            secondRoundSnowTempStart: values.secondRoundSnowTempStart,
+            secondRoundSnowTempFinish: values.secondRoundSnowTempFinish,
+            secondRoundHumidityStart: values.secondRoundHumidityStart,
+            secondRoundHumidityFinish: values.secondRoundHumidityFinish,
+            secondRoundMinWind: values.secondRoundMinWind,
+            secondRoundMaxWind: values.secondRoundMaxWind,
+            secondRoundAvgWind: values.secondRoundAvgWind,
+            thirdRoundBaseGate: values.thirdRoundBaseGate,
+            thirdRoundWeather: this.state.weather.find(weather => weather.id === values.thirdRoundWeatherId),
+            thirdRoundAirTempStart: values.thirdRoundAirTempStart,
+            thirdRoundAirTempFinish: values.thirdRoundAirTempFinish,
+            thirdRoundSnowTempStart: values.thirdRoundSnowTempStart,
+            thirdRoundSnowTempFinish: values.thirdRoundSnowTempFinish,
+            thirdRoundHumidityStart: values.thirdRoundHumidityStart,
+            thirdRoundHumidityFinish: values.thirdRoundHumidityFinish,
+            thirdRoundMinWind: values.thirdRoundMinWind,
+            thirdRoundMaxWind: values.thirdRoundMaxWind,
+            thirdRoundAvgWind: values.thirdRoundAvgWind,
+            fourthRoundBaseGate: values.fourthRoundBaseGate,
+            fourthRoundWeather: this.state.weather.find(weather => weather.id === values.fourthRoundWeatherId),
+            fourthRoundAirTempStart: values.fourthRoundAirTempStart,
+            fourthRoundAirTempFinish: values.fourthRoundAirTempFinish,
+            fourthRoundSnowTempStart: values.fourthRoundSnowTempStart,
+            fourthRoundSnowTempFinish: values.fourthRoundSnowTempFinish,
+            fourthRoundHumidityStart: values.fourthRoundHumidityStart,
+            fourthRoundHumidityFinish: values.fourthRoundHumidityFinish,
+            fourthRoundMinWind: values.fourthRoundMinWind,
+            fourthRoundMaxWind: values.fourthRoundMaxWind,
+            fourthRoundAvgWind: values.fourthRoundAvgWind
+        }
+        axios.put("/api/competitions/" + this.state.competitionToForm.id, {...dataValues})
+            .then(res => {
+                if (values.resultsLink !== '') {
+                    axios.post('/api/results/link/' + res.data.id, values.resultsLink)
+                        .then(res => console.log(res))
+                        .catch(error => {
+                            console.log(error)
+                            successful = false
+                        })
+                }
                 this.setState({
                     showCompletedModal: true,
                     completedModalStatus: successful,
                     showAddingModal: false,
-                }, () => this.filter())
+                    showFormModal: false,
+                    editing: false,
+                }, () => {
+                    this.filter()
+                })
             })
-
+            .catch(error => {
+                console.log(error)
+                successful = false
+            })
     }
 
     postResults = (values) => {
@@ -595,8 +688,9 @@ class DBResults extends Component {
                                                                          onClick={() => {
                                                                              const competitionToForm = this.setCompetitionToFormWithValues(competition)
                                                                              this.setState({
-                                                                                 competitionToForm: competitionToForm,
-                                                                                 editing: true
+                                                                                 competitionToForm: {...competitionToForm},
+                                                                                 editing: true,
+                                                                                 showFormModal: true
                                                                              })
                                                                          }
                                                                          }>
@@ -681,15 +775,19 @@ class DBResults extends Component {
                         </div>
                     }
 
-                    <Button
-                        onClick={() => {
-                            this.setState({
-                                showFormModal: true
-                            })
-                        }}
-                    >
-                        Add competition
-                    </Button>
+                    <div style={{textAlign: "right", paddingBottom: "15px"}}>
+                        <Button
+
+                            onClick={() => {
+                                this.setState({
+                                    showFormModal: true
+                                })
+                            }}
+                        >
+                            Add competition
+                        </Button>
+                    </div>
+
 
                     {this.state.showFormModal ? <ResultsFormModal showModal={this.state.showFormModal}
                                                                   aRDs={this.state.assistantsRD}
@@ -699,7 +797,17 @@ class DBResults extends Component {
                                                                   equipmentControllers={this.state.equipmentControllers}
                                                                   judges={this.state.judges}
                                                                   hills={this.state.hills}
-                                                                  onSubmit={this.postCompetition}
+                                                                  onSubmit={(values) => {
+                                                                      this.setState({
+                                                                          showAddingModal: true
+                                                                      }, () => {
+                                                                          if (!this.state.editing) {
+                                                                              this.postCompetition(values)
+                                                                          } else {
+                                                                              this.updateCompetition(values)
+                                                                          }
+                                                                      })
+                                                                  }}
                                                                   raceDirectors={this.state.raceDirectors}
                                                                   seasons={this.state.seasons}
                                                                   series={this.state.series}
@@ -708,7 +816,9 @@ class DBResults extends Component {
                                                                   weather={this.state.weather}
                                                                   {...this.state.competitionToForm}
                                                                   onHide={() => {
+                                                                      let competitionNull = this.setCompetitionToFormWithNull(this.state.competitionToForm)
                                                                       this.setState({
+                                                                          competitionToForm: competitionNull,
                                                                           showFormModal: false
                                                                       })
                                                                   }}

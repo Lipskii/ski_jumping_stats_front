@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Accordion, Button, Card, Form, Modal, Table} from "react-bootstrap";
+import {Accordion, Button, Card, Form, Modal} from "react-bootstrap";
 import {Formik} from "formik";
 import {ResultsValidationSchema} from "./ResultsValidationSchema";
 import {
@@ -7,13 +7,13 @@ import {
     Header3,
     Header5,
     StyledDiv2Right1200,
-    StyledForm
 } from "../../../components/StyledComponents";
 import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
 import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
 import {FormikDatePicker} from "../../../components/CommonForms/FormikDatePicker";
 import FormikTimePicker from "../../../components/CommonForms/FormikTimePicker";
 import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";
+import moment from "moment";
 
 
 const ResultsFormModal = (props) => {
@@ -24,6 +24,8 @@ const ResultsFormModal = (props) => {
     const [isTwoDayCompetition, setIsTwoDayCompetition] = useState(0)
     let hillId
     let venueId
+    let date1
+    let date2
 
     useEffect(() => console.log(props))
 
@@ -49,16 +51,24 @@ const ResultsFormModal = (props) => {
         setHillVersions([])
     }
 
-    // if(props["hillVersion"].hill !== null){
-    //     setHillVersions(props["hillVersion"].hill.hillVersions)
-    // }
-
     if(props["hillVersion"] === ""){
         hillId = ""
         venueId = ""
     } else {
         hillId = props["hillVersion"].hill.id
         venueId = props["hillVersion"].hill.venue.id
+    }
+
+    if(props["date1"] === ''){
+      date1 = ''
+    } else {
+        date1 = moment(props.date1)
+    }
+
+    if(props["date2"] === ''){
+        date2 = ''
+    } else {
+        date2 = moment(props.date2)
     }
 
 
@@ -71,8 +81,8 @@ const ResultsFormModal = (props) => {
                 assistantTDId: props.assistantTD.id,
                 cancelledAtRound: props.cancelledAtRound,
                 chiefOfCompetitionId: props.chiefOfCompetition.id,
-                date1: '',
-                date2: '',
+                date1: date1,
+                date2: date2,
                 equipmentController1Id: props.equipmentController1.id,
                 equipmentController2Id: props.equipmentController2.id,
                 firstRoundAirTempStart: props.firstRoundAirTempStart,
@@ -85,7 +95,7 @@ const ResultsFormModal = (props) => {
                 firstRoundMinWind: props.firstRoundMinWind,
                 firstRoundSnowTempStart: props.firstRoundSnowTempStart,
                 firstRoundSnowTempFinish: props.firstRoundSnowTempFinish,
-                firstRoundStartTime: props.firstRoundStartTime,
+                firstRoundStartTime: '',//props.firstRoundStartTime,
                 firstRoundWeatherId: props.firstRoundWeather.id,
                 fourthRoundAirTempStart: props.fourthRoundAirTempStart,
                 fourthRoundAirTempFinish: props.fourthRoundAirTempFinish,

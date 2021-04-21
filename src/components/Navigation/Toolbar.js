@@ -57,10 +57,10 @@ const Toolbar = () => {
                     </NavDropdown>
                     <Nav.Link>SJS All Time Ranking</Nav.Link>
                     <Nav.Link>Stats</Nav.Link>
-                    <Form inline>
-                        <FormControl type="text" placeholder="Search" className="mx-sm-2"/>
-                        <Button variant="secondary">Search</Button>
-                    </Form>
+                    {/*<Form inline>*/}
+                    {/*    <FormControl type="text" placeholder="Search" className="mx-sm-2"/>*/}
+                    {/*    <Button variant="secondary">Search</Button>*/}
+                    {/*</Form>*/}
                 </Nav>
                 <Nav className="mr-1">
                     <NavDropdown id="collasible-nav-dropdown_two" title="DB Tools">

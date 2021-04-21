@@ -10,7 +10,7 @@ export const ResultsValidationSchema = () => Yup.object(
         assistantRDId: Yup.number(),
         assistantTDId: Yup.number(),
         cancelledAtRound: Yup.number()
-            .min(1, "Cannot be less than 1")
+            .min(0, "Cannot be less than 0")
             .max(4, "Cannot be more than 4"),
         chiefOfCompetitionId: Yup.number(),
         date1: Yup.date()

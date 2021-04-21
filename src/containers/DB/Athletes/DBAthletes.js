@@ -8,6 +8,7 @@ import {Header3, StyledDiv2Right1200, StyledDivCentered1200, TableButton} from "
 import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
 import Loader from "react-loader-spinner";
 import AthletesForm from "./AthletesForm";
+import moment from "moment";
 
 
 
@@ -485,7 +486,7 @@ class DBAthletes extends Component {
                             editAthlete: false
                         })}
                         initialActive={this.state.athleteToEdit.isActive}
-                        //initialBirthdate={this.state.athleteToEdit.person.birthdate} //TODO
+                        initialBirthdate={moment(this.state.athleteToEdit.person.birthdate)}
                         initialClubId={this.state.athleteToEdit.skiClub.id}
                         initialCountryId={this.state.athleteToEdit.person.country.id}
                         initialCityId={this.state.athleteToEdit.person.city.id}
