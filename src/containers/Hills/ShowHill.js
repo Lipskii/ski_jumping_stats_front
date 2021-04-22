@@ -161,7 +161,7 @@ class ShowHill extends Component {
                                     <Row sm={1}>
                                         <Col>
                                             <strong>Opened
-                                                in: </strong> {this.state.oldestHillVersion.validSince.substring(0, 4)}
+                                                in: </strong> {this.state.oldestHillVersion.validSince !== null ? <div>{this.state.oldestHillVersion.validSince.slice(0, 4)}</div> : null}
                                         </Col>
                                     </Row>
 

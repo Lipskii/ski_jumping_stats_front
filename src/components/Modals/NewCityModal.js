@@ -7,13 +7,18 @@ import SelectInputForm from "../CommonForms/SelectInputForm";
 import FormikSelectInputForm from "../CommonForms/FormikSelectInputForm";
 import {Header3, StyledDiv2Right1200} from "../StyledComponents";
 import FormikTextInputForm from "../CommonForms/FormikTextInputForm";
+import AddingModal from "./AddingModal";
+import CompletedModal from "./CompletedModal";
 
 class NewCityModal extends Component {
 
     state = {
+        completedModalStatus: true,
         countries: this.props.countries,
         country: "",
         regions: [],
+        showAddingModal: false,
+        showCompletedModal: false,
     }
 
 
@@ -23,7 +28,7 @@ class NewCityModal extends Component {
 
     updateRegions = () => {
         let urlString
-        if(this.state.country === "" || this.state.country === undefined){
+        if (this.state.country === "" || this.state.country === undefined) {
             urlString = '/api/regions'
         } else {
             urlString = "/api/regions/country/" + this.state.country
@@ -38,98 +43,125 @@ class NewCityModal extends Component {
     }
 
     onSubmit = (values) => {
-        console.log(values)
-        axios.post("/api/cities",{
+        axios.post("/api/cities", {
             name: values.name,
             region: this.state.regions.find(region => region.id = values.regionId)
         })
-            .then(res => {
-                if(res.status === 200){
-                    this.props.afterAdding()
-                    window.alert(values.name + " added!")
-                } else{
-                    window.alert("Something went wrong")
-                }
-                }
-            )
-            .catch(error => console.log(error))
-
+            .then(() => {
+                this.setState({
+                    showAddingModal: false,
+                    showCompletedModal: true,
+                    completedModalStatus: true,
+                    completedModalText: values.name + " added!"
+                })
+            })
+            .catch(error => {
+                console.log(error)
+                this.setState({
+                    showAddingModal: false,
+                    showCompletedModal: true,
+                    completedModalStatus: false,
+                    completedModalText: "Ups, something went wrong. Try again."
+                })
+            } )
     }
 
 
     render() {
 
         console.log(this.state)
+        console.log(this)
 
         return (
-            <Formik
-                isInitialValid={false}
-                initialValues={{
-                    name: '',
-                    regionId: ''
-                }}
-                validationSchema={Yup.object({
-                    name: Yup.string()
-                        .required('Required'),
-                    regionId: Yup.number()
-                        .required('Required')
-                })}
-                onSubmit={values => this.onSubmit(values)}>
-                {({
-                      handleSubmit
+            <React.Fragment>
+                <AddingModal
+                    show={this.state.showAddingModal}
+                    onHide={() => this.setState({
+                        showAddingModal: false
+                    })}
+                />
+                <CompletedModal
+                    show={this.state.showCompletedModal}
+                    text={this.state.completedModalText}
+                    onHide={() => this.setState({
+                        showCompletedModal: false,
+                        completedModalText: ""
+                    })}
+                    status={this.state.completedModalStatus}
+                />
+                <Formik
+                    isInitialValid={false}
+                    initialValues={{
+                        name: '',
+                        regionId: ''
+                    }}
+                    validationSchema={Yup.object({
+                        name: Yup.string()
+                            .required('Required'),
+                        regionId: Yup.number()
+                            .required('Required')
+                    })}
+                    onSubmit={values =>{
+                        this.setState({
+                            showAddingModal: true
+                        }, () =>  this.onSubmit(values))
+                    }}>
+                    {({
+                          handleSubmit
 
-                  }) => (
-                    <Modal show={this.props.show} onHide={this.props.onHide}>
-                        <Modal.Header closeButton>
-                            <Header3>New city</Header3>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <small>Fields with (*) are mandatory</small>
-                            <Form style={{marginTop: "10px"}} onSubmit={e => {
-                                e.preventDefault()
-                                handleSubmit()
-                            }}>
+                      }) => (
+                        <Modal show={this.props.show} onHide={this.props.onHide}>
+                            <Modal.Header closeButton>
+                                <Header3>New city</Header3>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <small>Fields with (*) are mandatory</small>
+                                <Form style={{marginTop: "10px"}} onSubmit={e => {
+                                    e.preventDefault()
+                                    handleSubmit()
+                                }}>
 
-                                <FormikTextInputForm
-                                    name="name"
-                                    label="Name*:"
-                                />
+                                    <FormikTextInputForm
+                                        name="name"
+                                        label="Name*:"
+                                    />
 
-                                <SelectInputForm
-                                    title={"Country:"}
-                                    defaultValue={""}
-                                    onChange={e => {
-                                        this.setState({
-                                            country: e.target.value
-                                        }, () => this.updateRegions())
-                                    }}
-                                >
-                                    <option value={""}>All Countries...</option>
-                                    {this.state.countries.map(country =>
-                                        <option key={country.id} value={country.id}>
-                                            {country.name}
-                                        </option>)}
-                                </SelectInputForm>
+                                    <SelectInputForm
+                                        title={"Country:"}
+                                        defaultValue={""}
+                                        onChange={e => {
+                                            this.setState({
+                                                country: e.target.value
+                                            }, () => this.updateRegions())
+                                        }}
+                                    >
+                                        <option value={""}>All Countries...</option>
+                                        {this.state.countries.map(country =>
+                                            <option key={country.id} value={country.id}>
+                                                {country.name}
+                                            </option>)}
+                                    </SelectInputForm>
 
-                                <FormikSelectInputForm
-                                    name="regionId"
-                                    label="Region*:"
-                                >
-                                    <option value={""} disabled>Choose...</option>
-                                    {this.state.regions.map(region => (
-                                        <option key={region.id} value={region.id}>{region.name}</option>
-                                    ))}
-                                </FormikSelectInputForm>
+                                    <FormikSelectInputForm
+                                        name="regionId"
+                                        label="Region*:"
+                                    >
+                                        <option value={""} disabled>Choose...</option>
+                                        {this.state.regions.map(region => (
+                                            <option key={region.id} value={region.id}>{region.name}</option>
+                                        ))}
+                                    </FormikSelectInputForm>
 
-                                <StyledDiv2Right1200>
-                                    <Button type={"submit"}>Submit</Button>
-                                </StyledDiv2Right1200>
+                                    <StyledDiv2Right1200>
+                                        <Button type={"submit"}>Submit</Button>
+                                    </StyledDiv2Right1200>
 
-                            </Form>
-                        </Modal.Body>
-                    </Modal>
-                )}
-            </Formik>
+                                </Form>
+                            </Modal.Body>
+                        </Modal>
+                    )}
+                </Formik>
+            </React.Fragment>
         )
     }
 

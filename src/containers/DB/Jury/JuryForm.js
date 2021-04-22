@@ -51,7 +51,7 @@ const JuryForm = (props) => {
                             handleSubmit()
                         }}
                     >
-                        <Modal.Header>
+                        <Modal.Header closeButton>
                             <Header3>Adding new jury</Header3>
                         </Modal.Header>
 

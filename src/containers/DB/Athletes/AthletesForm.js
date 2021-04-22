@@ -8,6 +8,7 @@ import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectI
 import {AthletesValidationSchema} from "./AthletesValidationSchema";
 import {FormikDatePicker} from "../../../components/CommonForms/FormikDatePicker";
 import bsCustomFileInput from 'bs-custom-file-input';
+import axios from "axios";
 
 const AthletesForm = (props) => {
 
@@ -17,6 +18,15 @@ const AthletesForm = (props) => {
     useEffect(() => {
         bsCustomFileInput.init()
     })
+
+    const updateCities = () => {
+        console.log("UPDATE CITIES")
+        axios.get("/api/cities")
+            .then(res => {
+                setCities(res.data)
+            })
+            .catch(e => console.log(e))
+    }
 
     return (
         <React.Fragment>
@@ -50,21 +60,20 @@ const AthletesForm = (props) => {
                    errors
                }) => (
                 <Modal show={props.show} size={"xl"} scrollable={true} onHide={props.onHide}>
+
                     {/*to prevent premature component did mount in NewCityModal*/}
-                    {showModal ? <NewCityModal
-                        show={showModal}
-                        onHide={() => {
-                            setShowModal(false)
-                            setCities(props.cities)
-                        }}
-                        country={currentCountry}
-                        countries={props.countries}
-                        cities={cities}
-                        afterAdding={() => {
-                            setCurrentCountry("")
-                            props.updateCities()   //TODO change it, so the citiesForForm would be updated
-                        }}
-                    /> : null}
+                    {showModal ?
+                        <NewCityModal
+                            show={showModal}
+                            onHide={() => {
+                                setShowModal(false)
+                                updateCities()
+                            }}
+                            country={currentCountry}
+                            countries={props.countries}
+                            cities={cities}
+                        /> : null}
+
                     <Modal.Header closeButton>
                         <Header3>{props.mainHeader}</Header3>
                     </Modal.Header>
@@ -131,8 +140,9 @@ const AthletesForm = (props) => {
                                 }
                             >
                                 <option value={""}>No info</option>
-                                {props.cities.map(city => (
-                                    <option key={city.id} value={city.id}>{city.name}, {city.region.country.code}</option>
+                                {cities.map(city => (
+                                    <option key={city.id}
+                                            value={city.id}>{city.name}, {city.region.country.code}</option>
                                 ))}
                             </FormikSelectInputForm>
 

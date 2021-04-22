@@ -7,6 +7,7 @@ import {SkiClubsValidationSchema} from "./SkiClubsValidationSchema";
 import FormikTextInputForm from "../../../components/CommonForms/FormikTextInputForm";
 import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
 import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
+import axios from "axios";
 
 
 const SkiClubForm = (props) => {
@@ -15,6 +16,15 @@ const SkiClubForm = (props) => {
     const [currentCountry, setCurrentCountry] = useState("")
     const [cities, setCities] = useState(props.cities)
 
+    const updateCities = () => {
+        console.log("UPDATE CITIES")
+        axios.get("/api/cities")
+            .then(res => {
+                setCities(res.data)
+            })
+            .catch(e => console.log(e))
+    }
+
     return (
         <React.Fragment>
             {/*to prevent premature component did mount in NewCityModal*/}
@@ -22,7 +32,7 @@ const SkiClubForm = (props) => {
                 show={showModal}
                 onHide={() => {
                     setShowModal(false)
-                    setCities(props.cities)
+                    updateCities()
                 }}
                 country={currentCountry}
                 countries={props.countries}
@@ -54,7 +64,7 @@ const SkiClubForm = (props) => {
                         handleSubmit()
                     }}
                 >
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         <Header3>{props.mainHeader}</Header3>
                     </Modal.Header>
                            <Modal.Body>
@@ -95,7 +105,7 @@ const SkiClubForm = (props) => {
                                 }
                             >
                                 <option value={""} disabled>Choose...</option>
-                                {props.cities.map(city => (
+                                {cities.map(city => (
                                     <option key={city.id} value={city.id}>{city.name}</option>
                                 ))}
                             </FormikSelectInputForm>

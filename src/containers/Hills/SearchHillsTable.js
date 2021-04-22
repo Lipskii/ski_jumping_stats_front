@@ -83,7 +83,7 @@ const SearchHillsTable = (props) => {
                                                 :
                                                 <td/>}
 
-                                            <td>{oldestHillVersion.validSince.slice(0, 4)}</td>
+                                            <td>{oldestHillVersion.validSince !== null ? <div>{oldestHillVersion.validSince.slice(0, 4)}</div> : null}</td>
                                         </tr>
                                     </LinkContainer>
                                 )

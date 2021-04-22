@@ -96,13 +96,13 @@ class NewPersonModal extends Component {
                 {this.state.showCityModal ?  <NewCityModal
                     show={this.state.showCityModal}
                     onHide={() => {
+                        this.updateCities()
                         this.setState({
                             showCityModal: false
                         })
                     }}
                     countries={this.state.countries}
                     cities={this.state.cities}
-                    afterAdding={this.updateCities}
                 /> : null}
 
                 <AddingModal show={this.state.showAddingModal}/>

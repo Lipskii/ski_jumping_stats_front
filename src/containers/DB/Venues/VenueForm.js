@@ -10,6 +10,7 @@ import FormikTextInputForm from "../../../components/CommonForms/FormikTextInput
 import FormikSelectInputForm from "../../../components/CommonForms/FormikSelectInputForm";
 import SelectInputForm from "../../../components/CommonForms/SelectInputForm";
 import NewCityModal from "../../../components/Modals/NewCityModal";
+import axios from "axios";
 
 
 const VenueForm = (props) => {
@@ -17,6 +18,14 @@ const VenueForm = (props) => {
     const [showModal, setShowModal] = useState(false);
     const [currentCountry, setCurrentCountry] = useState("")
     const [cities, setCities] = useState(props.cities)
+
+    const updateCities = () => {
+        axios.get("/api/cities")
+            .then(res => {
+                setCities(res.data)
+            })
+            .catch(e => console.log(e))
+    }
 
     return (
         <React.Fragment>
@@ -26,15 +35,11 @@ const VenueForm = (props) => {
                 show={showModal}
                 onHide={() => {
                     setShowModal(false)
-                    setCities(props.cities)
+                    updateCities()
                 }}
                 country={currentCountry}
                 countries={props.countries}
                 cities={cities}
-                afterAdding={() => {
-                    setCurrentCountry("")
-                    props.updateCities()   //TODO change it, so the citiesForForm would be updated
-                }}
             /> : null}
 
             <Formik
@@ -101,7 +106,7 @@ const VenueForm = (props) => {
                                 }
                             >
                                 <option value={""} disabled>Choose...</option>
-                                {props.cities.map(city => (
+                                {cities.map(city => (
                                     <option key={city.id} value={city.id}>{city.name}</option>
                                 ))}
                             </FormikSelectInputForm>
