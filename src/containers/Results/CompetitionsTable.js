@@ -44,16 +44,23 @@ const CompetitionsTable = (props) => {
                                 return (
                                     <tr key={competition.id} id={competition.id}>
                                         <td>{competition.date1}</td>
+
                                         <td><img
                                             width={32}
                                             height={32}
                                             className="mr-3"
                                             src={fisLogo}
                                             alt="Generic placeholder"
-                                        /></td>
+                                        />
+                                        </td>
+                                        <td>
+                                            {competition.team ? <div>Team</div> : <div>Ind.</div>}
+                                        </td>
+
                                         <td>{competition.seriesMajor.name} {competition.seriesMinor !== null ?
                                             <small>({competition.seriesMinor.name})</small> : null}
                                         </td>
+
                                         <td><img
                                             alt={competition.hillVersion.hill.venue.city.region.country.code}
                                             src={'./flags/' + competition.hillVersion.hill.venue.city.region.country.code + '.png'}
@@ -62,6 +69,7 @@ const CompetitionsTable = (props) => {
                                                 marginRight: "5px"
                                             }}/> {competition.hillVersion.hill.venue.city.name} (HS: {competition.hillVersion.hillSize} m)
                                         </td>
+
                                         <td>
                                             <LinkContainer to={'/showResults/' + competition.id}>
                                                 <TableButton id={competition.id + "tbEdit"}
@@ -72,8 +80,8 @@ const CompetitionsTable = (props) => {
                                                     Read more
                                                 </TableButton>
                                             </LinkContainer>
-
                                         </td>
+
                                     </tr>
                                 )
                             }

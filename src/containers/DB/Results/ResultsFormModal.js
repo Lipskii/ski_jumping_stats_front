@@ -111,6 +111,7 @@ const ResultsFormModal = (props) => {
                 gateFactor: props.gateFactor,
                 hillId: hillId,
                 hillVersionId: props.hillVersion.id,
+                isTeam: props.team,
                 judgeAId: props.judgeA.id,
                 judgeBId: props.judgeB.id,
                 judgeCId: props.judgeC.id,
@@ -119,7 +120,7 @@ const ResultsFormModal = (props) => {
                 judgeSCId: props.judgeSC.id,
                 meterValue: props.meterValue,
                 raceDirectorId: props.raceDirector.id,
-                resultsLink: '',
+              //  resultsLink: '',
                 seasonId: props.season.id,
                 secondRoundAirTempStart: props.secondRoundAirTempStart,
                 secondRoundAirTempFinish: props.secondRoundAirTempFinish,
@@ -309,6 +310,16 @@ const ResultsFormModal = (props) => {
                                             label={"Start time"}
                                         />
 
+                                        <FormikSelectInputForm
+                                            name="isTeam"
+                                            label="Team? :"
+                                            style={{width: "100px"}}
+                                            defaultValue={false}
+                                        >
+                                            <option value={false}>No</option>
+                                            <option value={true}>Yes</option>
+                                        </FormikSelectInputForm>
+
                                         <FormikTextInputForm
                                             name="cancelledAtRound"
                                             label="Cancelled at:"
@@ -316,10 +327,10 @@ const ResultsFormModal = (props) => {
                                             style={{width: "100px"}}
                                         />
 
-                                        <FormikTextInputForm
-                                            name="resultsLink"
-                                            label="Link to results:"
-                                        />
+                                        {/*<FormikTextInputForm*/}
+                                        {/*    name="resultsLink"*/}
+                                        {/*    label="Link to results:"*/}
+                                        {/*/>*/}
 
                                     </Card.Body>
                                 </Accordion.Collapse>

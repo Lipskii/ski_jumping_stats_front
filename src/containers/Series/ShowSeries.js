@@ -43,10 +43,11 @@ class ShowSeries extends Component {
             seriesData,
             seasonsData,
         ) => {
+            let overallStandingsPodiumsDataSorted =  overallStandingsPodiumsData.data.sort((a,b) => parseInt(b.season.season) - parseInt(a.season.season))
             this.setState({
                 competitions: competitionsData.data.reverse(),
                 overallStandings: overallStandingsData.data,
-                overallStandingsPodiums: overallStandingsPodiumsData.data,
+                overallStandingsPodiums: overallStandingsPodiumsDataSorted,
                 seasons: seasonsData.data,
                 series: seriesData.data[0],
             }, () => {

@@ -85,6 +85,7 @@ export const ResultsValidationSchema = () => Yup.object(
         hillId: Yup.number(),
         hillVersionId: Yup.number()
             .required('Required'),
+        isTeam : Yup.bool(),
         judgeAId: Yup.number(),
         judgeBId: Yup.number(),
         judgeCId: Yup.number(),

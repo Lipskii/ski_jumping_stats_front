@@ -41,7 +41,7 @@ const SeriesOverallStandingsTable = (props) => {
                                             <td>{overallStanding.skiJumper.person.firstName} {overallStanding.skiJumper.person.lastName}</td>
                                             <td>{overallStanding.points}</td>
                                             <td>{overallStanding.points !== bestScore ?
-                                                <small>- {(bestScore - overallStanding.points).toFixed(2)}</small> : null}</td>
+                                                <small>- {(bestScore - overallStanding.points).toFixed(1)}</small> : null}</td>
 
                                         </tr>
                                     </LinkContainer>

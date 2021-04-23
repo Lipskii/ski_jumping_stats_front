@@ -12,6 +12,7 @@ import ResultsModal from "./ResultsModal";
 import AddResultsModal from "./AddResultsModal";
 import AddQualificationsModal from "./AddQualificationsModal";
 import ResultsFormModal from "./ResultsFormModal";
+import TeamResultsModal from "./TeamResultsModal";
 
 
 class DBResults extends Component {
@@ -49,6 +50,7 @@ class DBResults extends Component {
         showDeleteModal: false,
         showReadMoreModal: false,
         showResultsModal: false,
+        showTeamResultsModal: false,
         showQualificationsModal: false,
         qualificationsCompetition: '',
         venues: [],
@@ -138,13 +140,24 @@ class DBResults extends Component {
     }
 
     handleResultsButton = (competition) => {
-        axios.get('/api/results/' + competition.id)
-            .then(res => this.setState({
-                results: res.data,
-                competitionToResults: competition,
-                showResultsModal: true
-            }))
-            .catch(error => console.log(error))
+        if(competition.team){
+            axios.get('/api/teamResults?competitionId=' + competition.id)
+                .then(res => this.setState({
+                    results: res.data,
+                    competitionToResults: competition,
+                    showTeamResultsModal: true
+                }))
+                .catch(error => console.log(error))
+        } else {
+            axios.get('/api/results?competitionId=' + competition.id)
+                .then(res => this.setState({
+                    results: res.data,
+                    competitionToResults: competition,
+                    showResultsModal: true
+                }))
+                .catch(error => console.log(error))
+        }
+
     }
 
     setCompetitionToFormWithValues = (competition) => {
@@ -162,6 +175,7 @@ class DBResults extends Component {
                 competition[key] = ''
             }
         )
+        competition["team"] = false
         return competition
     }
 
@@ -235,18 +249,19 @@ class DBResults extends Component {
             fourthRoundHumidityFinish: values.fourthRoundHumidityFinish,
             fourthRoundMinWind: values.fourthRoundMinWind,
             fourthRoundMaxWind: values.fourthRoundMaxWind,
-            fourthRoundAvgWind: values.fourthRoundAvgWind
+            fourthRoundAvgWind: values.fourthRoundAvgWind,
+            team: values.isTeam
         }
         axios.post("/api/competitions", {...dataValues})
             .then(res => {
-                if (values.resultsLink !== '') {
-                    axios.post('/api/results/link/' + res.data.id, values.resultsLink)
-                        .then(res => console.log(res))
-                        .catch(error => {
-                            console.log(error)
-                            successful = false
-                        })
-                }
+                // if (values.resultsLink !== '') {
+                //     axios.post('/api/results/link/' + res.data.id, values.resultsLink)
+                //         .then(res => console.log(res))
+                //         .catch(error => {
+                //             console.log(error)
+                //             successful = false
+                //         })
+                // }
                 this.setState({
                     showCompletedModal: true,
                     completedModalStatus: successful,
@@ -334,18 +349,19 @@ class DBResults extends Component {
             fourthRoundHumidityFinish: values.fourthRoundHumidityFinish,
             fourthRoundMinWind: values.fourthRoundMinWind,
             fourthRoundMaxWind: values.fourthRoundMaxWind,
-            fourthRoundAvgWind: values.fourthRoundAvgWind
+            fourthRoundAvgWind: values.fourthRoundAvgWind,
+            team: values.isTeam,
         }
         axios.put("/api/competitions/" + this.state.competitionToForm.id, {...dataValues})
             .then(res => {
-                if (values.resultsLink !== '') {
-                    axios.post('/api/results/link/' + res.data.id, values.resultsLink)
-                        .then(res => console.log(res))
-                        .catch(error => {
-                            console.log(error)
-                            successful = false
-                        })
-                }
+                // if (values.resultsLink !== '') {
+                //     axios.post('/api/results/link/' + res.data.id, values.resultsLink)
+                //         .then(res => console.log(res))
+                //         .catch(error => {
+                //             console.log(error)
+                //             successful = false
+                //         })
+                // }
                 this.setState({
                     showCompletedModal: true,
                     completedModalStatus: successful,
@@ -364,20 +380,39 @@ class DBResults extends Component {
 
     postResults = (values) => {
         let successful = true
-        axios.post('/api/results/link/' + this.state.addResultsCompetition.id, values.resultsLink)
-            .then(res => console.log(res))
-            .catch(error => {
-                console.log(error)
-                successful = false
-            })
-            .finally(() => {
-                this.setState({
-                    showCompletedModal: true,
-                    completedModalStatus: successful,
-                    showAddingModal: false,
-                    showAddResultsModal: false
-                }, () => this.filter())
-            })
+        if(this.state.addResultsCompetition.team === true){
+            axios.post('/api/teamResults/link/' + this.state.addResultsCompetition.id, values.resultsLink)
+                .then(res => console.log(res))
+                .catch(error => {
+                    console.log(error)
+                    successful = false
+                })
+                .finally(() => {
+                    this.setState({
+                        showCompletedModal: true,
+                        completedModalStatus: successful,
+                        showAddingModal: false,
+                        showAddResultsModal: false
+                    }, () => this.filter())
+                })
+        } else {
+            axios.post('/api/results/link/' + this.state.addResultsCompetition.id, values.resultsLink)
+                .then(res => console.log(res))
+                .catch(error => {
+                    console.log(error)
+                    successful = false
+                })
+                .finally(() => {
+                    this.setState({
+                        showCompletedModal: true,
+                        completedModalStatus: successful,
+                        showAddingModal: false,
+                        showAddResultsModal: false
+                    }, () => this.filter())
+                })
+        }
+
+
     }
 
     postQualifications = (values) => {
@@ -522,6 +557,15 @@ class DBResults extends Component {
                     })}
                 /> : null}
 
+                {this.state.showTeamResultsModal ? <TeamResultsModal
+                    competition={this.state.competitionToResults}
+                    results={this.state.results}
+                    show={this.state.showTeamResultsModal}
+                    onHide={() => this.setState({
+                        showTeamResultsModal: false
+                    })}
+                /> : null}
+
                 <Header3>Results</Header3>
 
                 <StyledDivCentered1200>
@@ -643,6 +687,7 @@ class DBResults extends Component {
                                             <th>Date</th>
                                             <th>Series</th>
                                             <th>Hill</th>
+                                            <th>Type</th>
                                             <th>Actions</th>
                                         </tr>
                                         </thead>
@@ -667,7 +712,7 @@ class DBResults extends Component {
                                                                              })}>
                                                                 details
                                                             </TableButton>
-                                                            {competition.results.length > 0 ?
+                                                            {competition.results.length > 0 || competition.teamResults.length > 0?
                                                                 <TableButton id={competition.id + "tbEdit"}
                                                                              name={competition.name}
                                                                              size="sm"
@@ -680,6 +725,7 @@ class DBResults extends Component {
 
                                                         </td>
                                                         <td>{competition.hillVersion.hill.name}</td>
+                                                        <td>{competition.team ? <div>Team</div> : <div>Ind.</div>}</td>
                                                         <td style={{textAlign: "center"}}>
                                                             <TableButton id={competition.id}
                                                                          name={competition.name}
@@ -696,7 +742,7 @@ class DBResults extends Component {
                                                                          }>
                                                                 Edit
                                                             </TableButton>
-                                                            {competition.results.length > 0 ?
+                                                            {competition.results.length > 0 || competition.teamResults.length > 0 ?
                                                                 <TableButton id={competition.id + "tbEdit"}
                                                                              name={competition.name}
                                                                              size="sm"

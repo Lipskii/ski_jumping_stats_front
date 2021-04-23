@@ -5,7 +5,7 @@ import Loader from "react-loader-spinner";
 import fisLogo from "../../assets/fis_logo.png";
 import {Accordion, Card, Col, Container, ListGroup, Row} from "react-bootstrap";
 import ResultsTable from "./ResultsTable";
-
+import TeamResultsTable from "./TeamResultsTable";
 
 
 class ShowResults extends Component {
@@ -72,7 +72,9 @@ class ShowResults extends Component {
                                         </small>
                                     </Row> : null}
                                 <Row>
-                                    <ResultsTable results={this.state.competition.results}/>
+                                    {this.state.competition.team ?
+                                        <TeamResultsTable results={this.state.competition.teamResults}/>
+                                        : <ResultsTable results={this.state.competition.results}/>}
                                 </Row>
                             </Col>
 

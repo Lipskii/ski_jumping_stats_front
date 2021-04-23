@@ -40,7 +40,8 @@ class SearchResults extends Component {
                 + '&countryId=' + this.state.filterCountryId
                 + '&venueId=' + this.state.filterVenueId
                 + '&sizeOfHillId=' + this.state.filterSizeId
-                + '&season=' + this.state.filterSeason),
+                + '&season=' + this.state.filterSeason
+                ), //+ '?hasResults=true'
             axios.get('/api/venues?hasHills=true'
                 + '&countryId='+ this.state.filterCountryId)
         ])
